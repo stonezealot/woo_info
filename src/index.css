@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+@font-face
+{
+  font-family: 'varela';
+  src:url(./assets/fonts/VarelaRound-Regular.ttf);
+}
+
+@font-face
+{
+  font-family: 'phinster';
+  src:url(./assets/fonts/PhinsterRegular.TTF);
+}

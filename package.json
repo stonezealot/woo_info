@@ -3,9 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.18.2",
+    "antd-mobile": "^2.2.13",
     "react": "^16.8.6",
+    "react-cookie": "^4.0.0",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-native": "^0.59.8",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "3.0.1",
+    "url-search-params": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
