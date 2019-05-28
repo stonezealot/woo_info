@@ -9,9 +9,7 @@ import logo from './company_logo.png';
 import './App.css';
 import URLSearchParams from 'url-search-params';
 import OrderView from './OrderView';
-
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
-const Option = Select.Option;
+import DespatchView from './DespatchView';
 
 class Main extends Component {
 
@@ -41,23 +39,6 @@ class Main extends Component {
 
   componentDidMount() {
 
-    // const { home, serviceEntry } = this.state
-
-    // //get orders
-    // console.log('get orders last')
-    // let url = serviceEntry + 'api/orders/'
-    // let params = new URLSearchParams();
-    // params.append('custId', home.custId);
-    // url += ('?' + params);
-    // fetch(url, {
-    //   method: 'GET'
-    // })
-    //   .then(response => response.json())
-    //   .then(response => {
-    //     this.setState({
-    //       orders: response
-    //     })
-    //   })
   }
 
   tabChoiced = (id) => {
@@ -148,51 +129,16 @@ class Main extends Component {
               serviceEntry={this.state.serviceEntry} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox2Show }}>
-            <div className="main-search-title-container">
-              <p className="main-search-title" >Search Despatches</p>
-              <div className="main-search-second-container">
-                <p className="main-search-sub-title">Search</p>
-                <input className="main-search-input"
-                  style={searchInputStyle}
-                  onChange={this.handleSearchInput}></input>
-                <p className="main-search-sub-title">Status</p>
-                <Select
-                  className="main-search-select"
-                  onChange={this.handleSelect}
-                  defaultValue="All">
-                  <Option value="All">All</Option>
-                  <Option value="Despatch">Despatch</Option>
-                  <Option value="History">History</Option>
-                </Select>
-                <p className="main-search-sub-title">Start Date</p>
-                <DatePicker
-                  className="main-search-date-picker"
-                  allowClear={false}
-                  style={datePicker}
-                  defaultValue={moment('01/01/2000', dateFormatList[0])}
-                  format={dateFormatList}
-                  onChange={date => this.handleStartDate(date)} />
-                <p className="main-search-sub-title">End Date</p>
-                <DatePicker
-                  className="main-search-date-picker"
-                  allowClear={false}
-                  style={datePicker}
-                  defaultValue={moment(moment().format('DD/MM/YYYY'), dateFormatList[0])}
-                  format={dateFormatList}
-                  onChange={date => this.handleEndDate(date)} />
-              </div>
-            </div>
+            <DespatchView
+              orders={this.state.orders}
+              home={this.state.home}
+              serviceEntry={this.state.serviceEntry} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox3Show }}>
             <OrderView
               orders={this.state.orders}
               home={this.state.home}
               serviceEntry={this.state.serviceEntry} />
-          </div>
-          <div
-            className="main-view"
-            style={{ "display": isBox2Show }}>
-            Despatches
           </div>
           {/* <div
             className="main-view"

@@ -21,8 +21,8 @@ class OrderView extends Component {
       orderStatus: 'ALL',
       orderStartDate: '01/01/2000',
       orderEndDate: moment().format('DD/MM/YYYY'),
-      orders: this.props.orders,
-      ordersUpdated: this.props.orders,
+      orders: '',
+      ordersUpdated: '',
       serviceEntry: this.props.serviceEntry,
       home: this.props.home
     }

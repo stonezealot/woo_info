@@ -281,6 +281,13 @@
     overflow-x: scroll;
 }
 
+.main-view3 {
+    height: 370px;
+    max-width: 75vw;
+    background-color: rgb(236, 236, 236);
+    overflow-x: scroll;
+}
+
 .main-order-detail-view {
     position: absolute;
     top: 310px;
@@ -300,7 +307,18 @@
     width: calc(100vw - 400px);
     background-color: rgb(66, 66, 68);
     display: flex;
-    flex-direction: row
+    flex-direction: row;
+}
+
+.main-despatch-detail-header {
+    height: 30px;
+    top: 0px;
+    left: 0px;
+    /* width: 100%; */
+    width: calc(100vw);
+    background-color: rgb(66, 66, 68);
+    display: flex;
+    flex-direction: row;
 }
 
 .main-order-detail-body {
@@ -403,6 +421,25 @@
     background: rgb(52, 117, 160);
 }
 
+.main-view2::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view3::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view3::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background: rgb(52, 117, 160);
+}
+
+.main-view3::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
+}
+
 .main-order-detail-view::-webkit-scrollbar {
     width: 8px;
     height: 10px;
@@ -437,10 +474,6 @@
     overflow: hidden;
     padding: 3px;
 }
-
-/* .main-view-header {
-    white-space: nowrap
-} */
 
 @keyframes App-logo-spin {
     /* from {   
