@@ -22,14 +22,16 @@ class OrderView extends Component {
       orderStartDate: '01/01/2000',
       orderEndDate: moment().format('DD/MM/YYYY'),
       orders: this.props.orders,
+      ordersUpdated: this.props.orders,
       serviceEntry: this.props.serviceEntry,
-      home : this.props.home
+      home: this.props.home
     }
     this.handleSearchInput = this.handleSearchInput.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
     this.handleStartDate = this.handleStartDate.bind(this)
     this.handleEndDate = this.handleEndDate.bind(this)
     this.handleSearchButton = this.handleSearchButton.bind(this)
+    this.handleResetButton = this.handleResetButton.bind(this)
   }
 
 
@@ -48,6 +50,7 @@ class OrderView extends Component {
       .then(response => response.json())
       .then(response => {
         this.setState({
+          ordersUpdated: response,
           orders: response
         })
       })
@@ -74,20 +77,140 @@ class OrderView extends Component {
   }
 
   handleSearchButton() {
-    const { orderSearchInput, orderStatus, orderStartDate, orderEndDate} = this.state;
+    const { orderSearchInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
     console.log("orderSearchInput  " + orderSearchInput)
     console.log("orderStatus  " + orderStatus)
     console.log("orderStartDate  " + orderStartDate)
     console.log("orderEndDate  " + orderEndDate)
 
-    console.log(this.state.home.custId)
-    console.log(this.state.orders)
+    const date1 = moment(orderStartDate, dateFormatList[0]);
+    const date2 = moment(orderEndDate, dateFormatList[0]);
+    const text = orderSearchInput.toUpperCase();
 
-    this.setState({
-      orders:this.state.orders.filter(o => {
-        return o.pkgNum === 3
-      })
+    if (orderStatus === 'ALL') {
+      if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+        this.setState({
+          ordersUpdated: orders.filter(o => {
+            return (
+              (moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+              || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+          })
+        })
+      } else {
+        this.setState({
+          ordersUpdated: this.state.orders.filter(o => {
+            return (
+              ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+              && (
+                (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
+                || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
+                || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
+                || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
+                || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
+                || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : '')
+              )
+            )
+          })
+        })
+      }
+    } else if (orderStatus === 'LANDED ITEMS') {
+      if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+        this.setState({
+          ordersUpdated: orders.filter(o => {
+            return (
+              ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+              && o.landedItem === 'LANDED')
+          })
+        })
+      } else {
+        this.setState({
+          ordersUpdated: this.state.orders.filter(o => {
+            return (
+              ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+              && (
+                (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
+                || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
+                || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
+                || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
+                || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
+                || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
+              && o.landedItem === 'LANDED')
+          })
+        })
+      }
+    } else {
+      if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+        this.setState({
+          ordersUpdated: orders.filter(o => {
+            return (
+              ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+              && o.statusFlg === orderStatus)
+          })
+        })
+      } else {
+        this.setState({
+          ordersUpdated: this.state.orders.filter(o => {
+            return (
+              ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+              && (
+                (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
+                || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
+                || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
+                || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
+                || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
+                || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
+              && o.statusFlg === orderStatus)
+          })
+        })
+      }
+    }
+
+  }
+
+  handleResetButton() {
+    const { home, serviceEntry } = this.state
+    //get orders
+    console.log('get orders')
+    let url = serviceEntry + 'api/orders/'
+    let params = new URLSearchParams();
+    params.append('custId', home.custId);
+    url += ('?' + params);
+    fetch(url, {
+      method: 'GET'
     })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          orders: response,
+          ordersUpdated: response,
+          orderSearchInput: '',
+          orderStatus: 'ALL',
+          orderStartDate: '01/01/2000',
+          orderEndDate: moment().format('DD/MM/YYYY')
+        }, () => {
+          console.log("orderSearchInput  " + this.state.orderSearchInput)
+          console.log("orderStatus  " + this.state.orderStatus)
+          console.log("orderStartDate  " + this.state.orderStartDate)
+          console.log("orderEndDate  " + this.state.orderEndDate)
+        })
+      })
   }
 
   getOrderDetail(recKey) {
@@ -128,7 +251,7 @@ class OrderView extends Component {
 
   orderView() {
 
-    var orders = this.state.orders
+    var ordersUpdated = this.state.ordersUpdated
 
     const orderViewBody = {
       height: '60px',
@@ -162,66 +285,75 @@ class OrderView extends Component {
     return (
       <div>
         {
-          Object.keys(orders).map(key =>
-            <div key={orders[key].recKey} className="main-order-view-body" style={orderViewBody} onClick={() => this.getOrderDetail(orders[key].recKey)}>
+          Object.keys(ordersUpdated).map(key =>
+            <div key={ordersUpdated[key].recKey} className="main-order-view-body" style={orderViewBody} onClick={() => this.getOrderDetail(ordersUpdated[key].recKey)}>
               <div className="main-item-container" style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].vslName}
+                  {ordersUpdated[key].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[key].vslName}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].docId}
+                  {ordersUpdated[key].docId}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {moment(orders[key].stockDate).format('DD/MM/YYYY')}
+                  {moment(ordersUpdated[key].stockDate).format('DD/MM/YYYY') === ''
+                    || moment(ordersUpdated[key].stockDate).format('DD/MM/YYYY').toString().trim().length === 0
+                    || ordersUpdated[key].stockDate === null
+                    ? 'EXPECTED' :
+                    moment(ordersUpdated[key].stockDate).format('DD/MM/YYYY')
+                  }
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].custName}
+                  {ordersUpdated[key].landedItem === 'LANDED'?
+                  ordersUpdated[key].custName:
+                  ordersUpdated[key].suppName}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].itemRef}
+                  {ordersUpdated[key].landedItem === 'LANDED'?
+                  'LANDED ITEM':
+                  ordersUpdated[key].itemRef}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].description}
+                  {ordersUpdated[key].description}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].pkgNum}
+                  {ordersUpdated[key].pkgNum}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].pkgUom}
+                  {ordersUpdated[key].pkgUom}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].pkgWt}
+                  {ordersUpdated[key].pkgWt}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].AwbNo}
+                  {ordersUpdated[key].AwbNo}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].statusFlg}
+                  {ordersUpdated[key].statusFlg}
                 </div>
               </div>
               <div style={orderViewBodyItemContainer}>
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].dimension}
+                  {ordersUpdated[key].dimension}
                 </div>
               </div>
               <div
@@ -234,7 +366,7 @@ class OrderView extends Component {
                 }}
               >
                 <div className="main-item" style={orderViewBodyItem}>
-                  {orders[key].remark}
+                  {ordersUpdated[key].remark}
                 </div>
               </div>
             </div>)
@@ -361,11 +493,11 @@ class OrderView extends Component {
                   style={remarkInput}
                   disabled={true} />
               </div>
-              <div className="main-order-detail-container">
+              <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
                 <p className="main-order-detail-sub-title">DESCRIPTION: </p>
                 <TextArea
                   value={orderDetail.description}
-                  autosize={{ minRows: 1, maxRows: 1 }}
+                  autosize={{ minRows: 2, maxRows: 2 }}
                   style={remarkInput}
                   disabled={true} />
               </div>
@@ -499,13 +631,14 @@ class OrderView extends Component {
             <div className="main-search-second-container">
               <p className="main-search-sub-title">Search</p>
               <input className="main-search-input"
+                value={this.state.orderSearchInput}
                 style={searchInputStyle}
                 onChange={this.handleSearchInput}></input>
               <p className="main-search-sub-title">Status</p>
               <Select
                 className="main-search-select"
                 onChange={this.handleSelect}
-                defaultValue="ALL">
+                value={this.state.orderStatus}>
                 <Option value="ALL">ALL</Option>
                 <Option value="EXPECTED">EXPECTED</Option>
                 <Option value="STOCK">STOCK</Option>
@@ -517,7 +650,7 @@ class OrderView extends Component {
                 className="main-search-date-picker"
                 allowClear={false}
                 style={datePicker}
-                defaultValue={moment('01/01/2000', dateFormatList[0])}
+                value={moment(this.state.orderStartDate, dateFormatList[0])}
                 format={dateFormatList}
                 onChange={date => this.handleStartDate(date)} />
               <p className="main-search-sub-title">End Date</p>
@@ -525,14 +658,19 @@ class OrderView extends Component {
                 className="main-search-date-picker"
                 allowClear={false}
                 style={datePicker}
-                defaultValue={moment(moment().format('DD/MM/YYYY'), dateFormatList[0])}
+                value={moment(this.state.orderEndDate, dateFormatList[0])}
                 format={dateFormatList}
                 onChange={date => this.handleEndDate(date)} />
               <Button
-                style={{ marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="search"
                 onClick={this.handleSearchButton}>Search</Button>
+              <Button
+                style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                type="primary"
+                icon="reload"
+                onClick={this.handleResetButton}>Reset</Button>
             </div>
           </div>
         </div>
