@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { DatePicker, Select } from 'antd';
+import { Button } from 'antd';
 import 'antd/dist/antd.css';
-import moment from 'moment';
 import logo from './company_logo.png';
 import './App.css';
-import URLSearchParams from 'url-search-params';
 import OrderView from './OrderView';
 import DespatchView from './DespatchView';
+import InventoryView from './InventoryView';
 
 class Main extends Component {
 
@@ -23,6 +22,7 @@ class Main extends Component {
     this.state = {
       serviceEntry: cookies.get('serviceEntry'),
       home: cookies.get('home'),
+      username: cookies.get('username'),
       orders: '',
       orderRecKey: '',
       orderDetail: '',
@@ -34,11 +34,16 @@ class Main extends Component {
       currentIndex: 1,
     }
     console.log('custId:  ' + this.state.home.custId)
+    console.log('name:  ' + this.state.home.name)
     this.handleLogOutButton = this.handleLogOutButton.bind(this)
   }
 
   componentDidMount() {
-
+    const { home } = this.state
+    console.log(home)
+    if (home === '') {
+      this.props.history.push('/login')
+    }
   }
 
   tabChoiced = (id) => {
@@ -49,7 +54,7 @@ class Main extends Component {
 
   handleLogOutButton() {
     const { cookies } = this.props;
-    cookies.set('username', '')
+    cookies.set('home', '')
     this.props.history.push('/login')
   }
 
@@ -77,13 +82,17 @@ class Main extends Component {
       flexDirection: 'row'
     }
 
-    const searchInputStyle = {
+    const logOutButton = {
+      position: 'absolute',
+      right: '15px',
+      top: '15px',
+      height: '40px',
+      width: '120px',
+      backgroundColor: 'rgb(70, 154, 209)',
+      borderColor: 'rgb(70, 154, 209)',
       fontFamily: 'varela',
-      textAlign: 'center',
-    }
-
-    const datePicker = {
-      fontFamily: 'varela'
+      paddingTop: '1px',
+      paddingLeft: '9px'
     }
 
     var _this = this;
@@ -110,11 +119,18 @@ class Main extends Component {
       <div className="main-background">
         <header className="main-header">
           <img src={logo} className="main-logo" alt="logo" />
-          <button
-            className="log-out-button"
+          <div style={{ flexDirection: 'row' }}>
+            <p className="user-text">User:</p>
+            <p className="username-text">{this.state.home.userName}</p>
+          </div>
+          <Button
+            // className="log-out-button"
+            style={logOutButton}
+            type="primary"
+            icon="logout"
             onClick={this.handleLogOutButton}>
             Log out
-            </button>
+            </Button>
         </header>
         <div style={bodyContainer}>
           <div style={mainLeftTabStyle}>
@@ -124,30 +140,20 @@ class Main extends Component {
           </div>
           <div className="main-body-view-container" style={{ "display": isBox1Show }}>
             <OrderView
-              orders={this.state.orders}
               home={this.state.home}
               serviceEntry={this.state.serviceEntry} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox2Show }}>
             <DespatchView
-              orders={this.state.orders}
               home={this.state.home}
               serviceEntry={this.state.serviceEntry} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox3Show }}>
-            <OrderView
-              orders={this.state.orders}
+            <InventoryView
               home={this.state.home}
               serviceEntry={this.state.serviceEntry} />
           </div>
-          {/* <div
-            className="main-view"
-            style={{ "display": isBox3Show }}>
-            Inventory
-          </div> */}
         </div>
-
-
       </div >
     );
   }

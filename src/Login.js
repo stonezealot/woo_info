@@ -19,7 +19,7 @@ class Login extends Component {
         console.log('in login screen')
         super(props);
         this.state = {
-            serviceEntry: 'http://192.168.1.77:8080/',
+            serviceEntry: 'http://192.168.1.9:8080/',
             username: '',
             password: '',
             home: ''
@@ -89,7 +89,8 @@ class Login extends Component {
                 this.setState({ home: response }, () => {
                     cookies.set('home', this.state.home)
                     cookies.set('serviceEntry', this.state.serviceEntry)
-                    console.log(cookies.get('home').custId)
+                    cookies.set('username', this.state.username)
+                    console.log(cookies.get('home'))
                     this.props.history.push('/main')
                 });
             })
