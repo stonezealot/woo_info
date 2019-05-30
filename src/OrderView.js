@@ -1,4 +1,4 @@
-import React, { Component ,PureComponent} from 'react';
+import React, { Component, PureComponent } from 'react';
 import { DatePicker, Select, Input, Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -205,49 +205,13 @@ class OrderView extends PureComponent {
   }
 
   handleResetButton() {
-    const { home, serviceEntry } = this.state
-
-    if (home.isadmin === 'Y') {
-      //get orders admin 
-      console.log('get orders')
-      let url = serviceEntry + 'api/all-orders/'
-      fetch(url, {
-        method: 'GET'
-      })
-        .then(response => response.json())
-        .then(response => {
-          this.setState({
-            orders: response,
-            ordersUpdated: response,
-            orderSearchInput: '',
-            orderStatus: 'ALL',
-            orderStartDate: '01/01/2000',
-            orderEndDate: moment().format('DD/MM/YYYY')
-          })
-        })
-    } else {
-      //get orders common
-      console.log('get orders')
-      let url = serviceEntry + 'api/orders/'
-      let params = new URLSearchParams();
-      params.append('custId', home.custId);
-      url += ('?' + params);
-      fetch(url, {
-        method: 'GET'
-      })
-        .then(response => response.json())
-        .then(response => {
-          this.setState({
-            orders: response,
-            ordersUpdated: response,
-            orderSearchInput: '',
-            orderStatus: 'ALL',
-            orderStartDate: '01/01/2000',
-            orderEndDate: moment().format('DD/MM/YYYY')
-          })
-        })
-    }
-
+    this.setState({
+      ordersUpdated: this.state.orders,
+      orderSearchInput: '',
+      orderStatus: 'ALL',
+      orderStartDate: '01/01/2000',
+      orderEndDate: moment().format('DD/MM/YYYY')
+    })
   }
 
   getOrderDetail(recKey) {
@@ -309,6 +273,14 @@ class OrderView extends PureComponent {
       display: 'flex',
       justifyContent: 'center',
       flex: '1',
+    }
+
+    const orderViewBodyItemContainerLast = {
+      width: '9vw',
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      flex: '1'
     }
 
     const orderViewBodyItem = {
@@ -395,15 +367,7 @@ class OrderView extends PureComponent {
                   {ordersUpdated[key].dimension}
                 </div>
               </div>
-              <div
-                style={{
-                  width: '9vw',
-                  alignItems: 'center',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  flex: '1'
-                }}
-              >
+              <div style={orderViewBodyItemContainerLast}>
                 <div className="main-item" style={orderViewBodyItem}>
                   {ordersUpdated[key].remark}
                 </div>

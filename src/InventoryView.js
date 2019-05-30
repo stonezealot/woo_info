@@ -50,7 +50,7 @@ class InventoryView extends PureComponent {
                                 r.stkQty <= 0
                             )
                         })
-                    })
+                    },()=>{console.log('inventory complete')})
                 })
         } else {
             //get inventories common

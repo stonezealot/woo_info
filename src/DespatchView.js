@@ -41,6 +41,7 @@ class DespatchView extends PureComponent {
     }
 
     componentDidMount() {
+        console.log('现在是： DespatchView componentDidMount')
         const { home, serviceEntry } = this.state
 
         if (home.isadmin === 'Y') {
@@ -55,7 +56,7 @@ class DespatchView extends PureComponent {
                     this.setState({
                         despatchesUpdated: response,
                         despatches: response
-                    })
+                    },()=>{console.log('despatches complete')})
                 })
         } else {
             //get despatches common
@@ -177,32 +178,14 @@ class DespatchView extends PureComponent {
     }
 
     handleResetButton() {
-        const { home, serviceEntry } = this.state
-        //get despatches
-        console.log('get despatches')
-        let url = serviceEntry + 'api/despatches/'
-        let params = new URLSearchParams();
-        params.append('custId', home.custId);
-        url += ('?' + params);
-        fetch(url, {
-            method: 'GET'
+
+        this.setState({
+            despatchesUpdated: this.state.despatches,
+            despatchSearchInput: '',
+            despatchStatus: 'ALL',
+            despatchStartDate: '01/01/2000',
+            despatchEndDate: moment().format('DD/MM/YYYY')
         })
-            .then(response => response.json())
-            .then(response => {
-                this.setState({
-                    despatches: response,
-                    despatchesUpdated: response,
-                    despatchSearchInput: '',
-                    despatchStatus: 'ALL',
-                    despatchStartDate: '01/01/2000',
-                    despatchEndDate: moment().format('DD/MM/YYYY')
-                }, () => {
-                    console.log("despatchSearchInput  " + this.state.despatchSearchInput)
-                    console.log("despatchStatus  " + this.state.despatchStatus)
-                    console.log("despatchStartDate  " + this.state.despatchStartDate)
-                    console.log("despatchEndDate  " + this.state.despatchEndDate)
-                })
-            })
     }
 
     getDespatchDetail(recKey) {
