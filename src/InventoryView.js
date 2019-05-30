@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
 import './App.css';
 
-class InventoryView extends Component {
+class InventoryView extends PureComponent {
 
     constructor(props) {
         super(props);
@@ -648,7 +648,7 @@ class InventoryView extends Component {
                         :
                         <div
                             className="main-view2"
-                            style={{ width: '100vw', left: '0px', maxWidth: '100vw' }}>
+                            style={{ width: '100vw', left: '0px', maxWidth: 'calc(100vw - 150px)' }}>
                             {
                                 this.state.changeInventory ?
                                     <div style={subTitleContainer} className="main-order-detail-header">

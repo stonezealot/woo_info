@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { DatePicker, Select, Input, Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -9,7 +9,7 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const Option = Select.Option;
 const { TextArea } = Input;
 
-class DespatchView extends Component {
+class DespatchView extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

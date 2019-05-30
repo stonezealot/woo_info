@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component ,PureComponent} from 'react';
 import { DatePicker, Select, Input, Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -11,7 +11,7 @@ const Option = Select.Option;
 const { TextArea } = Input;
 
 
-class OrderView extends Component {
+class OrderView extends PureComponent {
 
   constructor(props) {
     super(props);
