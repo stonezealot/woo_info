@@ -1,8 +1,9 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
+import { List, AutoSizer } from "react-virtualized";
 import './App.css';
 
 class InventoryView extends PureComponent {
@@ -22,8 +23,10 @@ class InventoryView extends PureComponent {
             balance: '',
             movements: '',
             movementsIn: '',
-            movementsOut: ''
+            movementsOut: '',
+            Inventories: ''
         }
+        this.inventoryView = this.inventoryView.bind(this)
     }
 
     componentDidMount() {
@@ -50,7 +53,10 @@ class InventoryView extends PureComponent {
                                 r.stkQty <= 0
                             )
                         })
-                    },()=>{console.log('inventory complete')})
+                    }, () => {
+                        console.log('active length: ' + this.state.activeInventories.length)
+                        console.log('depleted length: ' + this.state.depletedInventories.length)
+                    })
                 })
         } else {
             //get inventories common
@@ -78,8 +84,15 @@ class InventoryView extends PureComponent {
                     })
                 })
         }
+    }
 
-
+    divScroll() {
+        var divscroll = document.getElementById('right-view');
+        var scrollTop = divscroll.scrollTop;
+        var wholeHeight = divscroll.scrollHeight;
+        var divHeight = divscroll.clientHeight;
+        console.log(scrollTop + '  ' + wholeHeight + '  ' + divHeight)
+        divscroll.scrollBy(0, -scrollTop);
     }
 
     getInventoryDetail(stkId, storeId) {
@@ -135,16 +148,18 @@ class InventoryView extends PureComponent {
                     this.setState({
                         totalIn: this.state.movementsIn.reduce(leijia, 0),
                         totalOut: this.state.movementsOut.reduce(leijia, 0)
-                    }, () => { console.log(this.state.totalIn + '  ' + this.state.totalOut + '  ' + (this.state.totalIn + this.state.totalOut)) })
+                    })
                 })
             })
     }
 
-    inventoryView() {
+    inventoryView({ index, isScrolling, key, style }) {
 
         const { changeInventory, activeInventories, depletedInventories } = this.state
 
         var inventories = changeInventory ? depletedInventories : activeInventories
+
+        console.log(index)
 
         const inventoryViewBody = {
             height: '60px',
@@ -176,45 +191,43 @@ class InventoryView extends PureComponent {
         }
 
         return (
-            <div>
-                {
-                    Object.keys(inventories).map(key =>
-                        <div key={inventories[key].recKey}
-                            className="main-order-view-body"
-                            style={inventoryViewBody}
-                            onClick={() => this.getInventoryDetail(inventories[key].stkId, inventories[key].storeId)}
-                        >
-                            <div className="main-item-container" style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {inventories[key].stkId}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {inventories[key].description}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {inventories[key].stkQty}
-                                </div>
-                            </div>
-                            <div
-                                style={{
-                                    width: 'calc((100vw - 150px)/4',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flex: '1'
-                                }}
-                            >
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {inventories[key].uomId}
-                                </div>
-                            </div>
-                        </div>)
-                }
+            <div style={style}
+                key={inventories[index].recKey}>
+                <div
+                    className="main-order-view-body"
+                    style={inventoryViewBody}
+                    onClick={() => this.getInventoryDetail(inventories[index].stkId, inventories[index].storeId)}>
+                    <div className="main-item-container" style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {inventories[index].stkId}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {inventories[index].description}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {inventories[index].stkQty}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            width: 'calc((100vw - 150px)/4',
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flex: '1'
+                        }}
+                    >
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {inventories[index].uomId}
+                        </div>
+                    </div>
+                </div>
             </div>
+
         )
     }
 
@@ -361,8 +374,6 @@ class InventoryView extends PureComponent {
             <div
                 className="main-view2"
                 style={{ width: '100vw', left: '0px', maxWidth: '100vw' }}>
-
-
                 <div style={subTitleContainer} className="main-order-detail-header">
                     <Button
                         style={backButton}
@@ -654,7 +665,7 @@ class InventoryView extends PureComponent {
                                     <div style={subTitleContainer} className="main-order-detail-header">
                                         <Button
                                             style={backButton}
-                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory })}
+                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory },()=>this.divScroll())}
                                             type="primary"
                                             icon="reload">Active</Button>
                                         <p style={subTitle}>Depleted</p>
@@ -663,7 +674,7 @@ class InventoryView extends PureComponent {
                                     <div style={subTitleContainer} className="main-order-detail-header">
                                         <Button
                                             style={backButton}
-                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory })}
+                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory },()=>this.divScroll())}
                                             type="primary"
                                             icon="reload">Depleted</Button>
                                         <p style={subTitle}>Active</p>
@@ -689,7 +700,19 @@ class InventoryView extends PureComponent {
                                     <p style={inventoryViewHeaderTitle}>UOM</p>
                                 </div>
                             </div>
-                            {this.inventoryView()}
+                            <AutoSizer style={{ height: 'calc(100vh - 198px)', width: 'calc(100vw - 150px)', resize: 'both' }}>
+                                {({ height, width }) => (
+                                    <List
+                                        id="right-view"
+                                        className="list"
+                                        width={width}
+                                        height={height}
+                                        rowHeight={60}
+                                        rowRenderer={this.inventoryView}
+                                        rowCount={this.state.changeInventory ? this.state.depletedInventories.length : this.state.activeInventories.length}
+                                    />
+                                )}
+                            </AutoSizer>
                         </div>
                     }
                 </div>

@@ -1,8 +1,9 @@
-import React, { Component, PureComponent } from 'react';
-import { DatePicker, Select, Input, Button } from 'antd';
+import React, { PureComponent } from 'react';
+import { DatePicker, Select, Input, Button, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
+import { List, AutoSizer } from "react-virtualized";
 import './App.css';
 
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
@@ -30,7 +31,8 @@ class DespatchView extends PureComponent {
             orders: '',
             orderDetail: '',
             showDetail: false,
-            showOrderDetail: false
+            showOrderDetail: false,
+            showError: false
         }
         this.handleSearchInput = this.handleSearchInput.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
@@ -38,6 +40,7 @@ class DespatchView extends PureComponent {
         this.handleEndDate = this.handleEndDate.bind(this)
         this.handleSearchButton = this.handleSearchButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
+        this.despatchView = this.despatchView.bind(this)
     }
 
     componentDidMount() {
@@ -56,7 +59,7 @@ class DespatchView extends PureComponent {
                     this.setState({
                         despatchesUpdated: response,
                         despatches: response
-                    },()=>{console.log('despatches complete')})
+                    }, () => { console.log('despatches complete') })
                 })
         } else {
             //get despatches common
@@ -110,76 +113,88 @@ class DespatchView extends PureComponent {
         const date2 = moment(despatchEndDate, dateFormatList[0]);
         const text = despatchSearchInput.toUpperCase();
 
-        if (despatchStatus === 'ALL') {
-            if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                this.setState({
-                    despatchesUpdated: despatches.filter(d => {
-                        return (
-                            moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                            && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
-                        )
-                    })
-                })
-            } else {
-                this.setState({
-                    despatchesUpdated: despatches.filter(d => {
-                        return (
-                            (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                            && (
-                                (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
-                                || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
-                                || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
-                                || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
-                                || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
-                                || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
-                                || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
-                                || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
-                                || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
-                            )
-                        )
-                    })
-                })
-            }
+        if (date1 > date2) {
+            this.setState({
+                showError: true
+            })
         } else {
-            if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                this.setState({
-                    despatchesUpdated: despatches.filter(d => {
-                        return (
-                            (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                            && d.statusFlg === despatchStatus
-                        )
-                    })
-                })
-            } else {
-                this.setState({
-                    despatchesUpdated: despatches.filter(d => {
-                        return (
-                            (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                            && (
-                                (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
-                                || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
-                                || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
-                                || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
-                                || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
-                                || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
-                                || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
-                                || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
-                                || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
+            if (despatchStatus === 'ALL') {
+                if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                        showError: false,
+                        despatchesUpdated: despatches.filter(d => {
+                            return (
+                                moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
                             )
-                            && d.statusFlg === despatchStatus
-                        )
+                        })
                     })
-                })
+                } else {
+                    this.setState({
+                        showError: false,
+                        despatchesUpdated: despatches.filter(d => {
+                            return (
+                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                && (
+                                    (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
+                                    || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
+                                    || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
+                                    || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
+                                    || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
+                                    || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
+                                    || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
+                                    || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
+                                    || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
+                                )
+                            )
+                        })
+                    })
+                }
+            } else {
+                if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                        showError: false,
+                        despatchesUpdated: despatches.filter(d => {
+                            return (
+                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                && d.statusFlg === despatchStatus
+                            )
+                        })
+                    })
+                } else {
+                    this.setState({
+                        showError: false,
+                        despatchesUpdated: despatches.filter(d => {
+                            return (
+                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                && (
+                                    (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
+                                    || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
+                                    || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
+                                    || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
+                                    || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
+                                    || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
+                                    || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
+                                    || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
+                                    || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
+                                )
+                                && d.statusFlg === despatchStatus
+                            )
+                        })
+                    })
+                }
             }
         }
+
     }
 
     handleResetButton() {
 
         this.setState({
+            showError: false,
             despatchesUpdated: this.state.despatches,
             despatchSearchInput: '',
             despatchStatus: 'ALL',
@@ -274,7 +289,7 @@ class DespatchView extends PureComponent {
             })
     }
 
-    despatchView() {
+    despatchView({ index, isScrolling, key, style }) {
 
         var despatchesUpdated = this.state.despatchesUpdated
 
@@ -308,65 +323,64 @@ class DespatchView extends PureComponent {
         }
 
         return (
-            <div>
-                {
-                    Object.keys(despatchesUpdated).map(key =>
-                        <div key={despatchesUpdated[key].recKey} className="main-order-view-body" style={despatchViewBody} onClick={() => this.getDespatchDetail(despatchesUpdated[key].recKey)}>
-                            <div className="main-item-container" style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].vslName}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].custName}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].marking}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {moment(despatchesUpdated[key].docDate).format('DD/MM/YYYY')}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].destination}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].totalPkgNum}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].totalPkgWt}
-                                </div>
-                            </div>
-                            <div style={despatchViewBodyItemContainer}>
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].awbNo}
-                                </div>
-                            </div>
-                            <div
-                                style={{
-                                    width: 'calc((100vw - 400px)/9',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flex: '1'
-                                }}
-                            >
-                                <div className="main-item" style={despatchViewBodyItem}>
-                                    {despatchesUpdated[key].statusFlg}
-                                </div>
-                            </div>
-                        </div>)
-                }
+            <div
+                style={style}
+                key={despatchesUpdated[index].recKey}>
+                <div className="main-order-view-body" style={despatchViewBody} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
+                    <div className="main-item-container" style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].vslName}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].custName}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].marking}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {moment(despatchesUpdated[index].docDate).format('DD/MM/YYYY')}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].destination}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].totalPkgNum}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].totalPkgWt}
+                        </div>
+                    </div>
+                    <div style={despatchViewBodyItemContainer}>
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].awbNo}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            width: 'calc((100vw - 400px)/9',
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flex: '1'
+                        }}
+                    >
+                        <div className="main-item" style={despatchViewBodyItem}>
+                            {despatchesUpdated[index].statusFlg}
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -1337,6 +1351,11 @@ class DespatchView extends PureComponent {
                                 format={dateFormatList}
                                 onChange={date => this.handleEndDate(date)}
                                 disabled={this.state.showDetail} />
+                            {
+                                this.state.showError ?
+                                    <Alert style={{ marginTop: '20px' }} message="Wrong Date Range" type="error" showIcon /> :
+                                    null
+                            }
                             <Button
                                 style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
@@ -1395,7 +1414,18 @@ class DespatchView extends PureComponent {
                                     <p style={despatchViewHeaderTitle}>STATUS</p>
                                 </div>
                             </div>
-                            <div>{this.despatchView()}</div>
+                            <AutoSizer style={{ height: 'calc(100vh - 198px)', width: 'calc(100vw - 400px)', resize: 'both' }}>
+                                {({ height, width }) => (
+                                    <List
+                                        className="list"
+                                        width={width}
+                                        height={height}
+                                        rowHeight={60}
+                                        rowRenderer={this.despatchView}
+                                        rowCount={this.state.despatchesUpdated.length}
+                                    />
+                                )}
+                            </AutoSizer>
                         </div>
                     }
 

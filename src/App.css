@@ -292,7 +292,8 @@
     top: 70px;
     left: 400px;
     height: 310px;
-    max-width: 75vw;
+    /* max-width: 75vw; */
+    max-width: calc(100vw - 400px);
     background-color: rgb(236, 236, 236);
     overflow-x: scroll;
 }
@@ -304,7 +305,8 @@
     height: calc(100vh - 70px);
     max-width: 75vw;
     background-color: rgb(236, 236, 236);
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .main-inventory-view2 {
@@ -526,6 +528,30 @@
 .main-despatch-detail-view::-webkit-scrollbar-corner {
     background-color: rgb(223, 219, 219);
 }
+
+.list::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: rgb(223, 219, 219);
+}
+
+.list::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background: rgb(52, 117, 160);
+}
+
+.list::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
+}
+
+/* .list::-webkit-scrollbar-button:vertical:start {
+    color: red;
+}
+
+.list::-webkit-scrollbar-button:vertical:end {
+    color: red;
+} */
+
 
 .main-order-view-body {
     cursor: pointer;
