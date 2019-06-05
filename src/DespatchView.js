@@ -1360,11 +1360,13 @@ class DespatchView extends PureComponent {
                                 style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="search"
+                                disabled={this.state.showDetail}
                                 onClick={this.handleSearchButton}>Search</Button>
                             <Button
                                 style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="reload"
+                                disabled={this.state.showDetail}
                                 onClick={this.handleResetButton}>Reset</Button>
                         </div>
                     </div>

@@ -27,7 +27,7 @@ class Main extends Component {
       orderRecKey: '',
       orderDetail: '',
       tabs: [
-        { tabName: "Orders", id: 1 },
+        { tabName: "Orders/Spares", id: 1 },
         { tabName: "Despatches", id: 2 },
         { tabName: "Inventory", id: 3 },
       ],

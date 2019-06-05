@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { DatePicker, Select, Input, Button, Alert } from 'antd';
+import { DatePicker, Select, Input, Button, Alert, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -21,6 +21,9 @@ class OrderView extends PureComponent {
       attachments: '',
       picUrl: '',
       orderSearchInput: '',
+      supplierInput: '',
+      vesselInput: '',
+      awbNoInput: '',
       orderStatus: 'ALL',
       orderStartDate: '01/01/2000',
       orderEndDate: moment().format('DD/MM/YYYY'),
@@ -29,15 +32,27 @@ class OrderView extends PureComponent {
       serviceEntry: this.props.serviceEntry,
       home: this.props.home,
       showDetail: false,
-      showError: false
+      showError: false,
+      showSupplierModal: false,
+      showVesselModal: false,
+      showAwbNoModal: false,
+      suppliers: '',
+      suppliersUpdate: '',
+      vessels: '',
+      vesselsUpdate: ''
     }
     this.handleSearchInput = this.handleSearchInput.bind(this)
+    this.handleSupplierInput = this.handleSupplierInput.bind(this)
+    this.handleVesselInput = this.handleVesselInput.bind(this)
+    this.handleAwbNoInput = this.handleAwbNoInput.bind(this)
     this.handleSelect = this.handleSelect.bind(this)
     this.handleStartDate = this.handleStartDate.bind(this)
     this.handleEndDate = this.handleEndDate.bind(this)
     this.handleSearchButton = this.handleSearchButton.bind(this)
     this.handleResetButton = this.handleResetButton.bind(this)
     this.orderView = this.orderView.bind(this)
+    this.suppliersView = this.suppliersView.bind(this)
+    this.vesselsView = this.vesselsView.bind(this)
   }
 
   componentDidMount() {
@@ -45,7 +60,7 @@ class OrderView extends PureComponent {
     console.log(home.isadmin)
 
     if (home.isadmin === 'Y') {
-      //get orders
+      //get orders Admin
       console.log('get orders Admin')
       let url = serviceEntry + 'api/all-orders/'
       fetch(url, {
@@ -59,7 +74,7 @@ class OrderView extends PureComponent {
           })
         })
     } else {
-      //get orders
+      //get orders common
       console.log('get orders common')
       let url = serviceEntry + 'api/orders/'
       let params = new URLSearchParams();
@@ -77,14 +92,89 @@ class OrderView extends PureComponent {
         })
     }
 
+    if (home.isadmin === 'Y') {
+      // get suppliers Admin
+      console.log('get suppliers Admin')
+      let url = serviceEntry + 'api/search-all-suppliers/'
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            suppliers: response,
+            suppliersUpdate: response
+          })
+        })
+    } else {
+      // get suppliers
+      console.log('get suppliers')
+      let url = serviceEntry + 'api/search-suppliers/'
+      let params = new URLSearchParams();
+      params.append('custId', home.custId);
+      url += ('?' + params);
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            suppliers: response,
+            suppliersUpdate: response
+          })
+        })
+    }
+
+
+    //get vessels
+    console.log('get vessels')
+    let url = serviceEntry + 'api/search-vessels'
+    fetch(url, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          vessels: response,
+          vesselsUpdate: response
+        })
+      })
   }
 
   handleSearchInput(e) {
-    if (e.target.value.length === 0) {
-      this.setState({ orderSearchInput: e.target.value });
-    } else {
-      this.setState({ orderSearchInput: e.target.value });
-    }
+    this.setState({ orderSearchInput: e.target.value });
+  }
+
+  handleAwbNoInput(e) {
+    this.setState({ awbNoInput: e.target.value });
+  }
+
+  handleSupplierInput(e) {
+    this.setState({
+      supplierInput: e.target.value
+    }, () => {
+      this.setState({
+        suppliersUpdate: this.state.suppliers.filter(s => {
+          return (
+            (s.suppName !== null ? s.suppName.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : '')
+            || (s.suppId !== null ? s.suppId.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : ''))
+        })
+      })
+    });
+  }
+
+  handleVesselInput(e) {
+    this.setState({
+      vesselInput: e.target.value
+    }, () => {
+      this.setState({
+        vesselsUpdate: this.state.vessels.filter(v => {
+          return (
+            (v.vslId !== null ? v.vslId.toUpperCase().includes(this.state.vesselInput.toUpperCase()) : '')
+            || (v.name !== null ? v.name.toUpperCase().includes(this.state.vesselInput.toUpperCase()) : ''))
+        })
+      })
+    });
   }
 
   handleSelect(value) {
@@ -100,8 +190,11 @@ class OrderView extends PureComponent {
   }
 
   handleSearchButton() {
-    const { orderSearchInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
+    const { orderSearchInput, supplierInput, vesselInput, awbNoInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
     console.log("orderSearchInput  " + orderSearchInput)
+    console.log("supplierInput  " + supplierInput)
+    console.log("vesselInput  " + vesselInput)
+    console.log("awbNoInput  " + awbNoInput)
     console.log("orderStatus  " + orderStatus)
     console.log("orderStartDate  " + orderStartDate)
     console.log("orderEndDate  " + orderEndDate)
@@ -109,6 +202,9 @@ class OrderView extends PureComponent {
     const date1 = moment(orderStartDate, dateFormatList[0]);
     const date2 = moment(orderEndDate, dateFormatList[0]);
     const text = orderSearchInput.toUpperCase();
+    const supplier = supplierInput.toUpperCase();
+    const vessel = vesselInput.toUpperCase();
+    const awbNo = awbNoInput.toUpperCase();
 
     if (date1 > date2) {
       this.setState({
@@ -121,10 +217,13 @@ class OrderView extends PureComponent {
             showError: false,
             ordersUpdated: orders.filter(o => {
               return (
-                (moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
                   && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
             })
           })
         } else {
@@ -144,6 +243,9 @@ class OrderView extends PureComponent {
                   || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
                   || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : '')
                 )
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : '')
               )
             })
           })
@@ -158,7 +260,10 @@ class OrderView extends PureComponent {
                   && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
                   || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
                     && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && o.landedItem === 'LANDED')
+                && o.landedItem === 'LANDED'
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
             })
           })
         } else {
@@ -177,7 +282,10 @@ class OrderView extends PureComponent {
                   || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
                   || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
                   || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
-                && o.landedItem === 'LANDED')
+                && o.landedItem === 'LANDED'
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
             })
           })
         }
@@ -191,7 +299,10 @@ class OrderView extends PureComponent {
                   && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
                   || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
                     && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && o.statusFlg === orderStatus)
+                && o.statusFlg === orderStatus
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
             })
           })
         } else {
@@ -210,7 +321,10 @@ class OrderView extends PureComponent {
                   || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
                   || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
                   || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
-                && o.statusFlg === orderStatus)
+                && o.statusFlg === orderStatus
+                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
+                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
+                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
             })
           })
         }
@@ -223,6 +337,9 @@ class OrderView extends PureComponent {
       showError: false,
       ordersUpdated: this.state.orders,
       orderSearchInput: '',
+      supplierInput: '',
+      vesselInput: '',
+      awbNoInput: '',
       orderStatus: 'ALL',
       orderStartDate: '01/01/2000',
       orderEndDate: moment().format('DD/MM/YYYY')
@@ -265,6 +382,113 @@ class OrderView extends PureComponent {
           attachments: response
         })
       })
+  }
+
+  suppliersView({ index, isScrolling, key, style }) {
+
+    const orderViewHeaderTitleContainer2 = {
+      display: 'flex',
+      flex: '1',
+      paddingLeft: '5px',
+    }
+
+    const orderViewHeaderTitle2 = {
+      height: '30px',
+      fontFamily: 'varela',
+      color: 'black',
+      textAlign: 'center',
+      paddingTop: '5px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+
+    let suppliers = this.state.suppliersUpdate
+
+    if (suppliers[index] != null) {
+      return (
+        <div style={style}
+          key={suppliers[index].suppName}>
+          <div className="modal-item"
+            style={{
+              height: '30px',
+              cursor: 'point',
+              display: 'flex',
+              flexDirection: 'row',
+              borderBottomStyle: 'solid',
+              borderWidth: '1px',
+              borderColor: 'rgb(223, 219, 219)',
+            }}
+            onClick={() => { this.setState({ supplierInput: suppliers[index].suppName, showSupplierModal: false }) }}
+          >
+            <div style={orderViewHeaderTitleContainer2}>
+              <p style={orderViewHeaderTitle2}>{suppliers[index].suppId}</p>
+            </div>
+            <div style={{
+              width: '7vw',
+              display: 'flex',
+              flex: '3',
+              paddingLeft: '5px',
+            }}>
+              <p style={orderViewHeaderTitle2}>{suppliers[index].suppName}</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+
+  vesselsView({ index, isScrolling, key, style }) {
+
+    const orderViewHeaderTitleContainer2 = {
+      paddingLeft: '5px',
+      display: 'flex',
+      flex: '1',
+    }
+
+    const orderViewHeaderTitle2 = {
+      height: '30px',
+      fontFamily: 'varela',
+      color: 'black',
+      textAlign: 'center',
+      paddingTop: '5px',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }
+
+    let vessels = this.state.vesselsUpdate
+
+    if (vessels[index] != null) {
+      return (
+        <div style={style}
+          key={vessels[index].vslId}>
+          <div className="modal-item"
+            style={{
+              height: '30px',
+              cursor: 'point',
+              display: 'flex',
+              flexDirection: 'row',
+              borderBottomStyle: 'solid',
+              borderWidth: '1px',
+              borderColor: 'rgb(223, 219, 219)',
+            }}
+            onClick={() => { this.setState({ vesselInput: vessels[index].vslId, showVesselModal: false }) }}
+          >
+            <div style={orderViewHeaderTitleContainer2}>
+              <p style={orderViewHeaderTitle2}>{vessels[index].vslId}</p>
+            </div>
+            <div style={{
+              width: '7vw',
+              display: 'flex',
+              flex: '3',
+              paddingLeft: '5px',
+            }}>
+              <p style={orderViewHeaderTitle2}>{vessels[index].name}</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
   }
 
   orderView({ index, isScrolling, key, style }) {
@@ -340,13 +564,13 @@ class OrderView extends PureComponent {
                 ordersUpdated[index].suppName}
             </div>
           </div>
-          <div style={orderViewBodyItemContainer}>
+          {/* <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
               {ordersUpdated[index].landedItem === 'LANDED' ?
                 'LANDED ITEM' :
                 ordersUpdated[index].itemRef}
             </div>
-          </div>
+          </div> */}
           <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
               {ordersUpdated[index].description}
@@ -354,7 +578,8 @@ class OrderView extends PureComponent {
           </div>
           <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].pkgNum}
+              {/* {ordersUpdated[index].pkgNum} */}
+              1
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
@@ -372,14 +597,19 @@ class OrderView extends PureComponent {
               {ordersUpdated[index].AwbNo}
             </div>
           </div>
-          <div style={orderViewBodyItemContainer}>
+          {/* <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
               {ordersUpdated[index].statusFlg}
+            </div>
+          </div> */}
+          <div style={orderViewBodyItemContainer}>
+            <div className="main-item" style={orderViewBodyItem}>
+              {ordersUpdated[index].dimension}
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].dimension}
+              {ordersUpdated[index].mlbarcodeRef1}
             </div>
           </div>
           <div style={orderViewBodyItemContainerLast}>
@@ -509,21 +739,23 @@ class OrderView extends PureComponent {
                 style={remarkInput}
                 disabled={true} />
             </div>
-            <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
-              <p className="main-order-detail-sub-title">PO NUMBER: </p>
-              <TextArea
-                value={orderDetail.itemRef}
-                autosize={{ minRows: 2, maxRows: 2 }}
-                style={remarkInput}
-                disabled={true} />
-            </div>
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">STATUS: </p>
-              <TextArea
-                value={orderDetail.statusFlg}
-                autosize={{ minRows: 1, maxRows: 1 }}
-                style={remarkInput}
-                disabled={true} />
+              {
+                orderDetail.statusFlg == 'DESPATCH' ?
+                  <Button
+                    style={{ backgroundColor: 'rgb(70, 154, 209)', height: '32px', fontFamily: 'varela', paddingTop: '2px' }}
+                    type="primary"
+                    >
+                  See Despatch
+                  </Button>
+                  :
+                  <TextArea
+                    value={orderDetail.statusFlg}
+                    autosize={{ minRows: 1, maxRows: 1 }}
+                    style={remarkInput}
+                    disabled={true} />
+              }
             </div>
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">DATE: </p>
@@ -552,7 +784,7 @@ class OrderView extends PureComponent {
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">QTY: </p>
               <TextArea
-                value={orderDetail.pkgNum}
+                value={1}
                 autosize={{ minRows: 1, maxRows: 1 }}
                 style={remarkInput}
                 disabled={true} />
@@ -585,6 +817,14 @@ class OrderView extends PureComponent {
               <p className="main-order-detail-sub-title">DIMENSION: </p>
               <TextArea
                 value={orderDetail.dimension}
+                autosize={{ minRows: 2, maxRows: 2 }}
+                style={remarkInput}
+                disabled={true} />
+            </div>
+            <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
+              <p className="main-order-detail-sub-title">ITEM PO: </p>
+              <TextArea
+                value={orderDetail.mlbarcodeRef1}
                 autosize={{ minRows: 2, maxRows: 2 }}
                 style={remarkInput}
                 disabled={true} />
@@ -684,7 +924,8 @@ class OrderView extends PureComponent {
     const searchInputStyle = {
       fontFamily: 'varela',
       textAlign: 'center',
-      width: '154px'
+      width: '154px',
+      marginTop: '-5px'
     }
 
     const orderViewHeader = {
@@ -719,7 +960,38 @@ class OrderView extends PureComponent {
     }
 
     const datePicker = {
-      fontFamily: 'varela'
+      fontFamily: 'varela',
+      marginTop: '-5px'
+    }
+
+    const orderViewHeader2 = {
+      height: '30px',
+      width: '100%',
+      backgroundColor: 'rgb(70, 154, 209)',
+      borderBottomStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'rgb(70, 154, 209)',
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: '10px'
+    }
+
+    const orderViewHeaderTitleContainer2 = {
+      borderRightStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'white',
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      flex: '1'
+    }
+
+    const orderViewHeaderTitle2 = {
+      fontSize: '13px',
+      fontFamily: 'varela',
+      color: 'white',
+      textAlign: 'center',
+      marginTop: '15px',
     }
 
     const exportDefaultExcel = () => {
@@ -747,17 +1019,38 @@ class OrderView extends PureComponent {
           <div className="main-search-title-container">
             <p className="main-search-title" >Search Orders</p>
             <div className="main-search-second-container">
-              <p className="main-search-sub-title">Search</p>
+              <p className="main-search-sub-title2">Search</p>
               <Input className="main-search-input"
                 value={this.state.orderSearchInput}
                 style={searchInputStyle}
                 onChange={this.handleSearchInput}
                 disabled={this.state.showDetail}></Input>
-              <p className="main-search-sub-title">Status</p>
+              <p className="main-search-sub-title2">Supplier</p>
+              <Input.Search className="main-search-input"
+                value={this.state.supplierInput}
+                style={searchInputStyle}
+                onChange={this.handleSupplierInput}
+                disabled={this.state.showDetail}
+                onSearch={() => this.setState({ showSupplierModal: true })}></Input.Search>
+              <p className="main-search-sub-title2">Vessel</p>
+              <Input.Search className="main-search-input"
+                value={this.state.vesselInput}
+                style={searchInputStyle}
+                onChange={this.handleVesselInput}
+                disabled={this.state.showDetail}
+                onSearch={() => this.setState({ showVesselModal: true })}></Input.Search>
+              <p className="main-search-sub-title2">AWB NO</p>
+              <Input className="main-search-input"
+                value={this.state.awbNoInput}
+                style={searchInputStyle}
+                onChange={this.handleAwbNoInput}
+                disabled={this.state.showDetail}></Input>
+              <p className="main-search-sub-title2">Status</p>
               <Select
                 className="main-search-select"
                 onChange={this.handleSelect}
                 value={this.state.orderStatus}
+                style={{ marginTop: '-5px' }}
                 disabled={this.state.showDetail}>
                 <Option value="ALL">ALL</Option>
                 <Option value="EXPECTED">EXPECTED</Option>
@@ -765,7 +1058,7 @@ class OrderView extends PureComponent {
                 <Option value="DESPATCH">DESPATCH</Option>
                 <Option value="LANDED ITEMS">LANDED ITEMS</Option>
               </Select>
-              <p className="main-search-sub-title">Start Date</p>
+              <p className="main-search-sub-title2">Start Date</p>
               <DatePicker
                 className="main-search-date-picker"
                 allowClear={false}
@@ -774,7 +1067,7 @@ class OrderView extends PureComponent {
                 format={dateFormatList}
                 onChange={date => this.handleStartDate(date)}
                 disabled={this.state.showDetail} />
-              <p className="main-search-sub-title">End Date</p>
+              <p className="main-search-sub-title2">End Date</p>
               <DatePicker
                 className="main-search-date-picker"
                 allowClear={false}
@@ -789,19 +1082,22 @@ class OrderView extends PureComponent {
                   null
               }
               <Button
-                style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '16px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="search"
+                disabled={this.state.showDetail}
                 onClick={this.handleSearchButton}>Search</Button>
               <Button
-                style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '16px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="reload"
+                disabled={this.state.showDetail}
                 onClick={this.handleResetButton}>Reset</Button>
               <Button
-                style={{ borderColor: 'rgb(238, 61, 61)', backgroundColor: 'rgb(238, 61, 61)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                style={{ borderColor: 'rgb(238, 61, 61)', backgroundColor: 'rgb(238, 61, 61)', marginTop: '16px', marginBottom: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="table"
+                disabled={this.state.showDetail}
                 onClick={() => exportDefaultExcel()}>Export to Excel</Button>
             </div>
           </div>
@@ -815,7 +1111,7 @@ class OrderView extends PureComponent {
             :
             <div
               className="main-view2"
-              style={{ width: '100vw', maxWidth: 'calc(100vw - 150px)'}}>
+              style={{ width: '100vw', maxWidth: 'calc(100vw - 150px)' }}>
               <div className="main-view-header" style={orderViewHeader}>
                 <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>VESSEL</p>
@@ -828,9 +1124,6 @@ class OrderView extends PureComponent {
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>SUPPLIER</p>
-                </div>
-                <div style={orderViewHeaderTitleContainer}>
-                  <p style={orderViewHeaderTitle}>PO NUMBER</p>
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>DESCRIPTION</p>
@@ -848,10 +1141,10 @@ class OrderView extends PureComponent {
                   <p style={orderViewHeaderTitle}>AWB</p>
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
-                  <p style={orderViewHeaderTitle}>STATUS</p>
+                  <p style={orderViewHeaderTitle}>DIMENSION</p>
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
-                  <p style={orderViewHeaderTitle}>DIMENSION</p>
+                  <p style={orderViewHeaderTitle}>ITEM PO</p>
                 </div>
                 <div
                   style={{
@@ -880,6 +1173,84 @@ class OrderView extends PureComponent {
 
 
         </div>
+        <Modal
+          visible={this.state.showSupplierModal}
+          style={{ fontFamily: 'varela' }}
+          title="Supplier"
+          onOk={() => this.setState({ showSupplierModal: false })}
+          onCancel={() => this.setState({ showSupplierModal: false })}
+        >
+          <Input.Search
+            className="main-search-input"
+            onChange={this.handleSupplierInput}
+          >
+          </Input.Search>
+          <div style={orderViewHeader2}>
+            <div style={orderViewHeaderTitleContainer2}>
+              <p style={orderViewHeaderTitle2}>Supplier Id</p>
+            </div>
+            <div style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              flex: '3'
+            }}>
+              <p style={orderViewHeaderTitle2}>Name</p>
+            </div>
+          </div>
+          <div>
+            <AutoSizer style={{ height: 'calc(50vh)', width: 'calc(50vw)', resize: 'both' }}>
+              {({ height, width }) => (
+                <List
+                  className="list"
+                  width={width}
+                  height={height}
+                  rowHeight={30}
+                  rowRenderer={this.suppliersView}
+                  rowCount={this.state.suppliersUpdate.length} />
+              )}
+            </AutoSizer>
+          </div>
+        </Modal>
+        <Modal
+          visible={this.state.showVesselModal}
+          style={{ fontFamily: 'varela' }}
+          title="Vessel"
+          onOk={() => this.setState({ showVesselModal: false })}
+          onCancel={() => this.setState({ showVesselModal: false })}
+        >
+          <Input.Search
+            className="main-search-input"
+            onChange={this.handleVesselInput}
+          >
+          </Input.Search>
+          <div style={orderViewHeader2}>
+            <div style={orderViewHeaderTitleContainer2}>
+              <p style={orderViewHeaderTitle2}>Vessel Id</p>
+            </div>
+            <div style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              flex: '3'
+            }}>
+              <p style={orderViewHeaderTitle2}>Name</p>
+            </div>
+          </div>
+          <div>
+            <AutoSizer style={{ height: 'calc(50vh)', width: 'calc(50vw)', resize: 'both' }}>
+              {({ height, width }) => (
+                <List
+                  className="list"
+                  width={width}
+                  height={height}
+                  rowHeight={30}
+                  rowRenderer={this.vesselsView}
+                  rowCount={this.state.vesselsUpdate.length} />
+              )}
+            </AutoSizer>
+          </div>
+        </Modal>
       </div>
     );
   }

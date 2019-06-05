@@ -184,6 +184,11 @@
     text-align: center;
 }
 
+.modal-item:hover {
+    cursor: pointer;
+    background-color: rgb(186, 187, 219);
+}
+
 .subCtrl :hover {
     background-color: rgb(111, 111, 112);
     border: none;
@@ -260,12 +265,20 @@
     border-right-style: solid;
     border-width: 1px;
     border-color: rgb(204, 202, 202);
+    /* overflow: auto;
+    max-height: calc(100vh - 130px); */
 }
 
 .main-search-sub-title {
     font-family: 'varela';
     text-align: center;
     margin-top: 10px;
+}
+
+.main-search-sub-title2 {
+    font-family: 'varela';
+    text-align: center;
+    margin-top: 5px;
 }
 
 .main-search-input {
@@ -552,7 +565,6 @@
     color: red;
 } */
 
-
 .main-order-view-body {
     cursor: pointer;
 }
@@ -563,6 +575,8 @@
 
 .main-item {
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     padding: 3px;
 }
 
