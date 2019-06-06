@@ -32,6 +32,9 @@ class Main extends Component {
         { tabName: "Inventory", id: 3 },
       ],
       currentIndex: 1,
+      showDespatchDetail: false,
+      showOrderDetail: false,
+      despatchDetail: '',
     }
     console.log('custId:  ' + this.state.home.custId)
     console.log('name:  ' + this.state.home.name)
@@ -58,7 +61,14 @@ class Main extends Component {
     this.props.history.push('/login')
   }
 
+  onChangeState(stateName) {
+    this.setState(stateName)
+  }
+
   render() {
+
+    console.log('show Despatch detail:  ' + this.state.showDespatchDetail)
+    // console.log('show detail:  ' + this.state.despatchDetail)
 
     const mainLeftTabStyle = {
       color: '#8c8c8c',
@@ -141,12 +151,18 @@ class Main extends Component {
           <div className="main-body-view-container" style={{ "display": isBox1Show }}>
             <OrderView
               home={this.state.home}
-              serviceEntry={this.state.serviceEntry} />
+              serviceEntry={this.state.serviceEntry}
+              showOrderDetail={this.state.showOrderDetail}
+              orderDetail={this.state.orderDetail}
+              parent={this.onChangeState.bind(this)} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox2Show }}>
             <DespatchView
               home={this.state.home}
-              serviceEntry={this.state.serviceEntry} />
+              serviceEntry={this.state.serviceEntry}
+              showDespatchDetail={this.state.showDespatchDetail}
+              despatchDetail={this.state.despatchDetail}
+              parent={this.onChangeState.bind(this)} />
           </div>
           <div className="main-body-view-container" style={{ "display": isBox3Show }}>
             <InventoryView

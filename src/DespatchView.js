@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { DatePicker, Select, Input, Button, Alert } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -10,7 +10,7 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const Option = Select.Option;
 const { TextArea } = Input;
 
-class DespatchView extends PureComponent {
+class DespatchView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,9 +30,9 @@ class DespatchView extends PureComponent {
             changeDetail: false,
             orders: '',
             orderDetail: '',
-            showDetail: false,
+            showDespatchDetail: this.props.showDespatchDetail,
             showOrderDetail: false,
-            showError: false
+            showError: false,
         }
         this.handleSearchInput = this.handleSearchInput.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
@@ -41,6 +41,17 @@ class DespatchView extends PureComponent {
         this.handleSearchButton = this.handleSearchButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.despatchView = this.despatchView.bind(this)
+        this.handleBackButton = this.handleBackButton.bind(this)
+        this.handleToOrder = this.handleToOrder.bind(this)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.showDespatchDetail === true) {
+            this.setState({
+                showDespatchDetail: true,
+                despatchDetail: nextProps.despatchDetail
+            })
+        }
     }
 
     componentDidMount() {
@@ -203,11 +214,43 @@ class DespatchView extends PureComponent {
         })
     }
 
+    handleBackButton() {
+
+        this.setState({ showDespatchDetail: false })
+        if (this.props.showDespatchDetail === true) {
+            this.props.parent({ showDespatchDetail: false })
+            this.props.parent({ currentIndex: 1 })
+        }
+    }
+
+    handleToOrder(recKey) {
+        console.log('recKey:  ' + recKey)
+        const serviceEntry = this.state.serviceEntry
+        //get order detail
+        let url = serviceEntry + 'api/orders/' + recKey
+        console.log(url)
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    orderDetail: response.mlmasView
+                }, () => {
+                    this.props.parent({ currentIndex: 1 })
+                    this.props.parent({ showOrderDetail: true })
+                    console.log(this.state.orderDetail)
+                    this.props.parent({ orderDetail: this.state.orderDetail })
+                })
+            })
+
+    }
+
     getDespatchDetail(recKey) {
 
         this.setState({
             changeDetail: true,
-            showDetail: true
+            showDespatchDetail: true
         })
 
         var serviceEntry = this.props.serviceEntry
@@ -241,14 +284,14 @@ class DespatchView extends PureComponent {
 
     }
 
-    divScroll() {
-        var divscroll = document.getElementById('right-view');
-        var scrollTop = divscroll.scrollTop;
-        var wholeHeight = divscroll.scrollHeight;
-        var divHeight = divscroll.clientHeight;
-        console.log(scrollTop + '  ' + wholeHeight + '  ' + divHeight)
-        divscroll.scrollBy(0, -scrollTop);
-    }
+    // divScroll() {
+    //     var divscroll = document.getElementById('right-view');
+    //     var scrollTop = divscroll.scrollTop;
+    //     var wholeHeight = divscroll.scrollHeight;
+    //     var divHeight = divscroll.clientHeight;
+    //     console.log(scrollTop + '  ' + wholeHeight + '  ' + divHeight)
+    //     divscroll.scrollBy(0, -scrollTop);
+    // }
 
     getOrderDetail(recKey) {
 
@@ -304,6 +347,17 @@ class DespatchView extends PureComponent {
             flexDirection: 'row',
         }
 
+        const despatchViewBody2 = {
+            height: '60px',
+            width: 'calc(100vw - 400px)',
+            backgroundColor: 'rgb(212, 211, 211)',
+            borderBottomStyle: 'solid',
+            borderWidth: '1px',
+            borderColor: 'rgb(204, 202, 202)',
+            display: 'flex',
+            flexDirection: 'row',
+        }
+
         const despatchViewBodyItemContainer = {
             width: 'calc((100vw - 400px)/9',
             alignItems: 'center',
@@ -326,7 +380,7 @@ class DespatchView extends PureComponent {
             <div
                 style={style}
                 key={despatchesUpdated[index].recKey}>
-                <div className="main-order-view-body" style={despatchViewBody} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
+                <div className="main-order-view-body" style={index % 2 === 1?despatchViewBody:despatchViewBody2} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
                     <div className="main-item-container" style={despatchViewBodyItemContainer}>
                         <div className="main-item" style={despatchViewBodyItem}>
                             {despatchesUpdated[index].vslName}
@@ -386,6 +440,8 @@ class DespatchView extends PureComponent {
     }
 
     despatchDetailView() {
+
+        console.log(this.state.despatchDetail)
 
         const { despatchDetail, attachments, picUrl } = this.state
 
@@ -479,7 +535,7 @@ class DespatchView extends PureComponent {
                         <div style={despatchDetailTitleContainer}>
                             <Button
                                 style={backButton}
-                                onClick={() => this.setState({ showDetail: false })}
+                                onClick={this.handleBackButton}
                                 type="primary"
                                 icon="left-circle">Back</Button>
                             <p style={despatchDetailTitle}>Origin Details</p>
@@ -493,7 +549,7 @@ class DespatchView extends PureComponent {
                         <div style={despatchDetailTitleContainer}>
                             <Button
                                 style={backButton}
-                                onClick={() => this.setState({ showDetail: false })}
+                                onClick={this.handleBackButton}
                                 type="primary"
                                 icon="left-circle">Back</Button>
                             <p style={despatchDetailTitle}>Consignee Details</p>
@@ -773,13 +829,15 @@ class DespatchView extends PureComponent {
                         <p style={despatchDetailTitle}>Orders in Despatch</p>
                     </div>
                 </div>
-                <div>
-                    <div
-                        className="main-view3"
-                        style={{ width: '100vw' }}>
+                <div className="main-view3"
+                style={{ width: '100vw' , maxWidth: 'calc(100vw - 150px)'}}>
+                    <div>
                         <div className="main-view-header" style={orderViewHeader}>
                             <div style={orderViewHeaderTitleContainer}>
-                                <p style={orderViewHeaderTitle}>VESSEL</p>
+                                <p style={orderViewHeaderTitle}>VESSEL NAME</p>
+                            </div>
+                            <div style={orderViewHeaderTitleContainer}>
+                                <p style={orderViewHeaderTitle}>CUSTOMER</p>
                             </div>
                             <div style={orderViewHeaderTitleContainer}>
                                 <p style={orderViewHeaderTitle}>ASN NUMBER</p>
@@ -791,7 +849,7 @@ class DespatchView extends PureComponent {
                                 <p style={orderViewHeaderTitle}>SUPPLIER</p>
                             </div>
                             <div style={orderViewHeaderTitleContainer}>
-                                <p style={orderViewHeaderTitle}>PO NUMBER</p>
+                                <p style={orderViewHeaderTitle}>ITEM PO</p>
                             </div>
                             <div style={orderViewHeaderTitleContainer}>
                                 <p style={orderViewHeaderTitle}>DESCRIPTION</p>
@@ -814,6 +872,7 @@ class DespatchView extends PureComponent {
                             <div style={orderViewHeaderTitleContainer}>
                                 <p style={orderViewHeaderTitle}>DIMENSION</p>
                             </div>
+
                             <div
                                 style={{
                                     width: '9vw',
@@ -825,11 +884,7 @@ class DespatchView extends PureComponent {
                                 <p style={orderViewHeaderTitle}>REMARKS</p>
                             </div>
                         </div>
-                        {this.state.showOrderDetail ?
-                            <div>{this.orderDetailView()}</div>
-                            :
-                            <div>{this.orderView()}</div>
-                        }
+                        <div>{this.orderView()}</div>
                     </div>
                 </div>
             </div>
@@ -875,11 +930,16 @@ class DespatchView extends PureComponent {
                 {
                     Object.keys(orders).map(key =>
                         <div key={orders[key].recKey} className="main-order-view-body" style={orderViewBody}
-                            onClick={() => this.getOrderDetail(orders[key].recKey)}
+                            onClick={() => this.handleToOrder(orders[key].recKey)}
                         >
                             <div className="main-item-container" style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{orders[key].vslName}
+                                    {orders[key].vslName}
+                                </div>
+                            </div>
+                            <div style={orderViewBodyItemContainer}>
+                                <div className="main-item" style={orderViewBodyItem}>
+                                    {orders[key].custName}
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
@@ -899,16 +959,19 @@ class DespatchView extends PureComponent {
                             </div>
                             <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].landedItem === 'LANDED' ?
-                                        orders[key].custName :
-                                        orders[key].suppName}
+                                    {orders[key].suppName}
                                 </div>
                             </div>
-                            <div style={orderViewBodyItemContainer}>
+                            {/* <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
                                     {orders[key].landedItem === 'LANDED' ?
                                         'LANDED ITEM' :
                                         orders[key].itemRef}
+                                </div>
+                            </div> */}
+                            <div style={orderViewBodyItemContainer}>
+                                <div className="main-item" style={orderViewBodyItem}>
+                                    {orders[key].mlbarcodeRef1}
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
@@ -918,7 +981,7 @@ class DespatchView extends PureComponent {
                             </div>
                             <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].pkgNum}
+                                    1
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
@@ -965,310 +1028,9 @@ class DespatchView extends PureComponent {
         )
     }
 
-    orderDetailView() {
-
-        const { orderDetail, orderAttachments, orderPicUrl } = this.state
-
-        const orderDetailTitleContainer = {
-            width: '40%',
-            // borderRightStyle: 'solid',
-            borderWidth: '1px',
-            borderColor: 'white',
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-        }
-
-        const orderDetailTitle = {
-            width: '200px',
-            fontSize: '17px',
-            fontFamily: 'varela',
-            color: 'white',
-            textAlign: 'center',
-            margin: '0px'
-        }
-
-        const remarkInput = {
-            width: '300 px',
-            marginLeft: '18px',
-            fontFamily: 'varela',
-            fontSize: '13px',
-            color: 'black',
-            backgroundColor: 'white'
-        }
-
-        const backButton = {
-            position: 'absolute',
-            left: '10px',
-            height: '40px',
-            width: '100px',
-            backgroundColor: 'rgb(66, 66, 68)',
-            borderColor: 'white',
-            fontFamily: 'varela',
-            paddingTop: '1px',
-            paddingLeft: '9px'
-        }
-
-        const rightSubTitleContainer = {
-            padding: '0px',
-            height: '30px',
-            width: '200px',
-            borderBottomStyle: 'solid',
-            borderWidth: '1px',
-            borderColor: 'rgb(204, 202, 202)',
-            marginTop: '20px',
-            marginBottom: '20px',
-        }
-
-        const rightSubTitle = {
-            marginLeft: '20px',
-            marginBottom: '10px',
-            height: '30px',
-            width: '200px',
-            fontFamily: 'varela',
-        }
-
-        const docContainer = {
-            margin: '20px',
-            padding: '0px',
-            height: '40px'
-        }
-
-        const doc = {
-            marginLeft: '10px',
-            marginTop: '10px',
-            fontFamily: 'varela',
-            fontSize: '14px'
-        }
-
-        if (orderDetail === '') {
-            return (
-                <div className="main-despatch-detail-view">
-                    <div className="main-order-detail-header">
-                        <div style={orderDetailTitleContainer}>
-                            <p style={orderDetailTitle}>Details</p>
-                        </div>
-                        <div style={{
-                            width: '50%',
-                            alignItems: 'center',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flex: '1'
-                        }}>
-                            <p style={orderDetailTitle}>More Info</p>
-                        </div>
-                    </div>
-                </div>
-            )
-        } else {
-            return (
-                <div className="main-despatch-detail-view2">
-                    <div className="main-order-detail-header">
-                        <div style={orderDetailTitleContainer}>
-                            <Button
-                                style={backButton}
-                                onClick={() => this.setState({ showOrderDetail: false })}
-                                type="primary"
-                                icon="left-circle">Back</Button>
-                            <p style={orderDetailTitle}>Details</p>
-                        </div>
-                        <div style={{
-                            // width: '50%',
-                            alignItems: 'center',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flex: '1'
-                        }}>
-                            <p style={orderDetailTitle}>More Info</p>
-                        </div>
-                    </div>
-                    <div className="main-order-detail-body">
-                        <div className="main-order-detail-body-left">
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">VESSEL: </p>
-                                <TextArea
-                                    value={orderDetail.vslName}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">ASN NUMBER: </p>
-                                <TextArea
-                                    value={orderDetail.docId}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
-                                <p className="main-order-detail-sub-title">PO NUMBER: </p>
-                                <TextArea
-                                    value={orderDetail.itemRef}
-                                    autosize={{ minRows: 2, maxRows: 2 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">STATUS: </p>
-                                <TextArea
-                                    value={orderDetail.statusFlg}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">DATE: </p>
-                                <TextArea
-                                    value={moment(orderDetail.stockDate).format('DD/MM/YYYY')}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">SUPPLIER: </p>
-                                <TextArea
-                                    value={orderDetail.custName}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
-                                <p className="main-order-detail-sub-title">DESCRIPTION: </p>
-                                <TextArea
-                                    value={orderDetail.description}
-                                    autosize={{ minRows: 2, maxRows: 2 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">QTY: </p>
-                                <TextArea
-                                    value={orderDetail.pkgNum}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">UOM: </p>
-                                <TextArea
-                                    value={orderDetail.pkgUom}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">WEIGHT: </p>
-                                <TextArea
-                                    value={orderDetail.pkgWt}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container">
-                                <p className="main-order-detail-sub-title">AWB: </p>
-                                <TextArea
-                                    value={orderDetail.AwbNo}
-                                    autosize={{ minRows: 1, maxRows: 1 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
-                                <p className="main-order-detail-sub-title">DIMENSION: </p>
-                                <TextArea
-                                    value={orderDetail.dimension}
-                                    autosize={{ minRows: 2, maxRows: 2 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                            <div className="main-order-detail-container" style={{ marginBottom: '200px' }}>
-                                <p className="main-order-detail-sub-title">REMARKS: </p>
-                                <TextArea
-                                    value={orderDetail.remark}
-                                    autosize={{ minRows: 4, maxRows: 4 }}
-                                    style={remarkInput}
-                                    disabled={true} />
-                            </div>
-                        </div>
-                        <div className="main-order-detail-body-right">
-                            <div style={rightSubTitleContainer}>
-                                <p style={rightSubTitle}>Import Documents</p>
-                            </div>
-                            <div>
-                                {
-
-                                    Object.keys(orderAttachments).map(key => {
-                                        var docSrc = "http://58.185.33.162/ep_attach/" + orderAttachments[key].name;
-
-                                        //handle
-                                        let dotIndex = orderAttachments[key].name.indexOf('.');
-                                        let length = orderAttachments[key].name.length;
-                                        let suffix = orderAttachments[key].name.substring(dotIndex + 1, length)
-
-                                        if (suffix === 'pdf' || suffix === 'PDF'
-                                            || suffix === 'xlsx' || suffix === 'XLSX'
-                                            || suffix === 'xls' || suffix === 'XLS'
-                                            || suffix === 'doc' || suffix === 'DOC'
-                                            || suffix === 'docx' || suffix === 'DOCX'
-                                            || suffix === 'txt' || suffix === 'TXT') {
-
-                                            return (
-                                                <div style={docContainer} key={orderAttachments[key].recKey} onClick={() => { window.open(docSrc) }}>
-                                                    <p className="doc" style={doc}>{orderAttachments[key].name}</p>
-                                                </div>
-                                            )
-                                        }
-                                    }
-                                    )
-                                }
-                            </div>
-
-                            <div style={rightSubTitleContainer}>
-                                <p style={rightSubTitle}>Pictures</p>
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <div className="main-order-detail-info-smallpic-container">
-                                    {
-
-                                        Object.keys(orderAttachments).map(key => {
-                                            var imgSrc = "http://58.185.33.162/ep_attach/" + orderAttachments[key].name;
-
-                                            //handle
-                                            let dotIndex = orderAttachments[key].name.indexOf('.');
-                                            let length = orderAttachments[key].name.length;
-                                            let suffix = orderAttachments[key].name.substring(dotIndex + 1, length)
-
-                                            if (suffix === 'jpg' || suffix === 'JPG'
-                                                || suffix === 'jpeg' || suffix === 'JPEG'
-                                                || suffix === 'gif' || suffix === 'GIF'
-                                                || suffix === 'png' || suffix === 'PNG'
-                                                || suffix === 'tif' || suffix === 'TIF') {
-
-                                                return (
-                                                    <div key={orderAttachments[key].recKey}>
-                                                        <img
-                                                            onMouseOver={() => { this.setState({ orderPicUrl: imgSrc }) }}
-                                                            className="small-pic" src={imgSrc} alt={imgSrc} />
-                                                    </div>
-                                                )
-                                            }
-                                        }
-                                        )
-                                    }
-                                </div>
-                                <div className="main-order-detail-info-largepic-container">
-                                    <img className="large-pic" src={orderPicUrl} alt={orderPicUrl} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            )
-        }
-    }
-
     render() {
+
+        console.log('show detail:  ' + this.state.showDespatchDetail)
 
         const searchInputStyle = {
             fontFamily: 'varela',
@@ -1322,13 +1084,13 @@ class DespatchView extends PureComponent {
                                 value={this.state.despatchSearchInput}
                                 style={searchInputStyle}
                                 onChange={this.handleSearchInput}
-                                disabled={this.state.showDetail}></Input>
+                                disabled={this.state.showDespatchDetail}></Input>
                             <p className="main-search-sub-title">Status</p>
                             <Select
                                 className="main-search-select"
                                 onChange={this.handleSelect}
                                 value={this.state.despatchStatus}
-                                disabled={this.state.showDetail}>
+                                disabled={this.state.showDespatchDetail}>
                                 <Option value="ALL">ALL</Option>
                                 <Option value="DESPATCH">DESPATCH</Option>
                                 <Option value="HISTORY">HISTORY</Option>
@@ -1341,7 +1103,7 @@ class DespatchView extends PureComponent {
                                 value={moment(this.state.despatchStartDate, dateFormatList[0])}
                                 format={dateFormatList}
                                 onChange={date => this.handleStartDate(date)}
-                                disabled={this.state.showDetail} />
+                                disabled={this.state.showDespatchDetail} />
                             <p className="main-search-sub-title">End Date</p>
                             <DatePicker
                                 className="main-search-date-picker"
@@ -1350,7 +1112,7 @@ class DespatchView extends PureComponent {
                                 value={moment(this.state.despatchEndDate, dateFormatList[0])}
                                 format={dateFormatList}
                                 onChange={date => this.handleEndDate(date)}
-                                disabled={this.state.showDetail} />
+                                disabled={this.state.showDespatchDetail} />
                             {
                                 this.state.showError ?
                                     <Alert style={{ marginTop: '20px' }} message="Wrong Date Range" type="error" showIcon /> :
@@ -1360,19 +1122,19 @@ class DespatchView extends PureComponent {
                                 style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="search"
-                                disabled={this.state.showDetail}
+                                disabled={this.state.showDespatchDetail}
                                 onClick={this.handleSearchButton}>Search</Button>
                             <Button
                                 style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="reload"
-                                disabled={this.state.showDetail}
+                                disabled={this.state.showDespatchDetail}
                                 onClick={this.handleResetButton}>Reset</Button>
                         </div>
                     </div>
                 </div>
                 <div>
-                    {this.state.showDetail ?
+                    {this.state.showDespatchDetail ?
 
                         <div>
                             {this.despatchDetailView()}

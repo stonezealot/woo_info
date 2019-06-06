@@ -322,6 +322,15 @@
     overflow-y: hidden;
 }
 
+.main-view4 {
+    position: absolute;
+    top: 0px;
+    left: 250px;
+    height: calc(100vh - 70px);
+    max-width: 75vw;
+    background-color: rgb(236, 236, 236);
+}
+
 .main-inventory-view2 {
     position: absolute;
     top: 0px;
@@ -335,9 +344,10 @@
 
 .main-view3 {
     height: 370px;
-    max-width: 75vw;
+    /* max-height: 200px; */
+    /* max-width: 75vw; */
     background-color: rgb(236, 236, 236);
-    overflow-x: scroll;
+    overflow: scroll;
 }
 
 .main-order-detail-view {
@@ -354,7 +364,7 @@
 .main-despatch-detail-view {
     position: absolute;
     top: 0px;
-    height: 100vh;
+    height: calc(100vh - 70px);
     left: 250px;
     width: 75vw;
     background-color: rgb(236, 236, 236);

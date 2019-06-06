@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { DatePicker, Select, Input, Button, Alert, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -12,7 +12,7 @@ const Option = Select.Option;
 const { TextArea } = Input;
 
 
-class OrderView extends PureComponent {
+class OrderView extends Component {
 
   constructor(props) {
     super(props);
@@ -31,7 +31,7 @@ class OrderView extends PureComponent {
       ordersUpdated: '',
       serviceEntry: this.props.serviceEntry,
       home: this.props.home,
-      showDetail: false,
+      showOrderDetail: false,
       showError: false,
       showSupplierModal: false,
       showVesselModal: false,
@@ -39,7 +39,9 @@ class OrderView extends PureComponent {
       suppliers: '',
       suppliersUpdate: '',
       vessels: '',
-      vesselsUpdate: ''
+      vesselsUpdate: '',
+      despatchDetail: '',
+      a: false
     }
     this.handleSearchInput = this.handleSearchInput.bind(this)
     this.handleSupplierInput = this.handleSupplierInput.bind(this)
@@ -50,9 +52,20 @@ class OrderView extends PureComponent {
     this.handleEndDate = this.handleEndDate.bind(this)
     this.handleSearchButton = this.handleSearchButton.bind(this)
     this.handleResetButton = this.handleResetButton.bind(this)
+    this.handleToDespatch = this.handleToDespatch.bind(this)
+    this.handleBackButton = this.handleBackButton.bind(this)
     this.orderView = this.orderView.bind(this)
     this.suppliersView = this.suppliersView.bind(this)
     this.vesselsView = this.vesselsView.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.showOrderDetail === true) {
+      this.setState({
+        showOrderDetail: true,
+        orderDetail: nextProps.orderDetail
+      })
+    }
   }
 
   componentDidMount() {
@@ -346,12 +359,44 @@ class OrderView extends PureComponent {
     })
   }
 
+  handleToDespatch(id) {
+
+    console.log('id:  ' + id)
+    const serviceEntry = this.state.serviceEntry
+    // get despatch detail
+    let url = serviceEntry + 'api/despatches/' + id
+    console.log(url)
+    fetch(url, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          despatchDetail: response.mldmasView
+        }, () => {
+          this.props.parent({ currentIndex: 2 })
+          this.props.parent({ showDespatchDetail: true })
+          console.log(this.state.despatchDetail)
+          this.props.parent({ despatchDetail: this.state.despatchDetail })
+        })
+      })
+  }
+
+  handleBackButton() {
+    this.setState({ showOrderDetail: false })
+    if (this.props.showOrderDetail === true) {
+      this.props.parent({ showOrderDetail: false })
+      this.props.parent({ currentIndex: 2 })
+    }
+  }
+
+
   getOrderDetail(recKey) {
 
     this.setState({
       attachments: '',
       picUrl: '',
-      showDetail: true
+      showOrderDetail: true
     })
 
     var serviceEntry = this.props.serviceEntry
@@ -506,6 +551,17 @@ class OrderView extends PureComponent {
       flexDirection: 'row',
     }
 
+    const orderViewBody2 = {
+      height: '60px',
+      width: 'calc(100vw)',
+      backgroundColor: 'rgb(212, 211, 211)',
+      borderBottomStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'rgb(204, 202, 202)',
+      display: 'flex',
+      flexDirection: 'row',
+    }
+
     const orderViewBodyItemContainer = {
       width: '7vw',
       alignItems: 'center',
@@ -536,7 +592,7 @@ class OrderView extends PureComponent {
       <div
         style={style}
         key={ordersUpdated[index].recKey}>
-        <div className="main-order-view-body" style={orderViewBody} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey)}>
+        <div className="main-order-view-body" style={index % 2 === 1?orderViewBody:orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey)}>
           <div className="main-item-container" style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
               {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].vslName}
@@ -706,7 +762,7 @@ class OrderView extends PureComponent {
           <div style={orderDetailTitleContainer}>
             <Button
               style={backButton}
-              onClick={() => this.setState({ showDetail: false })}
+              onClick={this.handleBackButton}
               type="primary"
               icon="left-circle">Back</Button>
             <p style={orderDetailTitle}>Details</p>
@@ -742,12 +798,13 @@ class OrderView extends PureComponent {
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">STATUS: </p>
               {
-                orderDetail.statusFlg == 'DESPATCH' ?
+                orderDetail.statusFlg === 'DESPATCH' ?
                   <Button
                     style={{ backgroundColor: 'rgb(70, 154, 209)', height: '32px', fontFamily: 'varela', paddingTop: '2px' }}
                     type="primary"
-                    >
-                  See Despatch
+                    onClick={() => this.handleToDespatch(orderDetail.mldRecKey)}
+                  >
+                    See Despatch
                   </Button>
                   :
                   <TextArea
@@ -1024,34 +1081,34 @@ class OrderView extends PureComponent {
                 value={this.state.orderSearchInput}
                 style={searchInputStyle}
                 onChange={this.handleSearchInput}
-                disabled={this.state.showDetail}></Input>
+                disabled={this.state.showOrderDetail}></Input>
               <p className="main-search-sub-title2">Supplier</p>
               <Input.Search className="main-search-input"
                 value={this.state.supplierInput}
                 style={searchInputStyle}
                 onChange={this.handleSupplierInput}
-                disabled={this.state.showDetail}
+                disabled={this.state.showOrderDetail}
                 onSearch={() => this.setState({ showSupplierModal: true })}></Input.Search>
               <p className="main-search-sub-title2">Vessel</p>
               <Input.Search className="main-search-input"
                 value={this.state.vesselInput}
                 style={searchInputStyle}
                 onChange={this.handleVesselInput}
-                disabled={this.state.showDetail}
+                disabled={this.state.showOrderDetail}
                 onSearch={() => this.setState({ showVesselModal: true })}></Input.Search>
               <p className="main-search-sub-title2">AWB NO</p>
               <Input className="main-search-input"
                 value={this.state.awbNoInput}
                 style={searchInputStyle}
                 onChange={this.handleAwbNoInput}
-                disabled={this.state.showDetail}></Input>
+                disabled={this.state.showOrderDetail}></Input>
               <p className="main-search-sub-title2">Status</p>
               <Select
                 className="main-search-select"
                 onChange={this.handleSelect}
                 value={this.state.orderStatus}
                 style={{ marginTop: '-5px' }}
-                disabled={this.state.showDetail}>
+                disabled={this.state.showOrderDetail}>
                 <Option value="ALL">ALL</Option>
                 <Option value="EXPECTED">EXPECTED</Option>
                 <Option value="STOCK">STOCK</Option>
@@ -1066,7 +1123,7 @@ class OrderView extends PureComponent {
                 value={moment(this.state.orderStartDate, dateFormatList[0])}
                 format={dateFormatList}
                 onChange={date => this.handleStartDate(date)}
-                disabled={this.state.showDetail} />
+                disabled={this.state.showOrderDetail} />
               <p className="main-search-sub-title2">End Date</p>
               <DatePicker
                 className="main-search-date-picker"
@@ -1075,7 +1132,7 @@ class OrderView extends PureComponent {
                 value={moment(this.state.orderEndDate, dateFormatList[0])}
                 format={dateFormatList}
                 onChange={date => this.handleEndDate(date)}
-                disabled={this.state.showDetail} />
+                disabled={this.state.showOrderDetail} />
               {
                 this.state.showError ?
                   <Alert style={{ marginTop: '20px' }} message="Wrong Date Range" type="error" showIcon /> :
@@ -1085,25 +1142,25 @@ class OrderView extends PureComponent {
                 style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '16px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="search"
-                disabled={this.state.showDetail}
+                disabled={this.state.showOrderDetail}
                 onClick={this.handleSearchButton}>Search</Button>
               <Button
                 style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '16px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="reload"
-                disabled={this.state.showDetail}
+                disabled={this.state.showOrderDetail}
                 onClick={this.handleResetButton}>Reset</Button>
               <Button
                 style={{ borderColor: 'rgb(238, 61, 61)', backgroundColor: 'rgb(238, 61, 61)', marginTop: '16px', marginBottom: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                 type="primary"
                 icon="table"
-                disabled={this.state.showDetail}
+                disabled={this.state.showOrderDetail}
                 onClick={() => exportDefaultExcel()}>Export to Excel</Button>
             </div>
           </div>
         </div>
         <div>
-          {this.state.showDetail ?
+          {this.state.showOrderDetail ?
 
             <div>
               {this.orderDetailView()}

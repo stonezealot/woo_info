@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
@@ -6,7 +6,7 @@ import URLSearchParams from 'url-search-params';
 import { List, AutoSizer } from "react-virtualized";
 import './App.css';
 
-class InventoryView extends PureComponent {
+class InventoryView extends Component {
 
     constructor(props) {
         super(props);
@@ -27,12 +27,11 @@ class InventoryView extends PureComponent {
             Inventories: ''
         }
         this.inventoryView = this.inventoryView.bind(this)
+        this.movementView = this.movementView.bind(this)
     }
 
     componentDidMount() {
         const { home, serviceEntry } = this.state
-
-
         if (home.isadmin === 'Y') {
             //get inventories admin
             console.log('get inventories')
@@ -53,9 +52,6 @@ class InventoryView extends PureComponent {
                                 r.stkQty <= 0
                             )
                         })
-                    }, () => {
-                        console.log('active length: ' + this.state.activeInventories.length)
-                        console.log('depleted length: ' + this.state.depletedInventories.length)
                     })
                 })
         } else {
@@ -172,6 +168,17 @@ class InventoryView extends PureComponent {
             flexDirection: 'row',
         }
 
+        const inventoryViewBody2 = {
+            height: '60px',
+            width: 'calc(100vw - 150px)',
+            backgroundColor: 'rgb(212, 211, 211)',
+            borderBottomStyle: 'solid',
+            borderWidth: '1px',
+            borderColor: 'rgb(204, 202, 202)',
+            display: 'flex',
+            flexDirection: 'row',
+        }
+
         const inventoryViewBodyItemContainer = {
             width: 'calc((100vw - 150px)/4',
             alignItems: 'center',
@@ -195,7 +202,7 @@ class InventoryView extends PureComponent {
                 key={inventories[index].recKey}>
                 <div
                     className="main-order-view-body"
-                    style={inventoryViewBody}
+                    style={index % 2 === 1 ? inventoryViewBody : inventoryViewBody2}
                     onClick={() => this.getInventoryDetail(inventories[index].stkId, inventories[index].storeId)}>
                     <div className="main-item-container" style={inventoryViewBodyItemContainer}>
                         <div className="main-item" style={inventoryViewBodyItem}>
@@ -372,7 +379,7 @@ class InventoryView extends PureComponent {
 
         return (
             <div
-                className="main-view2"
+                className="main-view4"
                 style={{ width: '100vw', left: '0px', maxWidth: '100vw' }}>
                 <div style={subTitleContainer} className="main-order-detail-header">
                     <Button
@@ -484,12 +491,23 @@ class InventoryView extends PureComponent {
                         <p style={inventoryViewHeaderTitle2}>UOM</p>
                     </div>
                 </div>
-                {this.movementView()}
+                {/* {this.movementView()} */}
+                <AutoSizer style={{ height: 'calc(100vh - 60px)', width: 'calc(100vw)', resize: 'both' }}>
+                    {({ height, width }) => (
+                        <List
+                            className="list"
+                            width={width + 400}
+                            height={height}
+                            rowHeight={60}
+                            rowRenderer={this.movementView}
+                            rowCount={this.state.movements.length} />
+                    )}
+                </AutoSizer>
             </div>
         )
     }
 
-    movementView() {
+    movementView({ index, isScrolling, key, style }) {
 
         const { movements } = this.state;
 
@@ -523,65 +541,123 @@ class InventoryView extends PureComponent {
         }
 
         return (
-            <div>
-                {
-                    Object.keys(movements).map(key =>
-
-                        <div key={movements[key].recKey}
-                            className="main-order-view-body"
-                            style={inventoryViewBody}
-                        >
-                            <div className="main-item-container" style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].stkId}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].description}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {moment(movements[key].docDate).format('DD/MM/YYYY')}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].vslName}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].marking}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].stkQty > 0 ? movements[key].stkQty : null}
-                                </div>
-                            </div>
-                            <div style={inventoryViewBodyItemContainer}>
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].stkQty <= 0 ? -movements[key].stkQty : null}
-                                </div>
-                            </div>
-                            <div
-                                style={{
-                                    width: 'calc((100vw - 150px)/8',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flex: '1'
-                                }}
-                            >
-                                <div className="main-item" style={inventoryViewBodyItem}>
-                                    {movements[key].uomId}
-                                </div>
-                            </div>
-                        </div>)
-                }
+            <div
+                style={style}
+                key={movements[index].recKey}>
+                <div className="main-order-view-body"
+                    style={inventoryViewBody}
+                >
+                    <div className="main-item-container" style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].stkId}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].description}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {moment(movements[index].docDate).format('DD/MM/YYYY')}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].vslName}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].marking}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].stkQty > 0 ? movements[index].stkQty : null}
+                        </div>
+                    </div>
+                    <div style={inventoryViewBodyItemContainer}>
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].stkQty <= 0 ? -movements[index].stkQty : null}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            width: 'calc((100vw - 150px)/8',
+                            alignItems: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flex: '1'
+                        }}
+                    >
+                        <div className="main-item" style={inventoryViewBodyItem}>
+                            {movements[index].uomId}
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
+            // <div>
+            //     {
+            //         Object.keys(movements).map(key =>
+
+            //             <div key={movements[key].recKey}
+            //                 className="main-order-view-body"
+            //                 style={inventoryViewBody}
+            //             >
+            //                 <div className="main-item-container" style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].stkId}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].description}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {moment(movements[key].docDate).format('DD/MM/YYYY')}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].vslName}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].marking}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].stkQty > 0 ? movements[key].stkQty : null}
+            //                     </div>
+            //                 </div>
+            //                 <div style={inventoryViewBodyItemContainer}>
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].stkQty <= 0 ? -movements[key].stkQty : null}
+            //                     </div>
+            //                 </div>
+            //                 <div
+            //                     style={{
+            //                         width: 'calc((100vw - 150px)/8',
+            //                         alignItems: 'center',
+            //                         display: 'flex',
+            //                         justifyContent: 'center',
+            //                         flex: '1'
+            //                     }}
+            //                 >
+            //                     <div className="main-item" style={inventoryViewBodyItem}>
+            //                         {movements[key].uomId}
+            //                     </div>
+            //                 </div>
+            //             </div>)
+            //     }
+            // </div>
         )
     }
 
@@ -665,7 +741,7 @@ class InventoryView extends PureComponent {
                                     <div style={subTitleContainer} className="main-order-detail-header">
                                         <Button
                                             style={backButton}
-                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory },()=>this.divScroll())}
+                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory }, () => this.divScroll())}
                                             type="primary"
                                             icon="reload">Active</Button>
                                         <p style={subTitle}>Depleted</p>
@@ -674,7 +750,7 @@ class InventoryView extends PureComponent {
                                     <div style={subTitleContainer} className="main-order-detail-header">
                                         <Button
                                             style={backButton}
-                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory },()=>this.divScroll())}
+                                            onClick={() => this.setState({ changeInventory: !this.state.changeInventory }, () => this.divScroll())}
                                             type="primary"
                                             icon="reload">Depleted</Button>
                                         <p style={subTitle}>Active</p>
