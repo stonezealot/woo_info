@@ -353,7 +353,8 @@
     /* max-height: 200px; */
     /* max-width: 75vw; */
     background-color: rgb(236, 236, 236);
-    overflow: scroll;
+    overflow-x: scroll;
+    /* overflow-y: scroll; */
 }
 
 .main-order-detail-view {
@@ -525,6 +526,48 @@
 }
 
 .main-view3::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view5 {
+    height:calc(100vh - 370px);
+    overflow-y: scroll;
+}
+
+.main-view5::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view5::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background: rgb(52, 117, 160);
+}
+
+.main-view5::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view6 {
+    width: 100vw;
+    height:calc(100vh - 150px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.main-view6::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: rgb(223, 219, 219);
+}
+
+.main-view6::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background: rgb(52, 117, 160);
+}
+
+.main-view6::-webkit-scrollbar-corner {
     background-color: rgb(223, 219, 219);
 }
 

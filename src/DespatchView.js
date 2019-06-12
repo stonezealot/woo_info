@@ -1077,7 +1077,7 @@ class DespatchView extends Component {
         }
 
         return (
-            <div>
+            <div className="main-view6">
                 {
                     Object.keys(orders).map(key =>
                         <div key={orders[key].recKey} className="main-order-view-body" style={orderViewBody}

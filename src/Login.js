@@ -3,7 +3,7 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Input, Alert, Icon } from 'antd';
-import logo from './sinwaglobal_logo.gif';
+import logo from './company_logo1.png';
 import './App.css';
 
 

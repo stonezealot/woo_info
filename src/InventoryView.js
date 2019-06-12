@@ -138,7 +138,7 @@ class InventoryView extends Component {
                         )
                     })
                 }, () => {
-                    console.log(this.state.movements[0].stkId)
+                    console.log(this.state.movements[0])
                     function leijia(a, b) {
                         return a + b.stkQty;
                     }
@@ -600,7 +600,7 @@ class InventoryView extends Component {
             //         </div>
             //     </div>
             // </div>
-            <div>
+            <div className="main-view5">
                 {
                     Object.keys(movements).map(key =>
                         <div key={movements[key].recKey} className="main-order-view-body"
