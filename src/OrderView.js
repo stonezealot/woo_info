@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Select, Input, Button, Alert, Modal } from 'antd';
+import { DatePicker, Select, Input, Button, Alert, Modal} from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -857,7 +857,7 @@ class OrderView extends Component {
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">WEIGHT: </p>
               <TextArea
-                value={orderDetail.pkgWt}
+                value={orderDetail.pkgWt+'kg'}
                 autosize={{ minRows: 1, maxRows: 1 }}
                 style={remarkInput}
                 disabled={true} />
@@ -923,11 +923,12 @@ class OrderView extends Component {
                       </div>
                     )
                   }
+
+                  return null
                 }
                 )
               }
             </div>
-
             <div style={rightSubTitleContainer}>
               <p style={rightSubTitle}>Pictures</p>
             </div>
@@ -957,6 +958,8 @@ class OrderView extends Component {
                         </div>
                       )
                     }
+
+                    return null
                   }
                   )
                 }
@@ -1057,14 +1060,13 @@ class OrderView extends Component {
         { k: 'docId', v: 'ASN NUMBER' },
         { k: moment('stockDate').format('DD/MM/YYYY'), v: 'RECEIVE DATE' },
         { k: 'custName', v: 'SUPPLIER' },
-        { k: 'itemRef', v: 'PO NUMBER' },
         { k: 'description', v: 'DESCRIPTION' },
         { k: 'pkgNum', v: 'QTY' },
         { k: 'pkgUom', v: 'UOM' },
         { k: 'pkgWt', v: 'WEIGHT' },
         { k: 'AwbNo', v: 'AWB' },
-        { k: 'statusFlg', v: 'STATUS' },
         { k: 'dimension', v: 'DIMENSION' },
+        { k: 'mlbarcodeRef1', v: 'ITEM PO' },
         { k: 'remark', v: 'REMARKS' },
       ]
       exportExcel(_headers, this.state.ordersUpdated);
@@ -1083,14 +1085,14 @@ class OrderView extends Component {
                 onChange={this.handleSearchInput}
                 disabled={this.state.showOrderDetail}></Input>
               <p className="main-search-sub-title2">Supplier</p>
-              <Input.Search className="main-search-input"
+              <Input.Search className="main-search-input2"
                 value={this.state.supplierInput}
                 style={searchInputStyle}
                 onChange={this.handleSupplierInput}
                 disabled={this.state.showOrderDetail}
                 onSearch={() => this.setState({ showSupplierModal: true })}></Input.Search>
               <p className="main-search-sub-title2">Vessel</p>
-              <Input.Search className="main-search-input"
+              <Input.Search className="main-search-input2"
                 value={this.state.vesselInput}
                 style={searchInputStyle}
                 onChange={this.handleVesselInput}
@@ -1168,7 +1170,7 @@ class OrderView extends Component {
             :
             <div
               className="main-view2"
-              style={{ width: '100vw', maxWidth: 'calc(100vw - 150px)' }}>
+              style={{ width: '100vw', maxWidth: 'calc(100vw - 400px)' }}>
               <div className="main-view-header" style={orderViewHeader}>
                 <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>VESSEL</p>
@@ -1238,7 +1240,7 @@ class OrderView extends Component {
           onCancel={() => this.setState({ showSupplierModal: false })}
         >
           <Input.Search
-            className="main-search-input"
+            className="main-search-input2"
             onChange={this.handleSupplierInput}
           >
           </Input.Search>
@@ -1277,7 +1279,7 @@ class OrderView extends Component {
           onCancel={() => this.setState({ showVesselModal: false })}
         >
           <Input.Search
-            className="main-search-input"
+            className="main-search-input2"
             onChange={this.handleVesselInput}
           >
           </Input.Search>

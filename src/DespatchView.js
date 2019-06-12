@@ -250,7 +250,9 @@ class DespatchView extends Component {
 
         this.setState({
             changeDetail: true,
-            showDespatchDetail: true
+            showDespatchDetail: true,
+            picUrl: '',
+            attachments: '',
         })
 
         var serviceEntry = this.props.serviceEntry
@@ -282,6 +284,21 @@ class DespatchView extends Component {
                 })
             })
 
+        //get attachments
+        url = serviceEntry + 'api/attachments/'
+        params = new URLSearchParams();
+        params.append('srcRecKey', recKey);
+        url += ('?' + params);
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    attachments: response
+                })
+            })
+
     }
 
     // divScroll() {
@@ -293,44 +310,44 @@ class DespatchView extends Component {
     //     divscroll.scrollBy(0, -scrollTop);
     // }
 
-    getOrderDetail(recKey) {
+    // getOrderDetail(recKey) {
 
-        this.divScroll()
+    //     this.divScroll()
 
-        this.setState({
-            orderPicUrl: '',
-            showOrderDetail: true
-        })
+    //     this.setState({
+    //         orderPicUrl: '',
+    //         showOrderDetail: true
+    //     })
 
-        var serviceEntry = this.props.serviceEntry
-        //get order detail
-        let url = serviceEntry + 'api/orders/' + recKey
-        console.log(url)
-        fetch(url, {
-            method: 'GET'
-        })
-            .then(response => response.json())
-            .then(response => {
-                this.setState({
-                    orderDetail: response.mlmasView
-                })
-            })
+    //     var serviceEntry = this.props.serviceEntry
+    //     //get order detail
+    //     let url = serviceEntry + 'api/orders/' + recKey
+    //     console.log(url)
+    //     fetch(url, {
+    //         method: 'GET'
+    //     })
+    //         .then(response => response.json())
+    //         .then(response => {
+    //             this.setState({
+    //                 orderDetail: response.mlmasView
+    //             })
+    //         })
 
-        //get attachments
-        url = serviceEntry + 'api/attachments/'
-        let params = new URLSearchParams();
-        params.append('srcRecKey', recKey);
-        url += ('?' + params);
-        fetch(url, {
-            method: 'GET'
-        })
-            .then(response => response.json())
-            .then(response => {
-                this.setState({
-                    orderAttachments: response
-                })
-            })
-    }
+    //     //get attachments
+    //     url = serviceEntry + 'api/attachments/'
+    //     let params = new URLSearchParams();
+    //     params.append('srcRecKey', recKey);
+    //     url += ('?' + params);
+    //     fetch(url, {
+    //         method: 'GET'
+    //     })
+    //         .then(response => response.json())
+    //         .then(response => {
+    //             this.setState({
+    //                 orderAttachments: response
+    //             })
+    //         })
+    // }
 
     despatchView({ index, isScrolling, key, style }) {
 
@@ -380,7 +397,7 @@ class DespatchView extends Component {
             <div
                 style={style}
                 key={despatchesUpdated[index].recKey}>
-                <div className="main-order-view-body" style={index % 2 === 1?despatchViewBody:despatchViewBody2} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
+                <div className="main-order-view-body" style={index % 2 === 1 ? despatchViewBody : despatchViewBody2} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
                     <div className="main-item-container" style={despatchViewBodyItemContainer}>
                         <div className="main-item" style={despatchViewBodyItem}>
                             {despatchesUpdated[index].vslName}
@@ -528,6 +545,38 @@ class DespatchView extends Component {
             marginTop: '21px',
         }
 
+        const rightSubTitleContainer = {
+            padding: '0px',
+            height: '30px',
+            width: '200px',
+            borderBottomStyle: 'solid',
+            borderWidth: '1px',
+            borderColor: 'rgb(204, 202, 202)',
+            marginTop: '20px',
+            marginBottom: '20px',
+          }
+      
+          const rightSubTitle = {
+            marginLeft: '20px',
+            marginBottom: '10px',
+            height: '30px',
+            width: '200px',
+            fontFamily: 'varela',
+          }
+      
+          const docContainer = {
+            margin: '20px',
+            padding: '0px',
+            height: '40px'
+          }
+      
+          const doc = {
+            marginLeft: '10px',
+            marginTop: '10px',
+            fontFamily: 'varela',
+            fontSize: '14px'
+          }
+
         return (
             <div id="right-view" className="main-despatch-detail-view">
                 <div className="main-order-detail-header">
@@ -662,19 +711,71 @@ class DespatchView extends Component {
                             </div>
                         </div>
                         <div className="main-order-detail-body-right">
+                            <div style={rightSubTitleContainer}>
+                                <p style={rightSubTitle}>Import Documents</p>
+                            </div>
+                            <div>
+                                {
+
+                                    Object.keys(attachments).map(key => {
+                                        var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+
+                                        //handle
+                                        let dotIndex = attachments[key].name.indexOf('.');
+                                        let length = attachments[key].name.length;
+                                        let suffix = attachments[key].name.substring(dotIndex + 1, length)
+
+                                        if (suffix === 'pdf' || suffix === 'PDF'
+                                            || suffix === 'xlsx' || suffix === 'XLSX'
+                                            || suffix === 'xls' || suffix === 'XLS'
+                                            || suffix === 'doc' || suffix === 'DOC'
+                                            || suffix === 'docx' || suffix === 'DOCX'
+                                            || suffix === 'txt' || suffix === 'TXT') {
+
+                                            return (
+                                                <div style={docContainer} key={attachments[key].recKey} onClick={() => { window.open(docSrc) }}>
+                                                    <p className="doc" style={doc}>{attachments[key].name}</p>
+                                                </div>
+                                            )
+                                        }
+
+                                        return null
+                                        
+                                    }
+                                    )
+                                }
+                            </div>
+                            <div style={rightSubTitleContainer}>
+                                <p style={rightSubTitle}>Pictures</p>
+                            </div>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <div className="main-order-detail-info-smallpic-container">
                                     {
 
                                         Object.keys(attachments).map(key => {
                                             var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                                            return (
-                                                <div key={attachments[key].recKey}>
-                                                    <img
-                                                        onMouseOver={() => { this.setState({ picUrl: imgSrc }) }}
-                                                        className="small-pic" src={imgSrc} alt={imgSrc} />
-                                                </div>
-                                            )
+
+                                            //handle
+                                            let dotIndex = attachments[key].name.indexOf('.');
+                                            let length = attachments[key].name.length;
+                                            let suffix = attachments[key].name.substring(dotIndex + 1, length)
+
+                                            if (suffix === 'jpg' || suffix === 'JPG'
+                                                || suffix === 'jpeg' || suffix === 'JPEG'
+                                                || suffix === 'gif' || suffix === 'GIF'
+                                                || suffix === 'png' || suffix === 'PNG'
+                                                || suffix === 'tif' || suffix === 'TIF') {
+
+                                                return (
+                                                    <div key={attachments[key].recKey}>
+                                                        <img
+                                                            onMouseOver={() => { this.setState({ picUrl: imgSrc }) }}
+                                                            className="small-pic" src={imgSrc} alt={imgSrc} />
+                                                    </div>
+                                                )
+                                            }
+
+                                            return null
                                         }
                                         )
                                     }
@@ -794,19 +895,69 @@ class DespatchView extends Component {
                             </div>
                         </div>
                         <div className="main-order-detail-body-right">
+                            <div style={rightSubTitleContainer}>
+                                <p style={rightSubTitle}>Import Documents</p>
+                            </div>
+                            <div>
+                                {
+
+                                    Object.keys(attachments).map(key => {
+                                        var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+
+                                        //handle
+                                        let dotIndex = attachments[key].name.indexOf('.');
+                                        let length = attachments[key].name.length;
+                                        let suffix = attachments[key].name.substring(dotIndex + 1, length)
+
+                                        if (suffix === 'pdf' || suffix === 'PDF'
+                                            || suffix === 'xlsx' || suffix === 'XLSX'
+                                            || suffix === 'xls' || suffix === 'XLS'
+                                            || suffix === 'doc' || suffix === 'DOC'
+                                            || suffix === 'docx' || suffix === 'DOCX'
+                                            || suffix === 'txt' || suffix === 'TXT') {
+
+                                            return (
+                                                <div style={docContainer} key={attachments[key].recKey} onClick={() => { window.open(docSrc) }}>
+                                                    <p className="doc" style={doc}>{attachments[key].name}</p>
+                                                </div>
+                                            )
+                                        }
+
+                                        return null
+                                    }
+                                    )
+                                }
+                            </div>
+                            <div style={rightSubTitleContainer}>
+                                <p style={rightSubTitle}>Pictures</p>
+                            </div>
                             <div style={{ display: 'flex', flexDirection: 'row' }}>
                                 <div className="main-order-detail-info-smallpic-container">
                                     {
 
                                         Object.keys(attachments).map(key => {
                                             var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                                            return (
-                                                <div key={attachments[key].recKey}>
-                                                    <img
-                                                        onMouseOver={() => { this.setState({ picUrl: imgSrc }) }}
-                                                        className="small-pic" src={imgSrc} alt={imgSrc} />
-                                                </div>
-                                            )
+
+                                            //handle
+                                            let dotIndex = attachments[key].name.indexOf('.');
+                                            let length = attachments[key].name.length;
+                                            let suffix = attachments[key].name.substring(dotIndex + 1, length)
+
+                                            if (suffix === 'jpg' || suffix === 'JPG'
+                                                || suffix === 'jpeg' || suffix === 'JPEG'
+                                                || suffix === 'gif' || suffix === 'GIF'
+                                                || suffix === 'png' || suffix === 'PNG'
+                                                || suffix === 'tif' || suffix === 'TIF') {
+
+                                                return (
+                                                    <div key={attachments[key].recKey}>
+                                                        <img
+                                                            onMouseOver={() => { this.setState({ picUrl: imgSrc }) }}
+                                                            className="small-pic" src={imgSrc} alt={imgSrc} />
+                                                    </div>
+                                                )
+                                            }
+                                            return null
                                         }
                                         )
                                     }
@@ -830,7 +981,7 @@ class DespatchView extends Component {
                     </div>
                 </div>
                 <div className="main-view3"
-                style={{ width: '100vw' , maxWidth: 'calc(100vw - 150px)'}}>
+                    style={{ width: '100vw', maxWidth: 'calc(100vw - 400px)' }}>
                     <div>
                         <div className="main-view-header" style={orderViewHeader}>
                             <div style={orderViewHeaderTitleContainer}>
