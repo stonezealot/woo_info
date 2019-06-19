@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Select, Input, Button, Alert, Modal} from 'antd';
+import { DatePicker, Select, Input, Button, Alert, Modal } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -163,20 +163,28 @@ class OrderView extends Component {
   }
 
   handleSupplierInput(e) {
+
+    console.log(this.state.suppliers)
+
     this.setState({
       supplierInput: e.target.value
     }, () => {
       this.setState({
         suppliersUpdate: this.state.suppliers.filter(s => {
-          return (
-            (s.suppName !== null ? s.suppName.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : '')
-            || (s.suppId !== null ? s.suppId.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : ''))
+          if (s != null) {
+            return (
+              (s.suppName !== null ? s.suppName.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : '')
+              || (s.suppId !== null ? s.suppId.toUpperCase().includes(this.state.supplierInput.toUpperCase()) : ''))
+          }
+
         })
       })
     });
   }
 
   handleVesselInput(e) {
+
+    console.log(this.state.vessels)
     this.setState({
       vesselInput: e.target.value
     }, () => {
@@ -391,7 +399,9 @@ class OrderView extends Component {
   }
 
 
-  getOrderDetail(recKey) {
+  getOrderDetail(recKey, mlbarcodeRecKey) {
+
+    console.log('mlbarcodeRecKey: ', mlbarcodeRecKey);
 
     this.setState({
       attachments: '',
@@ -401,6 +411,7 @@ class OrderView extends Component {
 
     var serviceEntry = this.props.serviceEntry
     //get order detail
+    if (mlbarcodeRecKey == null) {
     let url = serviceEntry + 'api/orders/' + recKey
     console.log(url)
     fetch(url, {
@@ -409,12 +420,30 @@ class OrderView extends Component {
       .then(response => response.json())
       .then(response => {
         this.setState({
-          orderDetail: response.mlmasView
+          orderDetail: response[0]
         })
       })
+    }
+     else {
+      let url = serviceEntry + 'api/orders-ml/'
+      let params = new URLSearchParams();
+      params.append('recKey', recKey);
+      params.append('mlbarcodeRecKey', mlbarcodeRecKey);
+      url += ('?' + params);
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            orderDetail: response[0]
+          })
+        })
+    }
+
 
     //get attachments
-    url = serviceEntry + 'api/attachments/'
+    let url = serviceEntry + 'api/attachments/'
     let params = new URLSearchParams();
     params.append('srcRecKey', recKey);
     url += ('?' + params);
@@ -591,11 +620,11 @@ class OrderView extends Component {
     return (
       <div
         style={style}
-        key={ordersUpdated[index].recKey}>
-        <div className="main-order-view-body" style={index % 2 === 1?orderViewBody:orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey)}>
+        key={index}>
+        <div className="main-order-view-body" style={index % 2 === 1 ? orderViewBody : orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey, ordersUpdated[index].mlbarcodeRecKey)}>
           <div className="main-item-container" style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].vslName}
+              {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].mlbarcodeRecKey}
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
@@ -857,7 +886,7 @@ class OrderView extends Component {
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">WEIGHT: </p>
               <TextArea
-                value={orderDetail.pkgWt+'kg'}
+                value={orderDetail.pkgWt + 'kg'}
                 autosize={{ minRows: 1, maxRows: 1 }}
                 style={remarkInput}
                 disabled={true} />

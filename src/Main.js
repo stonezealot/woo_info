@@ -4,7 +4,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
-import logo from './company_logo1.png';
+import logo from './company_logo.png';
 import './App.css';
 import OrderView from './OrderView';
 import DespatchView from './DespatchView';

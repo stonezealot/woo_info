@@ -267,6 +267,7 @@
     border-color: rgb(204, 202, 202);
     /* overflow: auto;
     max-height: calc(100vh - 130px); */
+    overflow: auto;
 }
 
 .main-search-sub-title {
