@@ -18,7 +18,7 @@ class Login extends Component {
         console.log('in login screen')
         super(props);
         this.state = {
-            serviceEntry: 'http://192.168.1.77:8080/',
+            serviceEntry: 'http://localhost:8085/',
             username: '',
             password: '',
             home: '',

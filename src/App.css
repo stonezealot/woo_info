@@ -15,7 +15,7 @@
 }
 
 .background-pic {
-    background: url(./cargoship.jpg) no-repeat center center;
+    background: url(localhost:8080/cargoship.jpg) no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
     background-color: rgba(0, 0, 0, 0.5);
@@ -268,6 +268,22 @@
     /* overflow: auto;
     max-height: calc(100vh - 130px); */
     overflow: auto;
+    max-height: calc(100vh - 130px);
+}
+
+.main-search-second-container::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+    background-color: rgb(223, 219, 219);
+}
+
+.main-search-second-container::-webkit-scrollbar-thumb {
+    border-radius: 1px;
+    background: rgb(52, 117, 160);
+}
+
+.main-search-second-container::-webkit-scrollbar-corner {
+    background-color: rgb(223, 219, 219);
 }
 
 .main-search-sub-title {
@@ -279,13 +295,13 @@
 .main-search-sub-title2 {
     font-family: 'varela';
     text-align: center;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .main-search-input {
     height: 32px;
     width: 150px;
-    border-style: solid;
+    /* border-style: solid; */
     border-width: 1px;
     align-content: center;
     border-color: #d9d9d9;
@@ -531,7 +547,7 @@
 }
 
 .main-view5 {
-    height:calc(100vh - 370px);
+    height: calc(100vh - 370px);
     overflow-y: scroll;
 }
 
@@ -552,7 +568,7 @@
 
 .main-view6 {
     width: 100vw;
-    height:calc(100vh - 150px);
+    height: calc(100vh - 150px);
     overflow-x: hidden;
     overflow-y: scroll;
 }

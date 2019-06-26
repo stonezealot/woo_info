@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -211,9 +211,11 @@ class InventoryView extends Component {
                         </div>
                     </div>
                     <div style={inventoryViewBodyItemContainer}>
-                        <div className="main-item" style={inventoryViewBodyItem}>
-                            {inventories[index].description}
-                        </div>
+                        <Tooltip placement="right" title={inventories[index].description}>
+                            <div className="main-item" style={inventoryViewBodyItem}>
+                                {inventories[index].description}
+                            </div>
+                        </Tooltip>
                     </div>
                     <div style={inventoryViewBodyItemContainer}>
                         <div className="main-item" style={inventoryViewBodyItem}>
@@ -605,8 +607,8 @@ class InventoryView extends Component {
                     Object.keys(movements).map(key =>
                         <div key={movements[key].recKey} className="main-order-view-body"
                             style={inventoryViewBody}
-                            >
-                        
+                        >
+
                             <div className="main-item-container" style={inventoryViewBodyItemContainer}>
                                 <div className="main-item" style={inventoryViewBodyItem}>
                                     {movements[key].stkId}
@@ -736,7 +738,7 @@ class InventoryView extends Component {
                         :
                         <div
                             className="main-view2"
-                            style={{ width: '100vw', left: '0px', maxWidth: 'calc(100vw - 150px)'}}>
+                            style={{ width: '100vw', left: '0px', maxWidth: 'calc(100vw - 150px)' }}>
                             {
                                 this.state.changeInventory ?
                                     <div style={subTitleContainer} className="main-order-detail-header">

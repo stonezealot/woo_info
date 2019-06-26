@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Select, Input, Button, Alert } from 'antd';
+import { DatePicker, Select, Input, Button, Alert, Tooltip, Spin } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -33,6 +33,7 @@ class DespatchView extends Component {
             showDespatchDetail: this.props.showDespatchDetail,
             showOrderDetail: false,
             showError: false,
+            loading: false
         }
         this.handleSearchInput = this.handleSearchInput.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
@@ -129,75 +130,85 @@ class DespatchView extends Component {
                 showError: true
             })
         } else {
-            if (despatchStatus === 'ALL') {
-                if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                    this.setState({
-                        showError: false,
-                        despatchesUpdated: despatches.filter(d => {
-                            return (
-                                moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
-                            )
-                        })
-                    })
-                } else {
-                    this.setState({
-                        showError: false,
-                        despatchesUpdated: despatches.filter(d => {
-                            return (
-                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                && (
-                                    (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
-                                    || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
-                                    || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
-                                    || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
-                                    || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
-                                    || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
-                                    || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
-                                    || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
-                                    || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
+            this.setState({
+                loading: true
+            }, () => {
+                if (despatchStatus === 'ALL') {
+                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                        this.setState({
+                            showError: false,
+                            despatchesUpdated: despatches.filter(d => {
+                                return (
+                                    moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
                                 )
-                            )
+                            })
                         })
-                    })
-                }
-            } else {
-                if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                    this.setState({
-                        showError: false,
-                        despatchesUpdated: despatches.filter(d => {
-                            return (
-                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                && d.statusFlg === despatchStatus
-                            )
-                        })
-                    })
-                } else {
-                    this.setState({
-                        showError: false,
-                        despatchesUpdated: despatches.filter(d => {
-                            return (
-                                (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                && (
-                                    (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : '')
-                                    || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : '')
-                                    || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : '')
-                                    || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : '')
-                                    || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : '')
-                                    || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : '')
-                                    || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : '')
-                                    || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : '')
-                                    || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : '')
+                    } else {
+                        this.setState({
+                            showError: false,
+                            despatchesUpdated: despatches.filter(d => {
+                                return (
+                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                    && (
+                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                    )
                                 )
-                                && d.statusFlg === despatchStatus
-                            )
+                            })
                         })
-                    })
+                    }
+                } else {
+                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                        this.setState({
+                            showError: false,
+                            despatchesUpdated: despatches.filter(d => {
+                                return (
+                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                    && d.statusFlg === despatchStatus
+                                )
+                            })
+                        })
+                    } else {
+                        this.setState({
+                            showError: false,
+                            despatchesUpdated: despatches.filter(d => {
+                                return (
+                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                    && (
+                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                    )
+                                    && d.statusFlg === despatchStatus
+                                )
+                            })
+                        })
+                    }
                 }
-            }
+            })
+            setTimeout(() => {
+                this.setState({
+                    loading: false
+                })
+            }, 2000);
+
         }
 
     }
@@ -205,12 +216,19 @@ class DespatchView extends Component {
     handleResetButton() {
 
         this.setState({
+            loading: true,
             showError: false,
             despatchesUpdated: this.state.despatches,
             despatchSearchInput: '',
             despatchStatus: 'ALL',
             despatchStartDate: '01/01/2000',
             despatchEndDate: moment().format('DD/MM/YYYY')
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    loading: false
+                })
+            }, 2000);
         })
     }
 
@@ -399,19 +417,25 @@ class DespatchView extends Component {
                 key={despatchesUpdated[index].recKey}>
                 <div className="main-order-view-body" style={index % 2 === 1 ? despatchViewBody : despatchViewBody2} onClick={() => this.getDespatchDetail(despatchesUpdated[index].recKey)}>
                     <div className="main-item-container" style={despatchViewBodyItemContainer}>
-                        <div className="main-item" style={despatchViewBodyItem}>
-                            {despatchesUpdated[index].vslName}
-                        </div>
+                        <Tooltip placement="right" title={despatchesUpdated[index].vslName}>
+                            <div className="main-item" style={despatchViewBodyItem}>
+                                {despatchesUpdated[index].vslName}
+                            </div>
+                        </Tooltip>
                     </div>
                     <div style={despatchViewBodyItemContainer}>
-                        <div className="main-item" style={despatchViewBodyItem}>
-                            {despatchesUpdated[index].custName}
-                        </div>
+                        <Tooltip placement="right" title={despatchesUpdated[index].custName}>
+                            <div className="main-item" style={despatchViewBodyItem}>
+                                {despatchesUpdated[index].custName}
+                            </div>
+                        </Tooltip>
                     </div>
                     <div style={despatchViewBodyItemContainer}>
-                        <div className="main-item" style={despatchViewBodyItem}>
-                            {despatchesUpdated[index].marking}
-                        </div>
+                        <Tooltip placement="right" title={despatchesUpdated[index].marking}>
+                            <div className="main-item" style={despatchViewBodyItem}>
+                                {despatchesUpdated[index].marking}
+                            </div>
+                        </Tooltip>
                     </div>
                     <div style={despatchViewBodyItemContainer}>
                         <div className="main-item" style={despatchViewBodyItem}>
@@ -419,9 +443,11 @@ class DespatchView extends Component {
                         </div>
                     </div>
                     <div style={despatchViewBodyItemContainer}>
-                        <div className="main-item" style={despatchViewBodyItem}>
-                            {despatchesUpdated[index].destination}
-                        </div>
+                        <Tooltip placement="right" title={despatchesUpdated[index].destination}>
+                            <div className="main-item" style={despatchViewBodyItem}>
+                                {despatchesUpdated[index].destination}
+                            </div>
+                        </Tooltip>
                     </div>
                     <div style={despatchViewBodyItemContainer}>
                         <div className="main-item" style={despatchViewBodyItem}>
@@ -526,14 +552,14 @@ class DespatchView extends Component {
         }
 
         const orderViewHeaderTitleContainer = {
-            width: '7vw',
+            width: '5.8vw',
             borderRightStyle: 'solid',
             borderWidth: '1px',
             borderColor: 'white',
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
-            flex: '1'
+            // flex: '1'
         }
 
         const orderViewHeaderTitle = {
@@ -554,28 +580,28 @@ class DespatchView extends Component {
             borderColor: 'rgb(204, 202, 202)',
             marginTop: '20px',
             marginBottom: '20px',
-          }
-      
-          const rightSubTitle = {
+        }
+
+        const rightSubTitle = {
             marginLeft: '20px',
             marginBottom: '10px',
             height: '30px',
             width: '200px',
             fontFamily: 'varela',
-          }
-      
-          const docContainer = {
+        }
+
+        const docContainer = {
             margin: '20px',
             padding: '0px',
             height: '40px'
-          }
-      
-          const doc = {
+        }
+
+        const doc = {
             marginLeft: '10px',
             marginTop: '10px',
             fontFamily: 'varela',
             fontSize: '14px'
-          }
+        }
 
         return (
             <div id="right-view" className="main-despatch-detail-view">
@@ -718,7 +744,8 @@ class DespatchView extends Component {
                                 {
 
                                     Object.keys(attachments).map(key => {
-                                        var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+                                        // var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+                                        var docSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
 
                                         //handle
                                         let dotIndex = attachments[key].name.indexOf('.');
@@ -740,7 +767,7 @@ class DespatchView extends Component {
                                         }
 
                                         return null
-                                        
+
                                     }
                                     )
                                 }
@@ -753,8 +780,8 @@ class DespatchView extends Component {
                                     {
 
                                         Object.keys(attachments).map(key => {
-                                            var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-
+                                            // var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+                                            var imgSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
                                             //handle
                                             let dotIndex = attachments[key].name.indexOf('.');
                                             let length = attachments[key].name.length;
@@ -1003,6 +1030,15 @@ class DespatchView extends Component {
                                 <p style={orderViewHeaderTitle}>ITEM PO</p>
                             </div>
                             <div style={orderViewHeaderTitleContainer}>
+                                <p style={orderViewHeaderTitle}>TITLE</p>
+                            </div>
+                            <div style={orderViewHeaderTitleContainer}>
+                                <p style={orderViewHeaderTitle}>VENDOR</p>
+                            </div>
+                            <div style={orderViewHeaderTitleContainer}>
+                                <p style={orderViewHeaderTitle}>PRIORITY</p>
+                            </div>
+                            <div style={orderViewHeaderTitleContainer}>
                                 <p style={orderViewHeaderTitle}>DESCRIPTION</p>
                             </div>
                             <div style={orderViewHeaderTitleContainer}>
@@ -1026,11 +1062,11 @@ class DespatchView extends Component {
 
                             <div
                                 style={{
-                                    width: '9vw',
+                                    width: '7.2vw',
                                     alignItems: 'center',
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    flex: '1'
+                                    // flex: '1'
                                 }}>
                                 <p style={orderViewHeaderTitle}>REMARKS</p>
                             </div>
@@ -1059,11 +1095,11 @@ class DespatchView extends Component {
         }
 
         const orderViewBodyItemContainer = {
-            width: '7vw',
+            width: '5.8vw',
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
-            flex: '1',
+            // flex: '1',
         }
 
         const orderViewBodyItem = {
@@ -1084,19 +1120,25 @@ class DespatchView extends Component {
                             onClick={() => this.handleToOrder(orders[key].recKey)}
                         >
                             <div className="main-item-container" style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].vslName}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].vslName}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].vslName}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].custName}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].custName}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].custName}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].docId}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].docId}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].docId}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
@@ -1109,9 +1151,11 @@ class DespatchView extends Component {
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].suppName}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].suppName}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].suppName}
+                                    </div>
+                                </Tooltip>
                             </div>
                             {/* <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
@@ -1121,14 +1165,39 @@ class DespatchView extends Component {
                                 </div>
                             </div> */}
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].mlbarcodeRef1}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].mlbarcodeRef1}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].mlbarcodeRef1}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].description}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].mlbarcodeRef2}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].mlbarcodeRef2}
+                                    </div>
+                                </Tooltip>
+                            </div>
+                            <div style={orderViewBodyItemContainer}>
+                                <Tooltip placement="top" title={orders[key].mlbarcodeRef3}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].mlbarcodeRef3}
+                                    </div>
+                                </Tooltip>
+                            </div>
+                            <div style={orderViewBodyItemContainer}>
+                                <Tooltip placement="top" title={orders[key].mlbarcodeRef4}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].mlbarcodeRef4}
+                                    </div>
+                                </Tooltip>
+                            </div>
+                            <div style={orderViewBodyItemContainer}>
+                                <Tooltip placement="top" title={orders[key].description}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].description}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
@@ -1146,9 +1215,11 @@ class DespatchView extends Component {
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].AwbNo}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].AwbNo}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].AwbNo}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div style={orderViewBodyItemContainer}>
                                 <div className="main-item" style={orderViewBodyItem}>
@@ -1156,22 +1227,26 @@ class DespatchView extends Component {
                                 </div>
                             </div>
                             <div style={orderViewBodyItemContainer}>
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].dimension}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].dimension}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].dimension}
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div
                                 style={{
-                                    width: '9vw',
+                                    width: '7.2vw',
                                     alignItems: 'center',
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    flex: '1'
+                                    // flex: '1'
                                 }}
                             >
-                                <div className="main-item" style={orderViewBodyItem}>
-                                    {orders[key].remark}
-                                </div>
+                                <Tooltip placement="top" title={orders[key].remark}>
+                                    <div className="main-item" style={orderViewBodyItem}>
+                                        {orders[key].remark}
+                                    </div>
+                                </Tooltip>
                             </div>
                         </div>)
                 }
@@ -1186,7 +1261,8 @@ class DespatchView extends Component {
         const searchInputStyle = {
             fontFamily: 'varela',
             textAlign: 'center',
-            width: '154px'
+            width: '200px',
+            marginTop: '15px'
         }
 
         const despatchViewHeader = {
@@ -1221,7 +1297,8 @@ class DespatchView extends Component {
         }
 
         const datePicker = {
-            fontFamily: 'varela'
+            fontFamily: 'varela',
+            marginTop: '15px'
         }
 
         return (
@@ -1230,57 +1307,70 @@ class DespatchView extends Component {
                     <div className="main-search-title-container">
                         <p className="main-search-title" >Search Despatches</p>
                         <div className="main-search-second-container">
-                            <p className="main-search-sub-title">Search</p>
+                            {/* <p className="main-search-sub-title">Search</p> */}
                             <Input className="main-search-input"
+                                addonBefore={<div style={{ width: '50px' }}>Search</div>}
                                 value={this.state.despatchSearchInput}
                                 style={searchInputStyle}
                                 onChange={this.handleSearchInput}
                                 disabled={this.state.showDespatchDetail}></Input>
-                            <p className="main-search-sub-title">Status</p>
-                            <Select
-                                className="main-search-select"
-                                onChange={this.handleSelect}
-                                value={this.state.despatchStatus}
-                                disabled={this.state.showDespatchDetail}>
-                                <Option value="ALL">ALL</Option>
-                                <Option value="DESPATCH">DESPATCH</Option>
-                                <Option value="HISTORY">HISTORY</Option>
-                            </Select>
-                            <p className="main-search-sub-title">Start Date</p>
-                            <DatePicker
-                                className="main-search-date-picker"
-                                allowClear={false}
-                                style={datePicker}
-                                value={moment(this.state.despatchStartDate, dateFormatList[0])}
-                                format={dateFormatList}
-                                onChange={date => this.handleStartDate(date)}
-                                disabled={this.state.showDespatchDetail} />
-                            <p className="main-search-sub-title">End Date</p>
-                            <DatePicker
-                                className="main-search-date-picker"
-                                allowClear={false}
-                                style={datePicker}
-                                value={moment(this.state.despatchEndDate, dateFormatList[0])}
-                                format={dateFormatList}
-                                onChange={date => this.handleEndDate(date)}
-                                disabled={this.state.showDespatchDetail} />
+                            {/* <p className="main-search-sub-title">Status</p> */}
+                            <Tooltip placement="right" title="Status">
+                                <Select
+                                    className="main-search-select"
+                                    onChange={this.handleSelect}
+                                    value={this.state.despatchStatus}
+                                    allowClear={true}
+                                    placeholder="Select Status"
+                                    style={{ marginTop: '15px', width: '200px' }}
+                                    disabled={this.state.showDespatchDetail}>
+                                    <Option value="ALL">ALL</Option>
+                                    <Option value="DESPATCH">DESPATCH</Option>
+                                    <Option value="HISTORY">HISTORY</Option>
+                                </Select>
+                            </Tooltip>
+                            {/* <p className="main-search-sub-title">Start Date</p> */}
+                            <Tooltip placement="right" title="Start Date">
+                                <DatePicker
+                                    className="main-search-date-picker"
+                                    allowClear={false}
+                                    style={datePicker}
+                                    value={moment(this.state.despatchStartDate, dateFormatList[0])}
+                                    format={dateFormatList}
+                                    onChange={date => this.handleStartDate(date)}
+                                    disabled={this.state.showDespatchDetail} />
+                            </Tooltip>
+
+                            {/* <p className="main-search-sub-title">End Date</p> */}
+                            <Tooltip placement="right" title="End Date">
+                                <DatePicker
+                                    className="main-search-date-picker"
+                                    allowClear={false}
+                                    style={datePicker}
+                                    value={moment(this.state.despatchEndDate, dateFormatList[0])}
+                                    format={dateFormatList}
+                                    onChange={date => this.handleEndDate(date)}
+                                    disabled={this.state.showDespatchDetail} />
+                            </Tooltip>
+
                             {
                                 this.state.showError ?
-                                    <Alert style={{ marginTop: '20px' }} message="Wrong Date Range" type="error" showIcon /> :
+                                    <Alert style={{ marginTop: '15px' }} message="Wrong Date Range" type="error" showIcon /> :
                                     null
                             }
                             <Button
-                                style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                                style={{ backgroundColor: 'rgb(70, 154, 209)', marginTop: '15px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="search"
                                 disabled={this.state.showDespatchDetail}
                                 onClick={this.handleSearchButton}>Search</Button>
                             <Button
-                                style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '50px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
+                                style={{ borderColor: 'rgb(240, 184, 30)', backgroundColor: 'rgb(240, 184, 30)', marginTop: '15px', marginBottom: '20px', height: '32px', width: '150px', fontFamily: 'varela', paddingTop: '2px' }}
                                 type="primary"
                                 icon="reload"
                                 disabled={this.state.showDespatchDetail}
                                 onClick={this.handleResetButton}>Reset</Button>
+                            <Spin spinning={this.state.loading}></Spin>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Select, Input, Button, Alert, Modal } from 'antd';
+import { DatePicker, Select, Input, Button, Alert, Modal, Tooltip, Spin } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
@@ -41,7 +41,8 @@ class OrderView extends Component {
       vessels: '',
       vesselsUpdate: '',
       despatchDetail: '',
-      a: false
+      a: false,
+      loading: false
     }
     this.handleSearchInput = this.handleSearchInput.bind(this)
     this.handleSupplierInput = this.handleSupplierInput.bind(this)
@@ -67,6 +68,15 @@ class OrderView extends Component {
       })
     }
   }
+
+  // componentDidUpdate() {
+  //   // this.setState({loading:false},console.log('loading complete'))
+  //   if (this.state.loading === true) {
+  //     this.setState({ loading: false }, () => { console.log('loading complete' + this.state.loading) })
+  //   } else {
+  //     //do something else
+  //   }
+  // }
 
   componentDidMount() {
     const { home, serviceEntry } = this.state
@@ -212,13 +222,13 @@ class OrderView extends Component {
 
   handleSearchButton() {
     const { orderSearchInput, supplierInput, vesselInput, awbNoInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
-    console.log("orderSearchInput  " + orderSearchInput)
-    console.log("supplierInput  " + supplierInput)
-    console.log("vesselInput  " + vesselInput)
-    console.log("awbNoInput  " + awbNoInput)
-    console.log("orderStatus  " + orderStatus)
-    console.log("orderStartDate  " + orderStartDate)
-    console.log("orderEndDate  " + orderEndDate)
+    // console.log("orderSearchInput  " + orderSearchInput)
+    // console.log("supplierInput  " + supplierInput)
+    // console.log("vesselInput  " + vesselInput)
+    // console.log("awbNoInput  " + awbNoInput)
+    // console.log("orderStatus  " + orderStatus)
+    // console.log("orderStartDate  " + orderStartDate)
+    // console.log("orderEndDate  " + orderEndDate)
 
     const date1 = moment(orderStartDate, dateFormatList[0]);
     const date2 = moment(orderEndDate, dateFormatList[0]);
@@ -227,134 +237,148 @@ class OrderView extends Component {
     const vessel = vesselInput.toUpperCase();
     const awbNo = awbNoInput.toUpperCase();
 
+
     if (date1 > date2) {
       this.setState({
         showError: true
       })
     } else {
-      if (orderStatus === 'ALL') {
-        if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-          this.setState({
-            showError: false,
-            ordersUpdated: orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
-            })
-          })
-        } else {
-          this.setState({
-            showError: false,
-            ordersUpdated: this.state.orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && (
-                  (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
-                  || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
-                  || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
-                  || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
-                  || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
-                  || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : '')
+      this.setState({
+        loading: true
+      }, () => {
+        console.log('loading', this.state.loading)
+        if (orderStatus === 'ALL') {
+          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+            this.setState({
+              showError: false,
+              ordersUpdated: orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
                 )
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : '')
-              )
+              })
             })
-          })
-        }
-      } else if (orderStatus === 'LANDED ITEMS') {
-        if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-          this.setState({
-            showError: false,
-            ordersUpdated: orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && o.landedItem === 'LANDED'
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
+          } else {
+            this.setState({
+              showError: false,
+              ordersUpdated: this.state.orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && (
+                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null)
+                  )
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                )
+              })
             })
-          })
+          }
+        } else if (orderStatus === 'LANDED ITEMS') {
+          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+            this.setState({
+              showError: false,
+              ordersUpdated: orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && o.landedItem === 'LANDED'
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                )
+              })
+            })
+          } else {
+            this.setState({
+              showError: false,
+              ordersUpdated: this.state.orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && (
+                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                  && o.landedItem === 'LANDED'
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+              })
+            })
+          }
         } else {
-          this.setState({
-            showError: false,
-            ordersUpdated: this.state.orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && (
-                  (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
-                  || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
-                  || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
-                  || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
-                  || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
-                  || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
-                && o.landedItem === 'LANDED'
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
+          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+            this.setState({
+              showError: false,
+              ordersUpdated: orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && o.statusFlg === orderStatus
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+              })
             })
-          })
+          } else {
+            this.setState({
+              showError: false,
+              ordersUpdated: this.state.orders.filter(o => {
+                return (
+                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                  && (
+                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                  && o.statusFlg === orderStatus
+                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+              })
+            })
+          }
         }
-      } else {
-        if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-          this.setState({
-            showError: false,
-            ordersUpdated: orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && o.statusFlg === orderStatus
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
-            })
-          })
-        } else {
-          this.setState({
-            showError: false,
-            ordersUpdated: this.state.orders.filter(o => {
-              return (
-                ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                  && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                  || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                && (
-                  (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : '')
-                  || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : '')
-                  || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : '')
-                  || (o.description !== null ? o.description.toUpperCase().includes(text) : '')
-                  || (o.remark !== null ? o.remark.toUpperCase().includes(text) : '')
-                  || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : ''))
-                && o.statusFlg === orderStatus
-                && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : '')
-                && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : '')
-                && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : ''))
-            })
-          })
-        }
-      }
+      })
+      setTimeout(() => {
+        this.setState({
+          loading: false
+        })
+      }, 2000);
     }
   }
 
   handleResetButton() {
     this.setState({
+      loading: true,
       showError: false,
       ordersUpdated: this.state.orders,
       orderSearchInput: '',
@@ -364,7 +388,14 @@ class OrderView extends Component {
       orderStatus: 'ALL',
       orderStartDate: '01/01/2000',
       orderEndDate: moment().format('DD/MM/YYYY')
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          loading: false
+        })
+      }, 2000);
     })
+
   }
 
   handleToDespatch(id) {
@@ -412,19 +443,18 @@ class OrderView extends Component {
     var serviceEntry = this.props.serviceEntry
     //get order detail
     if (mlbarcodeRecKey == null) {
-    let url = serviceEntry + 'api/orders/' + recKey
-    console.log(url)
-    fetch(url, {
-      method: 'GET'
-    })
-      .then(response => response.json())
-      .then(response => {
-        this.setState({
-          orderDetail: response[0]
-        })
+      let url = serviceEntry + 'api/orders/' + recKey
+      console.log(url)
+      fetch(url, {
+        method: 'GET'
       })
-    }
-     else {
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            orderDetail: response[0]
+          })
+        })
+    } else {
       let url = serviceEntry + 'api/orders-ml/'
       let params = new URLSearchParams();
       params.append('recKey', recKey);
@@ -592,11 +622,11 @@ class OrderView extends Component {
     }
 
     const orderViewBodyItemContainer = {
-      width: '7vw',
+      width: '6.5vw',
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      flex: '1',
+      // flex: '1',
     }
 
     const orderViewBodyItemContainerLast = {
@@ -604,7 +634,7 @@ class OrderView extends Component {
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      flex: '1'
+      // flex: '1'
     }
 
     const orderViewBodyItem = {
@@ -623,14 +653,18 @@ class OrderView extends Component {
         key={index}>
         <div className="main-order-view-body" style={index % 2 === 1 ? orderViewBody : orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey, ordersUpdated[index].mlbarcodeRecKey)}>
           <div className="main-item-container" style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].mlbarcodeRecKey}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].vslName}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].vslName}
+              </div>
+            </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].docId}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].docId}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].docId}
+              </div>
+            </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
@@ -643,11 +677,13 @@ class OrderView extends Component {
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].landedItem === 'LANDED' ?
-                ordersUpdated[index].custName :
-                ordersUpdated[index].suppName}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].landedItem === 'LANDED' ? ordersUpdated[index].custName : ordersUpdated[index].suppName}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].landedItem === 'LANDED' ?
+                  ordersUpdated[index].custName :
+                  ordersUpdated[index].suppName}
+              </div>
+            </Tooltip>
           </div>
           {/* <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
@@ -657,9 +693,11 @@ class OrderView extends Component {
             </div>
           </div> */}
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].description}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].description}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].description}
+              </div>
+            </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
@@ -678,9 +716,11 @@ class OrderView extends Component {
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].AwbNo}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].awbNo}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].awbNo}
+              </div>
+            </Tooltip>
           </div>
           {/* <div style={orderViewBodyItemContainer}>
             <div className="main-item" style={orderViewBodyItem}>
@@ -688,19 +728,46 @@ class OrderView extends Component {
             </div>
           </div> */}
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].dimension}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].dimension}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].dimension}
+              </div>
+            </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].mlbarcodeRef1}
-            </div>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef1}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].mlbarcodeRef1}
+              </div>
+            </Tooltip>
+          </div>
+          <div style={orderViewBodyItemContainer}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef2}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].mlbarcodeRef2}
+              </div>
+            </Tooltip>
+          </div>
+          <div style={orderViewBodyItemContainer}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef3}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].mlbarcodeRef3}
+              </div>
+            </Tooltip>
+          </div>
+          <div style={orderViewBodyItemContainer}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef4}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].mlbarcodeRef4}
+              </div>
+            </Tooltip>
           </div>
           <div style={orderViewBodyItemContainerLast}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].remark}
-            </div>
+            <Tooltip placement="top" title={ordersUpdated[index].remark}>
+              <div className="main-item" style={orderViewBodyItem}>
+                {ordersUpdated[index].remark}
+              </div>
+            </Tooltip>
           </div>
         </div>
 
@@ -932,8 +999,8 @@ class OrderView extends Component {
               {
 
                 Object.keys(attachments).map(key => {
-                  var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-
+                  // var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+                  var docSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
                   //handle
                   let dotIndex = attachments[key].name.indexOf('.');
                   let length = attachments[key].name.length;
@@ -966,8 +1033,8 @@ class OrderView extends Component {
                 {
 
                   Object.keys(attachments).map(key => {
-                    var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-
+                    // var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
+                    var imgSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
                     //handle
                     let dotIndex = attachments[key].name.indexOf('.');
                     let length = attachments[key].name.length;
@@ -1012,9 +1079,8 @@ class OrderView extends Component {
 
     const searchInputStyle = {
       fontFamily: 'varela',
-      textAlign: 'center',
-      width: '154px',
-      marginTop: '-5px'
+      width: '200px',
+      marginTop: '15px'
     }
 
     const orderViewHeader = {
@@ -1029,14 +1095,14 @@ class OrderView extends Component {
     }
 
     const orderViewHeaderTitleContainer = {
-      width: '7vw',
+      width: '6.5vw',
       borderRightStyle: 'solid',
       borderWidth: '1px',
       borderColor: 'white',
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
-      flex: '1'
+      // flex: '1'
     }
 
     const orderViewHeaderTitle = {
@@ -1050,7 +1116,7 @@ class OrderView extends Component {
 
     const datePicker = {
       fontFamily: 'varela',
-      marginTop: '-5px'
+      marginTop: '15px'
     }
 
     const orderViewHeader2 = {
@@ -1103,67 +1169,83 @@ class OrderView extends Component {
 
     return (
       <div>
+
         <div className="main-search-view">
           <div className="main-search-title-container">
             <p className="main-search-title" >Search Orders</p>
             <div className="main-search-second-container">
-              <p className="main-search-sub-title2">Search</p>
+              {/* <p className="main-search-sub-title2">Search</p> */}
               <Input className="main-search-input"
+                addonBefore={<div style={{ width: '50px' }}>Search</div>}
                 value={this.state.orderSearchInput}
                 style={searchInputStyle}
                 onChange={this.handleSearchInput}
                 disabled={this.state.showOrderDetail}></Input>
-              <p className="main-search-sub-title2">Supplier</p>
+              {/* <p className="main-search-sub-title2">Supplier</p> */}
               <Input.Search className="main-search-input2"
+                addonBefore={<div style={{ width: '50px' }}>Supplier</div>}
                 value={this.state.supplierInput}
                 style={searchInputStyle}
                 onChange={this.handleSupplierInput}
                 disabled={this.state.showOrderDetail}
                 onSearch={() => this.setState({ showSupplierModal: true })}></Input.Search>
-              <p className="main-search-sub-title2">Vessel</p>
+              {/* <p className="main-search-sub-title2">Vessel</p> */}
               <Input.Search className="main-search-input2"
+                addonBefore={<div style={{ width: '50px' }}>Vessel</div>}
                 value={this.state.vesselInput}
                 style={searchInputStyle}
                 onChange={this.handleVesselInput}
                 disabled={this.state.showOrderDetail}
                 onSearch={() => this.setState({ showVesselModal: true })}></Input.Search>
-              <p className="main-search-sub-title2">AWB NO</p>
+              {/* <p className="main-search-sub-title2">AWB NO</p> */}
               <Input className="main-search-input"
+                addonBefore={<div style={{ width: '50px' }}>Awb No</div>}
                 value={this.state.awbNoInput}
                 style={searchInputStyle}
                 onChange={this.handleAwbNoInput}
                 disabled={this.state.showOrderDetail}></Input>
-              <p className="main-search-sub-title2">Status</p>
-              <Select
-                className="main-search-select"
-                onChange={this.handleSelect}
-                value={this.state.orderStatus}
-                style={{ marginTop: '-5px' }}
-                disabled={this.state.showOrderDetail}>
-                <Option value="ALL">ALL</Option>
-                <Option value="EXPECTED">EXPECTED</Option>
-                <Option value="STOCK">STOCK</Option>
-                <Option value="DESPATCH">DESPATCH</Option>
-                <Option value="LANDED ITEMS">LANDED ITEMS</Option>
-              </Select>
-              <p className="main-search-sub-title2">Start Date</p>
-              <DatePicker
-                className="main-search-date-picker"
-                allowClear={false}
-                style={datePicker}
-                value={moment(this.state.orderStartDate, dateFormatList[0])}
-                format={dateFormatList}
-                onChange={date => this.handleStartDate(date)}
-                disabled={this.state.showOrderDetail} />
-              <p className="main-search-sub-title2">End Date</p>
-              <DatePicker
-                className="main-search-date-picker"
-                allowClear={false}
-                style={datePicker}
-                value={moment(this.state.orderEndDate, dateFormatList[0])}
-                format={dateFormatList}
-                onChange={date => this.handleEndDate(date)}
-                disabled={this.state.showOrderDetail} />
+              {/* <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}> */}
+              {/* <p className="main-search-sub-title2">Status</p> */}
+              <Tooltip placement="right" title="Status">
+                <Select
+                  className="main-search-select"
+                  onChange={this.handleSelect}
+                  value={this.state.orderStatus}
+                  placeholder="Select Status"
+                  style={{ marginTop: '15px', width: '200px' }}
+                  disabled={this.state.showOrderDetail}>
+                  <Option value="ALL">ALL</Option>
+                  <Option value="EXPECTED">EXPECTED</Option>
+                  <Option value="STOCK">STOCK</Option>
+                  <Option value="DESPATCH">DESPATCH</Option>
+                  <Option value="LANDED ITEMS">LANDED ITEMS</Option>
+                </Select>
+              </Tooltip>
+              {/* </div> */}
+              {/* <p className="main-search-sub-title2">Start Date</p> */}
+              <Tooltip placement="right" title="Start Date">
+                <DatePicker
+                  className="main-search-date-picker"
+                  allowClear={false}
+                  style={datePicker}
+                  value={moment(this.state.orderStartDate, dateFormatList[0])}
+                  placeholder={'Start'}
+                  format={dateFormatList}
+                  onChange={date => this.handleStartDate(date)}
+                  disabled={this.state.showOrderDetail} />
+              </Tooltip>
+              {/* <p className="main-search-sub-title2">End Date</p> */}
+              <Tooltip placement="right" title="End Date">
+                <DatePicker
+                  className="main-search-date-picker"
+                  allowClear={false}
+                  style={datePicker}
+                  value={moment(this.state.orderEndDate, dateFormatList[0])}
+                  format={dateFormatList}
+                  onChange={date => this.handleEndDate(date)}
+                  disabled={this.state.showOrderDetail} />
+              </Tooltip>
+
               {
                 this.state.showError ?
                   <Alert style={{ marginTop: '20px' }} message="Wrong Date Range" type="error" showIcon /> :
@@ -1187,6 +1269,7 @@ class OrderView extends Component {
                 icon="table"
                 disabled={this.state.showOrderDetail}
                 onClick={() => exportDefaultExcel()}>Export to Excel</Button>
+              <Spin spinning={this.state.loading}></Spin>
             </div>
           </div>
         </div>
@@ -1234,19 +1317,28 @@ class OrderView extends Component {
                 <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>ITEM PO</p>
                 </div>
+                <div style={orderViewHeaderTitleContainer}>
+                  <p style={orderViewHeaderTitle}>TITLE</p>
+                </div>
+                <div style={orderViewHeaderTitleContainer}>
+                  <p style={orderViewHeaderTitle}>VENDOR</p>
+                </div>
+                <div style={orderViewHeaderTitleContainer}>
+                  <p style={orderViewHeaderTitle}>PRIORITY</p>
+                </div>
                 <div
                   style={{
                     width: '9vw',
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'center',
-                    flex: '1'
+                    // flex: '1'
                   }}>
                   <p style={orderViewHeaderTitle}>REMARKS</p>
                 </div>
               </div>
               <AutoSizer style={{ height: 'calc(100vh - 60px)', width: 'calc(100vw)', resize: 'both' }}>
-                {({ height, width }) => (
+                {({ height, width }) => (                
                   <List
                     className="list"
                     width={width + 400}
