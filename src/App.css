@@ -15,7 +15,10 @@
 }
 
 .background-pic {
-    background: url(localhost:8080/cargoship.jpg) no-repeat center center;
+    /* Amos */
+    background: url(./cargoship.jpg) no-repeat center center;
+    /* Sinwa */
+    /* background: url(192.168.10.16:8080/cargoship.jpg) no-repeat center center; */
     background-size: cover;
     background-attachment: fixed;
     background-color: rgba(0, 0, 0, 0.5);
@@ -654,6 +657,16 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 3px;
+}
+
+.main-item-vessel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* white-space: nowrap; */
+    padding: 3px;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
 }
 
 .doc {

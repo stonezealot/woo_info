@@ -629,8 +629,16 @@ class OrderView extends Component {
       // flex: '1',
     }
 
+    const orderViewBodyItemContainerVessel = {
+      width: '10vw',
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      // flex: '1',
+    }
+
     const orderViewBodyItemContainerLast = {
-      width: '9vw',
+      width: '18.5vw',
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'center',
@@ -652,9 +660,9 @@ class OrderView extends Component {
         style={style}
         key={index}>
         <div className="main-order-view-body" style={index % 2 === 1 ? orderViewBody : orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey, ordersUpdated[index].mlbarcodeRecKey)}>
-          <div className="main-item-container" style={orderViewBodyItemContainer}>
+          <div className="main-item-container" style={orderViewBodyItemContainerVessel}>
             <Tooltip placement="right" title={ordersUpdated[index].vslName}>
-              <div className="main-item" style={orderViewBodyItem}>
+              <div className="main-item-vessel" style={orderViewBodyItem}>
                 {ordersUpdated[index].landedItem === 'LANDED' ? 'OFFLAND: ' : null}{ordersUpdated[index].vslName}
               </div>
             </Tooltip>
@@ -677,25 +685,16 @@ class OrderView extends Component {
             </div>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].landedItem === 'LANDED' ? ordersUpdated[index].custName : ordersUpdated[index].suppName}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef3}>
               <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].landedItem === 'LANDED' ?
-                  ordersUpdated[index].custName :
-                  ordersUpdated[index].suppName}
+                {ordersUpdated[index].mlbarcodeRef3}
               </div>
             </Tooltip>
           </div>
-          {/* <div style={orderViewBodyItemContainer}>
-            <div className="main-item" style={orderViewBodyItem}>
-              {ordersUpdated[index].landedItem === 'LANDED' ?
-                'LANDED ITEM' :
-                ordersUpdated[index].itemRef}
-            </div>
-          </div> */}
           <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].description}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef4}>
               <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].description}
+                {ordersUpdated[index].mlbarcodeRef4}
               </div>
             </Tooltip>
           </div>
@@ -745,20 +744,6 @@ class OrderView extends Component {
             <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef2}>
               <div className="main-item" style={orderViewBodyItem}>
                 {ordersUpdated[index].mlbarcodeRef2}
-              </div>
-            </Tooltip>
-          </div>
-          <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef3}>
-              <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].mlbarcodeRef3}
-              </div>
-            </Tooltip>
-          </div>
-          <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef4}>
-              <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].mlbarcodeRef4}
               </div>
             </Tooltip>
           </div>
@@ -1105,6 +1090,17 @@ class OrderView extends Component {
       // flex: '1'
     }
 
+    const orderViewHeaderTitleContainerVessel = {
+      width: '10vw',
+      borderRightStyle: 'solid',
+      borderWidth: '1px',
+      borderColor: 'white',
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      // flex: '1'
+    }
+
     const orderViewHeaderTitle = {
       width: '200px',
       fontSize: '12px',
@@ -1284,7 +1280,7 @@ class OrderView extends Component {
               className="main-view2"
               style={{ width: '100vw', maxWidth: 'calc(100vw - 400px)' }}>
               <div className="main-view-header" style={orderViewHeader}>
-                <div style={orderViewHeaderTitleContainer}>
+                <div style={orderViewHeaderTitleContainerVessel}>
                   <p style={orderViewHeaderTitle}>VESSEL</p>
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
@@ -1318,17 +1314,11 @@ class OrderView extends Component {
                   <p style={orderViewHeaderTitle}>ITEM PO</p>
                 </div>
                 <div style={orderViewHeaderTitleContainer}>
-                  <p style={orderViewHeaderTitle}>TITLE</p>
-                </div>
-                <div style={orderViewHeaderTitleContainer}>
-                  <p style={orderViewHeaderTitle}>VENDOR</p>
-                </div>
-                <div style={orderViewHeaderTitleContainer}>
                   <p style={orderViewHeaderTitle}>PRIORITY</p>
                 </div>
                 <div
                   style={{
-                    width: '9vw',
+                    width: '18.5vw',
                     alignItems: 'center',
                     display: 'flex',
                     justifyContent: 'center',
@@ -1338,7 +1328,7 @@ class OrderView extends Component {
                 </div>
               </div>
               <AutoSizer style={{ height: 'calc(100vh - 60px)', width: 'calc(100vw)', resize: 'both' }}>
-                {({ height, width }) => (                
+                {({ height, width }) => (
                   <List
                     className="list"
                     width={width + 400}
