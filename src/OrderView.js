@@ -692,9 +692,9 @@ class OrderView extends Component {
             </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef4}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef2}>
               <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].mlbarcodeRef4}
+                {ordersUpdated[index].mlbarcodeRef2}
               </div>
             </Tooltip>
           </div>
@@ -741,9 +741,9 @@ class OrderView extends Component {
             </Tooltip>
           </div>
           <div style={orderViewBodyItemContainer}>
-            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef2}>
+            <Tooltip placement="right" title={ordersUpdated[index].mlbarcodeRef4}>
               <div className="main-item" style={orderViewBodyItem}>
-                {ordersUpdated[index].mlbarcodeRef2}
+                {ordersUpdated[index].mlbarcodeRef4}
               </div>
             </Tooltip>
           </div>
