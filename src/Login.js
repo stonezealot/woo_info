@@ -18,12 +18,16 @@ class Login extends Component {
         console.log('in login screen')
         super(props);
         this.state = {
-            // Amos
+            // Amos-test
             // serviceEntry: 'http://172.16.10.14:8085/',
+            // Amos-live
+            // serviceEntry: 'http://172.16.10.4:8085/',
+            serviceEntry: 'https://logistics.amosgroup.com:8090/ws/',
+            // serviceEntry: 'http://58.185.33.170:8085/',
             // Sinwa
             // serviceEntry: 'http://192.168.10.16:8085/',
             // Ryan
-            serviceEntry: 'http://localhost:8085/',
+            // serviceEntry: 'http://localhost:8080/',
             username: '',
             password: '',
             home: '',

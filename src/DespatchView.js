@@ -115,121 +115,283 @@ class DespatchView extends Component {
     }
 
     handleSearchButton() {
-        const { despatchSearchInput, despatchStatus, despatchStartDate, despatchEndDate, despatches } = this.state;
-        console.log("despatchSearchInput  " + despatchSearchInput)
-        console.log("despatchStatus  " + despatchStatus)
-        console.log("despatchStartDate  " + despatchStartDate)
-        console.log("despatchEndDate  " + despatchEndDate)
+        const { home, serviceEntry, despatchSearchInput, despatchStatus, despatchStartDate, despatchEndDate, despatches } = this.state;
 
         const date1 = moment(despatchStartDate, dateFormatList[0]);
         const date2 = moment(despatchEndDate, dateFormatList[0]);
         const text = despatchSearchInput.toUpperCase();
+        console.log(text)
 
-        if (date1 > date2) {
-            this.setState({
-                showError: true
+        //new search
+        if (home.isadmin === 'Y') {
+            //get despatches admin
+            console.log('get despatches')
+            let url = serviceEntry + 'api/all-despatches/'
+            fetch(url, {
+                method: 'GET'
             })
-        } else {
-            this.setState({
-                loading: true
-            }, () => {
-                if (despatchStatus === 'ALL') {
-                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                        this.setState({
-                            showError: false,
-                            despatchesUpdated: despatches.filter(d => {
-                                return (
-                                    moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
-                                )
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        despatchesUpdated: response,
+                        despatches: response
+                    }, () => {
+                        if (date1 > date2) {
+                            this.setState({
+                                showError: true
                             })
-                        })
-                    } else {
-                        this.setState({
-                            showError: false,
-                            despatchesUpdated: despatches.filter(d => {
-                                return (
-                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                    && (
-                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                    )
-                                )
+                        } else {
+                            this.setState({
+                                loading: true
+                            }, () => {
+                                if (despatchStatus === 'ALL') {
+                                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
+                                                )
+                                            })
+                                        })
+                                    } else {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && (
+                                                        (d.vslName !== null ? d.vslName.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.shipName !== null ? d.shipName.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.marking !== null ? d.marking.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.custName !== null ? d.custName.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.consName !== null ? d.consName.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.permitNo !== null ? d.permitNo.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.carrier !== null ? d.carrier.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.awbNo !== null ? d.awbNo.toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.destination !== null ? d.destination.toUpperCase().includes(text) : d.recKey !== null)
+                                                    )
+                                                )
+                                            })
+                                        })
+                                    }
+                                } else {
+                                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && d.statusFlg === despatchStatus
+                                                )
+                                            })
+                                        })
+                                    } else {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && (
+                                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                    )
+                                                    && d.statusFlg === despatchStatus
+                                                )
+                                            })
+                                        })
+                                    }
+                                }
                             })
-                        })
-                    }
-                } else {
-                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
-                        this.setState({
-                            showError: false,
-                            despatchesUpdated: despatches.filter(d => {
-                                return (
-                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                    && d.statusFlg === despatchStatus
-                                )
-                            })
-                        })
-                    } else {
-                        this.setState({
-                            showError: false,
-                            despatchesUpdated: despatches.filter(d => {
-                                return (
-                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                                    && (
-                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
-                                    )
-                                    && d.statusFlg === despatchStatus
-                                )
-                            })
-                        })
-                    }
-                }
-            })
-            setTimeout(() => {
-                this.setState({
-                    loading: false
+                            setTimeout(() => {
+                                this.setState({
+                                    loading: false
+                                })
+                            }, 2000);
+                        }
+                    })
                 })
-            }, 2000);
+        } else {
+            //get despatches common
+            console.log('get despatches')
+            let url = serviceEntry + 'api/despatches/'
+            let params = new URLSearchParams();
+            params.append('custId', home.custId);
+            url += ('?' + params);
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        despatchesUpdated: response,
+                        despatches: response
+                    }, () => {
+                        if (date1 > date2) {
+                            this.setState({
+                                showError: true
+                            })
+                        } else {
+                            this.setState({
+                                loading: true
+                            }, () => {
+                                if (despatchStatus === 'ALL') {
+                                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                    && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2
+                                                )
+                                            })
+                                        })
+                                    } else {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && (
+                                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                    )
+                                                )
+                                            })
+                                        })
+                                    }
+                                } else {
+                                    if (despatchSearchInput === '' || despatchSearchInput.toString().trim().length === 0) {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && d.statusFlg === despatchStatus
+                                                )
+                                            })
+                                        })
+                                    } else {
+                                        this.setState({
+                                            showError: false,
+                                            despatchesUpdated: this.state.despatches.filter(d => {
+                                                return (
+                                                    (moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                                                        && moment(moment(d.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                                                    && (
+                                                        (d.vslName !== null ? d.vslName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.shipName !== null ? d.shipName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.marking !== null ? d.marking.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.custName !== null ? d.custName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.consName !== null ? d.consName.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.permitNo !== null ? d.permitNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.carrier !== null ? d.carrier.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.awbNo !== null ? d.awbNo.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                        || (d.destination !== null ? d.destination.toString().toUpperCase().includes(text) : d.recKey !== null)
+                                                    )
+                                                    && d.statusFlg === despatchStatus
+                                                )
+                                            })
+                                        })
+                                    }
+                                }
+                            })
+                            setTimeout(() => {
+                                this.setState({
+                                    loading: false
+                                })
+                            }, 2000);
 
+                        }
+                    })
+                })
         }
+
+
 
     }
 
     handleResetButton() {
 
-        this.setState({
-            loading: true,
-            showError: false,
-            despatchesUpdated: this.state.despatches,
-            despatchSearchInput: '',
-            despatchStatus: 'ALL',
-            despatchStartDate: '01/01/2000',
-            despatchEndDate: moment().format('DD/MM/YYYY')
-        }, () => {
-            setTimeout(() => {
-                this.setState({
-                    loading: false
+        //new reset
+        if (this.state.home.isadmin === 'Y') {
+            //get despatches admin
+            console.log('get despatches')
+            let url = this.state.serviceEntry + 'api/all-despatches/'
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        loading: true,
+                        showError: false,
+                        despatchesUpdated: response,
+                        despatches: response,
+                        despatchSearchInput: '',
+                        despatchStatus: 'ALL',
+                        despatchStartDate: '01/01/2000',
+                        despatchEndDate: moment().format('DD/MM/YYYY')
+                    }, () => {
+                        setTimeout(() => {
+                            this.setState({
+                                loading: false
+                            })
+                        }, 2000);
+                    })
                 })
-            }, 2000);
-        })
+        } else {
+            //get despatches common
+            console.log('get despatches')
+            let url = this.state.serviceEntry + 'api/despatches/'
+            let params = new URLSearchParams();
+            params.append('custId', this.state.home.custId);
+            url += ('?' + params);
+            fetch(url, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(response => {
+                    this.setState({
+                        loading: true,
+                        showError: false,
+                        despatchesUpdated: response,
+                        despatches: response,
+                        despatchSearchInput: '',
+                        despatchStatus: 'ALL',
+                        despatchStartDate: '01/01/2000',
+                        despatchEndDate: moment().format('DD/MM/YYYY')
+                    }, () => {
+                        setTimeout(() => {
+                            this.setState({
+                                loading: false
+                            })
+                        }, 2000);
+                    })
+                })
+        }
+
+
     }
 
     handleBackButton() {
@@ -253,8 +415,9 @@ class DespatchView extends Component {
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    orderDetail: response.mlmasView
+                    orderDetail: response[0]
                 }, () => {
+                    console.log('vslName ===== ' + response[0].vslName)
                     this.props.parent({ currentIndex: 1 })
                     this.props.parent({ showOrderDetail: true })
                     console.log(this.state.orderDetail)
@@ -744,13 +907,19 @@ class DespatchView extends Component {
                                 {
 
                                     Object.keys(attachments).map(key => {
-                                        // var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                                        var docSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                                        // var docSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
 
                                         //handle
-                                        let dotIndex = attachments[key].name.indexOf('.');
-                                        let length = attachments[key].name.length;
-                                        let suffix = attachments[key].name.substring(dotIndex + 1, length)
+                                        let splitArray = attachments[key].name.split(".")
+                                        let suffix = splitArray[splitArray.length - 1]
+                                        console.log('suffix:' + suffix)
+                                        let name = attachments[key].ftpFileName + '.' + suffix
+                                        console.log('name:' + name)
+                                        //amos-test
+                                        // var docSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                                        //amos-live
+                                        var docSrc = "http://172.16.10.4:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                                        console.log('before if ' + docSrc)
 
                                         if (suffix === 'pdf' || suffix === 'PDF'
                                             || suffix === 'xlsx' || suffix === 'XLSX'
@@ -780,13 +949,17 @@ class DespatchView extends Component {
                                     {
 
                                         Object.keys(attachments).map(key => {
-                                            // var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                                            var imgSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
                                             //handle
-                                            let dotIndex = attachments[key].name.indexOf('.');
-                                            let length = attachments[key].name.length;
-                                            let suffix = attachments[key].name.substring(dotIndex + 1, length)
-
+                                            let splitArray = attachments[key].name.split(".")
+                                            let suffix = splitArray[splitArray.length - 1]
+                                            console.log('suffix:' + suffix)
+                                            let name = attachments[key].ftpFileName + '.' + suffix
+                                            console.log('name:' + name)
+                                            //amos-test
+                                            // var imgSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                                            //amos-live
+                                            var imgSrc = "http://172.16.10.4:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                                            console.log('before if ' + imgSrc)
                                             if (suffix === 'jpg' || suffix === 'JPG'
                                                 || suffix === 'jpeg' || suffix === 'JPEG'
                                                 || suffix === 'gif' || suffix === 'GIF'
@@ -929,12 +1102,16 @@ class DespatchView extends Component {
                                 {
 
                                     Object.keys(attachments).map(key => {
-                                        var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-
-                                        //handle
-                                        let dotIndex = attachments[key].name.indexOf('.');
-                                        let length = attachments[key].name.length;
-                                        let suffix = attachments[key].name.substring(dotIndex + 1, length)
+                                        let splitArray = attachments[key].name.split(".")
+                                        let suffix = splitArray[splitArray.length - 1]
+                                        console.log('suffix:' + suffix)
+                                        let name = attachments[key].ftpFileName + '.' + suffix
+                                        console.log('name:' + name)
+                                        //amos-test
+                                        // var docSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                                        //amos-live
+                                        var docSrc = "http://58.185.33.170:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                                        console.log('before if ' + docSrc)
 
                                         if (suffix === 'pdf' || suffix === 'PDF'
                                             || suffix === 'xlsx' || suffix === 'XLSX'
@@ -963,12 +1140,16 @@ class DespatchView extends Component {
                                     {
 
                                         Object.keys(attachments).map(key => {
-                                            var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-
-                                            //handle
-                                            let dotIndex = attachments[key].name.indexOf('.');
-                                            let length = attachments[key].name.length;
-                                            let suffix = attachments[key].name.substring(dotIndex + 1, length)
+                                            let splitArray = attachments[key].name.split(".")
+                                            let suffix = splitArray[splitArray.length - 1]
+                                            console.log('suffix:' + suffix)
+                                            let name = attachments[key].ftpFileName + '.' + suffix
+                                            console.log('name:' + name)
+                                            //amos-test
+                                            // var imgSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                                            //amos-live
+                                            var imgSrc = "http://58.185.33.170:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                                            console.log('before if ' + imgSrc)
 
                                             if (suffix === 'jpg' || suffix === 'JPG'
                                                 || suffix === 'jpeg' || suffix === 'JPEG'
@@ -1320,7 +1501,6 @@ class DespatchView extends Component {
                                     className="main-search-select"
                                     onChange={this.handleSelect}
                                     value={this.state.despatchStatus}
-                                    allowClear={true}
                                     placeholder="Select Status"
                                     style={{ marginTop: '15px', width: '200px' }}
                                     disabled={this.state.showDespatchDetail}>

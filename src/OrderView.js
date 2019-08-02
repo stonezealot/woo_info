@@ -92,8 +92,8 @@ class OrderView extends Component {
         .then(response => response.json())
         .then(response => {
           this.setState({
-            ordersUpdated: response,
-            orders: response
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') })
           })
         })
     } else {
@@ -109,8 +109,8 @@ class OrderView extends Component {
         .then(response => response.json())
         .then(response => {
           this.setState({
-            ordersUpdated: response,
-            orders: response
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') })
           })
         })
     }
@@ -221,14 +221,7 @@ class OrderView extends Component {
   }
 
   handleSearchButton() {
-    const { orderSearchInput, supplierInput, vesselInput, awbNoInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
-    // console.log("orderSearchInput  " + orderSearchInput)
-    // console.log("supplierInput  " + supplierInput)
-    // console.log("vesselInput  " + vesselInput)
-    // console.log("awbNoInput  " + awbNoInput)
-    // console.log("orderStatus  " + orderStatus)
-    // console.log("orderStartDate  " + orderStartDate)
-    // console.log("orderEndDate  " + orderEndDate)
+    const { home, serviceEntry, orderSearchInput, supplierInput, vesselInput, awbNoInput, orderStatus, orderStartDate, orderEndDate, orders } = this.state;
 
     const date1 = moment(orderStartDate, dateFormatList[0]);
     const date2 = moment(orderEndDate, dateFormatList[0]);
@@ -236,166 +229,383 @@ class OrderView extends Component {
     const supplier = supplierInput.toUpperCase();
     const vessel = vesselInput.toUpperCase();
     const awbNo = awbNoInput.toUpperCase();
+    console.log(text)
 
-
-    if (date1 > date2) {
-      this.setState({
-        showError: true
+    //new search 
+    if (home.isadmin === 'Y') {
+      //get orders Admin
+      console.log('get orders Admin')
+      let url = serviceEntry + 'api/all-orders/'
+      fetch(url, {
+        method: 'GET'
       })
-    } else {
-      this.setState({
-        loading: true
-      }, () => {
-        console.log('loading', this.state.loading)
-        if (orderStatus === 'ALL') {
-          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-            this.setState({
-              showError: false,
-              ordersUpdated: orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
-                )
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') })
+          }, () => {
+            if (date1 > date2) {
+              this.setState({
+                showError: true
               })
-            })
-          } else {
-            this.setState({
-              showError: false,
-              ordersUpdated: this.state.orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && (
-                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null)
-                  )
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
-                )
+            } else {
+              this.setState({
+                loading: true
+              }, () => {
+                console.log('loading', this.state.loading)
+                if (orderStatus === 'ALL') {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null)
+                          )
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  }
+                } else if (orderStatus === 'LANDED ITEMS') {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && o.landedItem === 'LANDED'
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                          && o.landedItem === 'LANDED'
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  }
+                } else {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && o.statusFlg === orderStatus
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                          && o.statusFlg === orderStatus
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  }
+                }
               })
-            })
-          }
-        } else if (orderStatus === 'LANDED ITEMS') {
-          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-            this.setState({
-              showError: false,
-              ordersUpdated: orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && o.landedItem === 'LANDED'
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
-                )
-              })
-            })
-          } else {
-            this.setState({
-              showError: false,
-              ordersUpdated: this.state.orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && (
-                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
-                  && o.landedItem === 'LANDED'
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
-              })
-            })
-          }
-        } else {
-          if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
-            this.setState({
-              showError: false,
-              ordersUpdated: orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && o.statusFlg === orderStatus
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
-              })
-            })
-          } else {
-            this.setState({
-              showError: false,
-              ordersUpdated: this.state.orders.filter(o => {
-                return (
-                  ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                    && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
-                    || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
-                      && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
-                  && (
-                    (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
-                    || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
-                  && o.statusFlg === orderStatus
-                  && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
-                  && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
-                  && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
-              })
-            })
-          }
-        }
-      })
-      setTimeout(() => {
-        this.setState({
-          loading: false
+              setTimeout(() => {
+                this.setState({
+                  loading: false
+                })
+              }, 2000);
+            }
+          })
         })
-      }, 2000);
+    } else {
+      //get orders common
+      console.log('get orders common')
+      let url = serviceEntry + 'api/orders/'
+      let params = new URLSearchParams();
+      params.append('custId', home.custId);
+      url += ('?' + params);
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') })
+          }, () => {
+            if (date1 > date2) {
+              this.setState({
+                showError: true
+              })
+            } else {
+              this.setState({
+                loading: true
+              }, () => {
+                console.log('loading', this.state.loading)
+                if (orderStatus === 'ALL') {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null)
+                          )
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  }
+                } else if (orderStatus === 'LANDED ITEMS') {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && o.landedItem === 'LANDED'
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null)
+                        )
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                          && o.landedItem === 'LANDED'
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  }
+                } else {
+                  if (orderSearchInput === '' || orderSearchInput.toString().trim().length === 0) {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && o.statusFlg === orderStatus
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  } else {
+                    this.setState({
+                      showError: false,
+                      ordersUpdated: this.state.orders.filter(o => {
+                        return (
+                          ((moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                            && moment(moment(o.stockDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2)
+                            || (moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) >= date1
+                              && moment(moment(o.docDate).format('DD/MM/YYYY'), dateFormatList[0]) <= date2))
+                          && (
+                            (o.vslName !== null ? o.vslName.toString().toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.suppName !== null ? o.suppName.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.itemRef !== null ? o.itemRef.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.description !== null ? o.description.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.remark !== null ? o.remark.toUpperCase().includes(text) : o.recKey !== null)
+                            || (o.awbNo !== null ? o.awbNo.toUpperCase().includes(text) : o.recKey !== null))
+                          && o.statusFlg === orderStatus
+                          && (o.suppName !== null ? o.suppName.toUpperCase().includes(supplier) : o.recKey !== null)
+                          && (o.vslId !== null ? o.vslId.toUpperCase().includes(vessel) : o.recKey !== null)
+                          && (o.awbNo !== null ? o.awbNo.toUpperCase().includes(awbNo) : o.recKey !== null))
+                      })
+                    })
+                  }
+                }
+              })
+              setTimeout(() => {
+                this.setState({
+                  loading: false
+                })
+              }, 2000);
+            }
+          })
+        })
     }
+
+
   }
 
   handleResetButton() {
-    this.setState({
-      loading: true,
-      showError: false,
-      ordersUpdated: this.state.orders,
-      orderSearchInput: '',
-      supplierInput: '',
-      vesselInput: '',
-      awbNoInput: '',
-      orderStatus: 'ALL',
-      orderStartDate: '01/01/2000',
-      orderEndDate: moment().format('DD/MM/YYYY')
-    }, () => {
-      setTimeout(() => {
-        this.setState({
-          loading: false
-        })
-      }, 2000);
-    })
 
+    if (this.state.home.isadmin === 'Y') {
+      //get orders Admin
+      console.log('get orders Admin')
+      let url = this.state.serviceEntry + 'api/all-orders/'
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            loading: true,
+            showError: false,
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orderSearchInput: '',
+            supplierInput: '',
+            vesselInput: '',
+            awbNoInput: '',
+            orderStatus: 'ALL',
+            orderStartDate: '01/01/2000',
+            orderEndDate: moment().format('DD/MM/YYYY')
+          }, () => {
+            setTimeout(() => {
+              this.setState({
+                loading: false
+              })
+            }, 2000);
+          })
+        })
+    } else {
+      //get orders common
+      console.log('get orders common')
+      let url = this.state.serviceEntry + 'api/orders/'
+      let params = new URLSearchParams();
+      params.append('custId', this.state.home.custId);
+      url += ('?' + params);
+      fetch(url, {
+        method: 'GET'
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.setState({
+            loading: true,
+            showError: false,
+            ordersUpdated: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orders: response.filter(o => { return (o.statusFlg !== 'DESPATCH' && o.statusFlg !== 'CANCEL') }),
+            orderSearchInput: '',
+            supplierInput: '',
+            vesselInput: '',
+            awbNoInput: '',
+            orderStatus: 'ALL',
+            orderStartDate: '01/01/2000',
+            orderEndDate: moment().format('DD/MM/YYYY')
+          }, () => {
+            setTimeout(() => {
+              this.setState({
+                loading: false
+              })
+            }, 2000);
+          })
+        })
+    }
   }
 
   handleToDespatch(id) {
@@ -430,15 +640,15 @@ class OrderView extends Component {
   }
 
 
-  getOrderDetail(recKey, mlbarcodeRecKey) {
-
-    console.log('mlbarcodeRecKey: ', mlbarcodeRecKey);
+  getOrderDetail(recKey, mlmasRecKey, mlbarcodeRecKey) {
 
     this.setState({
       attachments: '',
       picUrl: '',
       showOrderDetail: true
     })
+
+
 
     var serviceEntry = this.props.serviceEntry
     //get order detail
@@ -475,7 +685,7 @@ class OrderView extends Component {
     //get attachments
     let url = serviceEntry + 'api/attachments/'
     let params = new URLSearchParams();
-    params.append('srcRecKey', recKey);
+    params.append('srcRecKey', mlmasRecKey);
     url += ('?' + params);
     fetch(url, {
       method: 'GET'
@@ -484,6 +694,8 @@ class OrderView extends Component {
       .then(response => {
         this.setState({
           attachments: response
+        }, () => {
+          console.log('at  ' + this.state.attachments)
         })
       })
   }
@@ -659,7 +871,7 @@ class OrderView extends Component {
       <div
         style={style}
         key={index}>
-        <div className="main-order-view-body" style={index % 2 === 1 ? orderViewBody : orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey, ordersUpdated[index].mlbarcodeRecKey)}>
+        <div className="main-order-view-body" style={index % 2 === 1 ? orderViewBody : orderViewBody2} onClick={() => this.getOrderDetail(ordersUpdated[index].recKey, ordersUpdated[index].mlmasRecKey, ordersUpdated[index].mlbarcodeRecKey)}>
           <div className="main-item-container" style={orderViewBodyItemContainerVessel}>
             <Tooltip placement="right" title={ordersUpdated[index].vslName}>
               <div className="main-item-vessel" style={orderViewBodyItem}>
@@ -906,7 +1118,7 @@ class OrderView extends Component {
             <div className="main-order-detail-container">
               <p className="main-order-detail-sub-title">SUPPLIER: </p>
               <TextArea
-                value={orderDetail.custName}
+                value={orderDetail.mlbarcodeRef3}
                 autosize={{ minRows: 1, maxRows: 1 }}
                 style={remarkInput}
                 disabled={true} />
@@ -914,7 +1126,7 @@ class OrderView extends Component {
             <div className="main-order-detail-container" style={{ marginBottom: '25px' }}>
               <p className="main-order-detail-sub-title">DESCRIPTION: </p>
               <TextArea
-                value={orderDetail.description}
+                value={orderDetail.mlbarcodeRef2}
                 autosize={{ minRows: 2, maxRows: 2 }}
                 style={remarkInput}
                 disabled={true} />
@@ -984,12 +1196,22 @@ class OrderView extends Component {
               {
 
                 Object.keys(attachments).map(key => {
-                  // var docSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                  var docSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+
+                  // var docSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
                   //handle
-                  let dotIndex = attachments[key].name.indexOf('.');
-                  let length = attachments[key].name.length;
-                  let suffix = attachments[key].name.substring(dotIndex + 1, length)
+                  // let dotIndex = attachments[key].name.indexOf('.');
+                  // let length = attachments[key].name.length;
+                  // let suffix = attachments[key].name.substring(dotIndex + 1, length)
+                  let splitArray = attachments[key].name.split(".")
+                  let suffix = splitArray[splitArray.length - 1]
+                  console.log('suffix:' + suffix)
+                  let name = attachments[key].ftpFileName + '.' + suffix
+                  console.log('name:' + name)
+                  //amos-test
+                  // var docSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                  //amos-live
+                  var docSrc = "http://58.185.33.170:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                  console.log('before if ' + docSrc)
 
                   if (suffix === 'pdf' || suffix === 'PDF'
                     || suffix === 'xlsx' || suffix === 'XLSX'
@@ -997,7 +1219,7 @@ class OrderView extends Component {
                     || suffix === 'doc' || suffix === 'DOC'
                     || suffix === 'docx' || suffix === 'DOCX'
                     || suffix === 'txt' || suffix === 'TXT') {
-
+                    console.log(docSrc)
                     return (
                       <div style={docContainer} key={attachments[key].recKey} onClick={() => { window.open(docSrc) }}>
                         <p className="doc" style={doc}>{attachments[key].name}</p>
@@ -1018,18 +1240,24 @@ class OrderView extends Component {
                 {
 
                   Object.keys(attachments).map(key => {
-                    // var imgSrc = "http://58.185.33.162/ep_attach/" + attachments[key].name;
-                    var imgSrc = "http://localhost:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
-                    //handle
-                    let dotIndex = attachments[key].name.indexOf('.');
-                    let length = attachments[key].name.length;
-                    let suffix = attachments[key].name.substring(dotIndex + 1, length)
 
+                    let splitArray = attachments[key].name.split(".")
+                    let suffix = splitArray[splitArray.length - 1]
+                    console.log('suffix:' + suffix)
+                    let name = attachments[key].ftpFileName + '.' + suffix
+                    console.log('name:' + name)
+                    //amos-test
+                    // var imgSrc = "http://172.16.10.14:8080/EPB_TRANS_TESTAMOS/FTP_FILE/" + attachments[key].ftpFileName;
+                    //amos-live
+                    var imgSrc = "http://58.185.33.170:8080/EPB_TRANS_EPB/FTP_FILE/" + attachments[key].ftpFileName;
+                    console.log('before if ' + imgSrc)
                     if (suffix === 'jpg' || suffix === 'JPG'
                       || suffix === 'jpeg' || suffix === 'JPEG'
                       || suffix === 'gif' || suffix === 'GIF'
                       || suffix === 'png' || suffix === 'PNG'
                       || suffix === 'tif' || suffix === 'TIF') {
+
+                      console.log(imgSrc)
 
                       return (
                         <div key={attachments[key].recKey}>
@@ -1213,7 +1441,7 @@ class OrderView extends Component {
                   <Option value="ALL">ALL</Option>
                   <Option value="EXPECTED">EXPECTED</Option>
                   <Option value="STOCK">STOCK</Option>
-                  <Option value="DESPATCH">DESPATCH</Option>
+                  {/* <Option value="DESPATCH">DESPATCH</Option> */}
                   <Option value="LANDED ITEMS">LANDED ITEMS</Option>
                 </Select>
               </Tooltip>
