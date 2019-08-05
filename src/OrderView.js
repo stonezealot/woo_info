@@ -3,9 +3,9 @@ import { DatePicker, Select, Input, Button, Alert, Modal, Tooltip, Spin } from '
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import URLSearchParams from 'url-search-params';
-import { exportExcel } from 'xlsx-oc';
 import { List, AutoSizer } from "react-virtualized";
 import './App.css';
+import ExportJsonExcel from 'js-export-excel';
 
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const Option = Select.Option;
@@ -1373,22 +1373,45 @@ class OrderView extends Component {
       marginTop: '15px',
     }
 
-    const exportDefaultExcel = () => {
-      var _headers = [
-        { k: 'vslName', v: 'VESSEL' },
-        { k: 'docId', v: 'ASN NUMBER' },
-        { k: moment('stockDate').format('DD/MM/YYYY'), v: 'RECEIVE DATE' },
-        { k: 'custName', v: 'SUPPLIER' },
-        { k: 'description', v: 'DESCRIPTION' },
-        { k: 'pkgNum', v: 'QTY' },
-        { k: 'pkgUom', v: 'UOM' },
-        { k: 'pkgWt', v: 'WEIGHT' },
-        { k: 'AwbNo', v: 'AWB' },
-        { k: 'dimension', v: 'DIMENSION' },
-        { k: 'mlbarcodeRef1', v: 'ITEM PO' },
-        { k: 'remark', v: 'REMARKS' },
+    //new excel
+    const downloadExcel = () => {
+      const data = this.state.ordersUpdated
+      var option = {}
+      let dataTable = []
+      if (data) {
+        for (let i in data) {
+          if (data) {
+            let obj = {
+              'VESSEL': data[i].vslName,
+              'ASN NUMBER': data[i].docId,
+              'RECEIVE DATE': moment(data[i].stockDate).format('DD/MM/YYYY'),
+              'SUPPLIER': data[i].mlbarcodeRef3,
+              'DESCRIPTION': data[i].mlbarcodeRef2,
+              'QTY': 1,
+              'UOM': data[i].pkgUom,
+              'WEIGHT': data[i].pkgWt,
+              'AWB': data[i].awbNo,
+              'DIMENSION': data[i].dimension,
+              'ITEM PO': data[i].mlbarcodeRef1,
+              'PRIORITY': data[i].mlbarcodeRef4
+            }
+            dataTable.push(obj);
+          }
+        }
+      }
+
+      option.fileName = 'order infomation'
+      option.datas = [
+        {
+          sheetData: dataTable,
+          sheetName: 'sheet',
+          sheetFilter: ['VESSEL', 'ASN NUMBER', 'RECEIVE DATE', 'SUPPLIER', 'DESCRIPTION', 'QTY', 'UOM', 'WEIGHT', 'AWB', 'DIMENSION', 'ITEM PO', 'PRIORITY'],
+          sheetHeader: ['VESSEL', 'ASN NUMBER', 'RECEIVE DATE', 'SUPPLIER', 'DESCRIPTION', 'QTY', 'UOM', 'WEIGHT', 'AWB', 'DIMENSION', 'ITEM PO', 'PRIORITY'],
+        }
       ]
-      exportExcel(_headers, this.state.ordersUpdated);
+
+      var toExcel = new ExportJsonExcel(option);
+      toExcel.saveExcel();
     }
 
     return (
@@ -1492,7 +1515,7 @@ class OrderView extends Component {
                 type="primary"
                 icon="table"
                 disabled={this.state.showOrderDetail}
-                onClick={() => exportDefaultExcel()}>Export to Excel</Button>
+                onClick={() => downloadExcel()}>Export to Excel</Button>
               <Spin spinning={this.state.loading}></Spin>
             </div>
           </div>

@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.18.2",
     "antd-mobile": "^2.2.13",
+    "js-export-excel": "^1.1.2",
     "react": "^16.8.6",
     "react-cookie": "^4.0.0",
     "react-dom": "^16.8.6",
