@@ -102,6 +102,17 @@
     border-radius: 5px;
 }
 
+.version-text {
+    border: none;
+    color: white;
+    height: 50px;
+    width: 100px;
+    font-size: 18px;
+    font-family: 'varela';
+    border-radius: 5px;
+    text-align: center;
+}
+
 .main-background {
     background-color: rgb(241, 238, 253);
     width: 100%;

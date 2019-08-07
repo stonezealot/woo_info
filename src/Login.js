@@ -22,12 +22,12 @@ class Login extends Component {
             // serviceEntry: 'http://172.16.10.14:8085/',
             // Amos-live
             // serviceEntry: 'http://172.16.10.4:8085/',
-            serviceEntry: 'https://logistics.amosgroup.com:8090/ws/',
+            // serviceEntry: 'https://logistics.amosgroup.com:8090/ws/',
             // serviceEntry: 'http://58.185.33.170:8085/',
             // Sinwa
             // serviceEntry: 'http://192.168.10.16:8085/',
             // Ryan
-            // serviceEntry: 'http://localhost:8080/',
+            serviceEntry: 'http://localhost:8080/',
             username: '',
             password: '',
             home: '',
@@ -156,6 +156,12 @@ class Login extends Component {
                                 <Alert style={{ marginTop: '20px' }} message={this.state.log} type="error" showIcon /> :
                                 null
                         }
+                        <div style={{
+                            width: '100px', height: '30px', position: 'absolute', bottom: '0px', alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <p className="version-text">v1.0.0</p>
+                        </div>
                     </header>
                 </div>
             </div>
