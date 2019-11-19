@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Login from './Login';
+import Register from './Register';
 import Main from './Main';
+import Phone from './Phone';
+import Cart from './Cart';
+import Point from './Point';
+import Gift from './Gift';
+import Shop from './Shop';
+import Scan from './Scan';
+
 
 class Routers extends Component {
 
@@ -32,15 +39,33 @@ class Routers extends Component {
                     <Route
                         exact
                         path="/"
-                        component={Login}
+                        component={Register}
                     />
                     <Route
                         exact
-                        path="/login" component={Login} />
+                        path="/register" component={Register} />
                     <Route
                         exact
                         path="/main" component={Main} />
-                    <Redirect to="/login" />
+                    <Route
+                        exact
+                        path="/phone" component={Phone} />
+                    <Route
+                        exact
+                        path="/cart" component={Cart} />
+                    <Route
+                        exact
+                        path="/point" component={Point} />
+                    <Route
+                        exact
+                        path="/gift" component={Gift} />
+                    <Route
+                        exact
+                        path="/shop" component={Shop} />
+                        <Route
+                        exact
+                        path="/scan" component={Scan} />
+                    <Redirect to="/register" />
                 </Switch>
 
             </Router>

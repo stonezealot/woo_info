@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { Button } from 'antd';
 import 'antd/dist/antd.css';
-import logo from './company_logo.png';
 import './App.css';
-import OrderView from './OrderView';
-import DespatchView from './DespatchView';
-import InventoryView from './InventoryView';
+import { Button, NavBar } from 'antd-mobile';
 
 class Main extends Component {
 
@@ -18,159 +14,154 @@ class Main extends Component {
 
   constructor(props) {
     super(props);
-    const { cookies } = this.props;
     this.state = {
-      serviceEntry: cookies.get('serviceEntry'),
-      home: cookies.get('home'),
-      username: cookies.get('username'),
-      orders: '',
-      orderRecKey: '',
-      orderDetail: '',
-      tabs: [
-        { tabName: "Orders/Spares", id: 1 },
-        { tabName: "Despatches", id: 2 },
-        { tabName: "Inventory", id: 3 },
-      ],
-      currentIndex: 1,
-      showDespatchDetail: false,
-      showOrderDetail: false,
-      despatchDetail: '',
+
     }
-    console.log('custId:  ' + this.state.home.custId)
-    console.log('name:  ' + this.state.home.name)
-    this.handleLogOutButton = this.handleLogOutButton.bind(this)
+    this.handlePhoneButton = this.handlePhoneButton.bind(this);
+    this.handleCartButton = this.handleCartButton.bind(this);
+    this.handlePointButton = this.handlePointButton.bind(this);
+    this.handleGiftButton = this.handleGiftButton.bind(this);
+    this.handleShopButton = this.handleShopButton.bind(this);
+    this.handleScanButton = this.handleScanButton.bind(this);
   }
 
   componentDidMount() {
-    const { home } = this.state
-    console.log(home)
-    if (home === '') {
-      this.props.history.push('/login')
-    }
+
   }
 
-  tabChoiced = (id) => {
-    this.setState({
-      currentIndex: id
-    });
+  handlePhoneButton() {
+    console.log('phone')
+    this.props.history.push('/phone')
   }
 
-  handleLogOutButton() {
-    const { cookies } = this.props;
-    cookies.set('home', '')
-    this.props.history.push('/login')
+  handleCartButton() {
+    console.log('cart')
+    this.props.history.push('/cart')
   }
 
-  onChangeState(stateName) {
-    this.setState(stateName)
+  handlePointButton() {
+    console.log('point')
+    this.props.history.push('/point')
+  }
+
+  handleGiftButton() {
+    console.log('gift')
+    this.props.history.push('/gift')
+  }
+
+  handleShopButton() {
+    console.log('shop')
+    this.props.history.push('/shop')
+  }
+
+  handleScanButton() {
+    console.log('scan')
+    this.props.history.push('/scan')
   }
 
   render() {
 
-    console.log('show Despatch detail:  ' + this.state.showDespatchDetail)
-    // console.log('show detail:  ' + this.state.despatchDetail)
+    const header = {
+      // textAlign: 'center',
+      // fontSize: '20px',
+      // fontFamily: 'varela',
+      backgroundColor: '#F7F7F7',
+      color: 'black',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // marginTop:'35px'
+    };
 
-    const mainLeftTabStyle = {
-      color: '#8c8c8c',
-      position: 'absolute',
-      top: '70px',
-      height: '100%',
-      backgroundColor: 'rgb(66, 66, 68)',
-      width: '150px'
+    const image = {
+      backgroundColor: '#3CC48D',
+      height: '180px',
+      width: '100%',
+      backgroundSize: 'cover'
     }
 
-    const mainLeftTabItemStyle = {
-      listStyle: 'none',
+    const squareButton = {
+
+      background: '#F7F7F7',
+      width: '33vw',
+      height: '33vw',
+      margin: '2px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '15px',
+      flexDirection: 'column'
     }
 
-    const text = {
-      fontSize: '16px',
-      paddingTop: '20px'
+    const icon = {
+
     }
-
-    const bodyContainer = {
-      flexDirection: 'row'
-    }
-
-    const logOutButton = {
-      position: 'absolute',
-      right: '15px',
-      top: '15px',
-      height: '40px',
-      width: '120px',
-      backgroundColor: 'rgb(70, 154, 209)',
-      borderColor: 'rgb(70, 154, 209)',
-      fontFamily: 'varela',
-      paddingTop: '1px',
-      paddingLeft: '9px'
-    }
-
-    var _this = this;
-    var isBox1Show = this.state.currentIndex === 1 ? 'block' : 'none';
-    var isBox2Show = this.state.currentIndex === 2 ? 'block' : 'none';
-    var isBox3Show = this.state.currentIndex === 3 ? 'block' : 'none';
-
-    var tabList = this.state.tabs.map(function (res, index) {
-      var tabStyle = res.id === this.state.currentIndex ? 'subCtrl-active' : 'subCtrl';
-
-      return (
-        <li
-          data-value={res.id}
-          key={index}
-          onClick={this.tabChoiced.bind(_this, res.id)}
-          className={tabStyle}>
-          <p style={text}>{res.tabName}</p>
-        </li>
-      )
-
-    }.bind(_this));
 
     return (
-      <div className="main-background">
-        <header className="main-header">
-          <img src={logo} className="main-logo" alt="logo" />
-          <div style={{ flexDirection: 'row' }}>
-            <p className="user-text">User:</p>
-            <p className="username-text">{this.state.home.userName}</p>
+      <div style={{marginTop:'-10px'}}>
+        <NavBar
+          className="navbar"
+          mode="light"
+          onLeftClick={() => console.log('onLeftClick')}
+        ><div style={{paddingTop:'5px'}}>会员中心</div></NavBar>
+        {/* <div style={header}> */}
+          <div style={{ marginTop: '10px', height: '35px' }}>
           </div>
-          <Button
-            // className="log-out-button"
-            style={logOutButton}
-            type="primary"
-            icon="logout"
-            onClick={this.handleLogOutButton}>
-            Log out
-            </Button>
-        </header>
-        <div style={bodyContainer}>
-          <div style={mainLeftTabStyle}>
-            <ul style={mainLeftTabItemStyle}>
-              {tabList}
-            </ul>
+        {/* </div> */}
+        <div>
+          <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
+        </div>
+        <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
+          <div style={{ height: '40px', width: '40px', backgroundColor: 'pink' }}>头像</div>
+          <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>昵称</div>
+        </div>
+        <div style={{ backgroundColor: '#3CC48D', marginTop: '5px', height: '60px', display: 'flex', flexDirection: 'row' }}>
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <div style={{ color: 'yellow', fontWeight: 'bold' }}>0</div>
+            <div style={{ color: 'white', fontSize: '10px' }}>我的积分</div>
           </div>
-          <div className="main-body-view-container" style={{ "display": isBox1Show }}>
-            <OrderView
-              home={this.state.home}
-              serviceEntry={this.state.serviceEntry}
-              showOrderDetail={this.state.showOrderDetail}
-              orderDetail={this.state.orderDetail}
-              parent={this.onChangeState.bind(this)} />
-          </div>
-          <div className="main-body-view-container" style={{ "display": isBox2Show }}>
-            <DespatchView
-              home={this.state.home}
-              serviceEntry={this.state.serviceEntry}
-              showDespatchDetail={this.state.showDespatchDetail}
-              despatchDetail={this.state.despatchDetail}
-              parent={this.onChangeState.bind(this)} />
-          </div>
-          <div className="main-body-view-container" style={{ "display": isBox3Show }}>
-            <InventoryView
-              home={this.state.home}
-              serviceEntry={this.state.serviceEntry} />
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <div style={{ color: 'yellow', fontWeight: 'bold' }}>4</div>
+            <div style={{ color: 'white', fontSize: '10px' }}>我的优惠券</div>
           </div>
         </div>
-      </div >
+        <div style={{ marginTop: '1px', backgroundColor: 'white' }}>
+          <div style={{ flexDirection: 'row', display: 'flex' }}>
+            <div style={squareButton} onClick={this.handlePhoneButton}>
+              <img alt={require("./phone.png")} src={require("./phone.png")} style={icon}></img>
+              修改电话
+            </div>
+            <div style={squareButton} onClick={this.handleCartButton}>
+              <img alt={require("./cart.png")} src={require("./cart.png")} style={icon}></img>
+              消费查询</div>
+            <div style={squareButton} onClick={this.handlePointButton}>
+              <img alt={require("./ask.png")} src={require("./ask.png")} style={icon}></img>
+              积分查询</div>
+          </div>
+          <div style={{ flexDirection: 'row', display: 'flex' }}>
+            <div style={squareButton} onClick={this.handleGiftButton}>
+              <img alt={require("./gift.png")} src={require("./gift.png")} style={icon}></img>
+              会员福利</div>
+            <div style={squareButton} onClick={this.handleShopButton}>
+              <img alt={require("./shop.png")} src={require("./shop.png")} style={icon}></img>
+              门店查询</div>
+            <div style={squareButton} onClick={this.handleScanButton}>
+              <img alt={require("./scan.png")} src={require("./scan.png")} style={icon}></img>
+              扫码消费</div>
+          </div>
+        </div>
+      </div>
     );
   }
 
