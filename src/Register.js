@@ -55,16 +55,17 @@ class Register extends Component {
 
     componentDidMount() {
 
-        let url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxa355898a104558ea&secret=ccf19520c3289a22f04fd26a487bef24'
+        let url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa355898a104558ea&redirect_uri=http%3A%2F%2Fwww.epbchina.com%2Fwoo&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect'
+        
         fetch(url, {
             method: 'GET'
           })
             .then(response => response.json())
-            .then(response => {
-              this.setState({
-                accessToken: response
-              },()=>{console.log(this.state.accessToken.access_token)})
-            })
+            // .then(response => {
+            //   this.setState({
+            //     accessToken: response
+            //   },()=>{console.log(this.state.accessToken.access_token)})
+            // })
 
     }
 
