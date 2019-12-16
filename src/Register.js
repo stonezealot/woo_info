@@ -49,7 +49,8 @@ class Register extends Component {
             dValue: 0,
             sValue: 0,
             accessToken: '',
-            test: ''
+            test: '',
+            location: this.props.location
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
     }
@@ -66,7 +67,8 @@ class Register extends Component {
                 this.setState({
                     test: response
                 }, () => {
-                    console.log('test:   ' + this.state.test)
+                    console.log('test:   ' + this.state.test[0].name)
+                    console.log('current url:    ' + this.props.location)
                 })
             })
 
