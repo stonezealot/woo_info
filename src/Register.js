@@ -68,7 +68,7 @@ class Register extends Component {
                     test: response
                 }, () => {
                     console.log('test:   ' + this.state.test[0].name)
-                    console.log('current url:    ' + this.props.location.pathname)
+                    console.log('current url:    ' + this.props.location.search)
                 })
             })
 
