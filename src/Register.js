@@ -48,7 +48,8 @@ class Register extends Component {
             date: now,
             dValue: 0,
             sValue: 0,
-            accessToken: ''
+            accessToken: '',
+            test: ''
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
     }
@@ -61,8 +62,14 @@ class Register extends Component {
             method: 'GET'
         })
             .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    test: response
+                }, () => {
+                    console.log('test:   ' + this.state.test)
+                })
+            })
 
-        console.log("search:  " + this.props.match.location.search);
     }
 
     handleSaveButton() {
