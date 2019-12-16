@@ -58,17 +58,21 @@ class Register extends Component {
 
     componentDidMount() {
 
-        let url = 'https://dev.epbmobile.app:8090/fnb-ws/api/returns'
+        let url = 'https://dev.epbmobile.app:8090/gateway/epod/api/open-id?code=081LBHdm1v1a5r05Awam1T7Rdm1LBHdx'
 
         fetch(url, {
-            method: 'GET'
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer 9449f946-a91d-4e45-b88d-8f2504482f66'
+            }
         })
             .then(response => response.json())
             .then(response => {
                 this.setState({
                     test: response
                 }, () => {
-                    console.log('test:   ' + this.state.test[0].name)
+                    console.log('test:   ' + this.state.test.openid)
                 })
             })
 
@@ -76,6 +80,7 @@ class Register extends Component {
         console.log('current search:' + this.urlValue('code'))
     }
 
+    //获取url中的code值
     urlValue(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
         var r = window.location.search.substr(1).match(reg);
