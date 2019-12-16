@@ -53,6 +53,7 @@ class Register extends Component {
             location: this.props.location
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
+        this.urlValue = this.urlValue.bind(this);
     }
 
     componentDidMount() {
@@ -68,10 +69,17 @@ class Register extends Component {
                     test: response
                 }, () => {
                     console.log('test:   ' + this.state.test[0].name)
-                    console.log('current search url:    ' + window.location.search)
                 })
             })
 
+        console.log('current search url:' + window.location.search)
+        console.log('current search:' + this.urlValue('code'))
+    }
+
+    urlValue(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
     }
 
     handleSaveButton() {
