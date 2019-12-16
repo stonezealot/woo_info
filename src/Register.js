@@ -55,7 +55,7 @@ class Register extends Component {
 
     componentDidMount() {
 
-        let url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa355898a104558ea&redirect_uri=http%3A%2F%2Fwww.epbchina.com%2Fwoo&response_type=code&scope=snsapi_userinfo&state=#wechat_redirect'
+        let url = 'https://dev.epbmobile.app:8090/fnb-ws/api/returns'
 
         fetch(url, {
             method: 'GET'
