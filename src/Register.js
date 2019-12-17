@@ -73,7 +73,7 @@ class Register extends Component {
                 this.setState({
                     test: response
                 }, () => {
-                    console.log('test:   ' + this.state.test.openid)
+                    console.log('test:   ' + this.state.test.openId)
                 })
             })
 
