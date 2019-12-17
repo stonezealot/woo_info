@@ -58,13 +58,14 @@ class Register extends Component {
 
     componentDidMount() {
 
-        let url = 'https://dev.epbmobile.app:8090/gateway/epod/api/open-id?code=081LBHdm1v1a5r05Awam1T7Rdm1LBHdx'
+        let url = 'https://dev.epbmobile.app:8090/gateway/epod/api/open-id?code=' + this.urlValue('code')
+        console.log(url)
 
         fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization':'Bearer 9449f946-a91d-4e45-b88d-8f2504482f66'
+                'Authorization': 'Bearer bcda9c6d-7ddf-4fc5-86bf-ce7002e87197'
             }
         })
             .then(response => response.json())
