@@ -73,7 +73,12 @@ class Register extends Component {
                 this.setState({
                     test: response
                 }, () => {
-                    console.log('test:   ' + this.state.test.openId)
+
+                    console.log('access_token:' + this.state.test.accessToken)
+                    console.log('refresh_token:' + this.state.test.refreshToken)
+                    console.log('openid:' + this.state.test.openid)
+                    console.log('scope:' + this.state.test.scope)
+
                 })
             })
 
