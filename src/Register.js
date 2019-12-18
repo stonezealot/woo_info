@@ -79,7 +79,7 @@ class Register extends Component {
                     console.log('refresh_token:' + this.state.test.refreshToken)
                     console.log('openid:' + this.state.test.openid)
                     console.log('scope:' + this.state.test.scope)
-                    fetch('https://dev.epbmobile.app:8090/gateway/epod/api/userinfo?access_token=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
+                    fetch('https://dev.epbmobile.app:8090/gateway/epod/api/userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
                         method: 'GET'
                     }).then(response => response.json())
                         .then(response => {
