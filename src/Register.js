@@ -65,7 +65,7 @@ class Register extends Component {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer bcda9c6d-7ddf-4fc5-86bf-ce7002e87197'
+                'Authorization': 'Bearer 2ddfb2aa-131c-4ad2-bf6a-ae8ce99adbdd'
             }
         })
             .then(response => response.json())
