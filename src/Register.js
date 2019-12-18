@@ -80,7 +80,11 @@ class Register extends Component {
                     console.log('openid:' + this.state.test.openid)
                     console.log('scope:' + this.state.test.scope)
                     fetch('https://dev.epbmobile.app:8090/gateway/epod/api/userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
-                        method: 'GET'
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer 2ddfb2aa-131c-4ad2-bf6a-ae8ce99adbdd'
+                        }
                     }).then(response => response.json())
                         .then(response => {
                             this.setState({
