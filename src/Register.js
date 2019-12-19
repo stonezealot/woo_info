@@ -92,9 +92,13 @@ class Register extends Component {
                         },
                         body: JSON.stringify(body),
                     })
+                        .then(response => response.json())
                         .then(response => {
-                            console.log('get vip id: ' + response.json())
+                            this.setState({
+                                vipIdReturn: response
+                            }, () => { console.log(this.state.vipIdReturn) })
                         })
+
 
                     //get userinfo
                     fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
