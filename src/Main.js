@@ -14,7 +14,10 @@ class Main extends Component {
 
   constructor(props) {
     super(props);
+
+    const { cookies } = this.props;
     this.state = {
+
       nickname: cookies.get('nickname'),
       headimgurl: cookies.get('headimgurl')
 
