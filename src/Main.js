@@ -19,7 +19,9 @@ class Main extends Component {
     this.state = {
 
       nickname: cookies.get('nickname'),
-      headimgurl: cookies.get('headimgurl')
+      // headimgurl: cookies.get('headimgurl'),
+
+      headimgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erfbmp9anj1jZCgvSaOwcUR3ArOFF6vXWzMAssLqjHlgSBUBasT4kOMllvLrOLYM1bDaazFhwTevA/132'
 
     }
     this.handlePhoneButton = this.handlePhoneButton.bind(this);
@@ -116,7 +118,7 @@ class Main extends Component {
           <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
         </div>
         <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
-          <img style={{ height: '40px', width: '40px' }} src={this.state.headimgurl}>头像</img>
+          <img style={{ height: '40px', width: '40px' }} src={this.state.headimgurl}/>
           <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>{this.state.nickname}</div>
         </div>
         <div style={{ backgroundColor: '#3CC48D', marginTop: '5px', height: '60px', display: 'flex', flexDirection: 'row' }}>
