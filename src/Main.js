@@ -115,7 +115,7 @@ class Main extends Component {
         </div>
         {/* </div> */}
         <div>
-          <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
+          <img style={image} className='woopic' alt={require("./woopic.png")} src={this.state.headimgurl} />
         </div>
         <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
           <img style={{ height: '40px', width: '40px' }} src={this.state.headimgurl}/>
