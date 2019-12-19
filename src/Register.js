@@ -39,7 +39,8 @@ class Register extends Component {
         console.log('in login screen')
         super(props);
         this.state = {
-            serviceEntry: 'http://localhost:8080/',
+            serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
+            authorization: 'Bearer 107c4843-2174-46bd-94ee-8b3373391baf',
             username: '',
             password: '',
             home: '',
@@ -59,14 +60,14 @@ class Register extends Component {
 
     componentDidMount() {
 
-        let url = 'https://dev.epbmobile.app:8090/gateway/epod/api/access-token?code=' + this.urlValue('code')
+        let url = this.state.serviceEntry + 'access-token?code=' + this.urlValue('code')
         console.log(url)
 
         fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 2ddfb2aa-131c-4ad2-bf6a-ae8ce99adbdd'
+                'Authorization': this.state.authorization
             }
         })
             .then(response => response.json())
@@ -75,21 +76,40 @@ class Register extends Component {
                     test: response
                 }, () => {
 
-                    console.log('access_token:' + this.state.test.accessToken)
-                    console.log('refresh_token:' + this.state.test.refreshToken)
-                    console.log('openid:' + this.state.test.openid)
-                    console.log('scope:' + this.state.test.scope)
-                    fetch('https://dev.epbmobile.app:8090/gateway/epod/api/userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
+                    console.log(this.state.test)
+
+
+                    const body = {
+                        wechatId: this.state.test.openid,
+                    }
+
+                    //get vip id
+                    fetch(this.state.serviceEntry + 'get-vip-id', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': this.state.authorization
+                        },
+                        body: JSON.stringify(body),
+                    })
+                        .then(response => {
+                            console.log('get vip id: ' + response)
+                        })
+
+                    //get userinfo
+                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer 2ddfb2aa-131c-4ad2-bf6a-ae8ce99adbdd'
+                            'Authorization': this.state.authorization
                         }
                     }).then(response => response.json())
                         .then(response => {
                             this.setState({
                                 userinfo: response
-                            }, () => { console.log(this.state.userinfo) })
+                            }, () => {
+                                console.log(this.state.userinfo)
+                            })
                         })
                 })
             })
