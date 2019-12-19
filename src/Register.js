@@ -93,7 +93,7 @@ class Register extends Component {
                         body: JSON.stringify(body),
                     })
                         .then(response => {
-                            console.log('get vip id: ' + response)
+                            console.log('get vip id: ' + response.json())
                         })
 
                     //get userinfo
