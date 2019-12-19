@@ -19,9 +19,9 @@ class Main extends Component {
     this.state = {
 
       nickname: cookies.get('nickname'),
-      // headimgurl: cookies.get('headimgurl'),
+      headimgurl: cookies.get('headimgurl'),
 
-      headimgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erfbmp9anj1jZCgvSaOwcUR3ArOFF6vXWzMAssLqjHlgSBUBasT4kOMllvLrOLYM1bDaazFhwTevA/132'
+      // headimgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erfbmp9anj1jZCgvSaOwcUR3ArOFF6vXWzMAssLqjHlgSBUBasT4kOMllvLrOLYM1bDaazFhwTevA/132'
 
     }
     this.handlePhoneButton = this.handlePhoneButton.bind(this);
