@@ -52,13 +52,19 @@ class Register extends Component {
             accessToken: '',
             test: '',
             location: this.props.location,
-            userinfo: ''
+            userinfo: '',
+            nickname: '',
+            headimgurl: ''
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
         this.urlValue = this.urlValue.bind(this);
     }
 
     componentDidMount() {
+
+
+        const { cookies } = this.props;
+
 
         let url = this.state.serviceEntry + 'access-token?code=' + this.urlValue('code')
         console.log(url)
@@ -98,27 +104,33 @@ class Register extends Component {
                                 vipIdReturn: response
                             }, () => {
                                 if (this.state.vipIdReturn.errCode == 'OK') {
-                                    this.props.history.push('/main')
+
+                                    //get userinfo
+                                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
+                                        method: 'GET',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': this.state.authorization
+                                        }
+                                    }).then(response => response.json())
+                                        .then(response => {
+                                            this.setState({
+                                                userinfo: response
+                                            }, () => {
+                                                console.log(this.state.userinfo)
+                                                cookies.set('nickname', this.state.userinfo.nickname)
+                                                cookies.set('headimgurl', this.state.userinfo.headimgurl)
+                                                this.props.history.push('/main')
+                                            })
+                                        })
+
+
                                 }
                             })
                         })
 
 
-                    //get userinfo
-                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': this.state.authorization
-                        }
-                    }).then(response => response.json())
-                        .then(response => {
-                            this.setState({
-                                userinfo: response
-                            }, () => {
-                                console.log(this.state.userinfo)
-                            })
-                        })
+
                 })
             })
 

@@ -15,6 +15,8 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      nickname: cookies.get('nickname'),
+      headimgurl: cookies.get('headimgurl')
 
     }
     this.handlePhoneButton = this.handlePhoneButton.bind(this);
@@ -97,22 +99,22 @@ class Main extends Component {
     }
 
     return (
-      <div style={{marginTop:'-10px'}}>
+      <div style={{ marginTop: '-10px' }}>
         <NavBar
           className="navbar"
           mode="light"
           onLeftClick={() => console.log('onLeftClick')}
-        ><div style={{paddingTop:'5px'}}>会员中心</div></NavBar>
+        ><div style={{ paddingTop: '5px' }}>会员中心</div></NavBar>
         {/* <div style={header}> */}
-          <div style={{ marginTop: '10px', height: '35px' }}>
-          </div>
+        <div style={{ marginTop: '10px', height: '35px' }}>
+        </div>
         {/* </div> */}
         <div>
           <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
         </div>
         <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
-          <div style={{ height: '40px', width: '40px', backgroundColor: 'pink' }}>头像</div>
-          <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>昵称</div>
+          <img style={{ height: '40px', width: '40px' }} src={this.state.headimgurl}>头像</img>
+          <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>{this.state.nickname}</div>
         </div>
         <div style={{ backgroundColor: '#3CC48D', marginTop: '5px', height: '60px', display: 'flex', flexDirection: 'row' }}>
           <div style={{
