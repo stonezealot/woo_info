@@ -96,7 +96,11 @@ class Register extends Component {
                         .then(response => {
                             this.setState({
                                 vipIdReturn: response
-                            }, () => { console.log(this.state.vipIdReturn) })
+                            }, () => {
+                                if (this.state.vipIdReturn.errCode == 'OK') {
+                                    this.props.history.push('/main')
+                                }
+                            })
                         })
 
 
