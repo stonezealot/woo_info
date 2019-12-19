@@ -18,7 +18,7 @@ class Point extends Component {
     }
 
     componentDidMount() {
-
+        document.title = '个人信息-会员积分'
     }
 
 

@@ -19,7 +19,7 @@ class Phone extends Component {
     }
 
     componentDidMount() {
-
+        document.title = '变更手机号码'
     }
 
     render() {
@@ -64,11 +64,19 @@ class Phone extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                
-                <div style={header}>
+
+                {/* <div style={header}>
                     <div style={{ marginTop: '10px', height: '30px' }}>
                         <p style={headerTitle}>修改手机号</p>
                     </div>
+                </div> */}
+                <NavBar
+                    className="navbar"
+                    mode="light"
+                    onLeftClick={() => console.log('onLeftClick')}
+                ><div style={{ paddingTop: '5px' }}>修改手机号</div></NavBar>
+                {/* <div style={header}> */}
+                <div style={{ marginTop: '10px', height: '35px' }}>
                 </div>
                 <div style={{
                     marginTop: '10px',

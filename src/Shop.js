@@ -31,7 +31,7 @@ class Shop extends Component {
     }
 
     componentDidMount() {
-
+        document.title = '门店列表'
     }
 
     onChange = (e) => {

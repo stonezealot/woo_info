@@ -22,7 +22,7 @@ class Scan extends Component {
     }
 
     componentDidMount() {
-
+        document.title = '我的二维码'
     }
 
     onChange = (e) => {

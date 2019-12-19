@@ -62,12 +62,9 @@ class Register extends Component {
 
     componentDidMount() {
 
-
         const { cookies } = this.props;
 
-
         let url = this.state.serviceEntry + 'access-token?code=' + this.urlValue('code')
-        console.log(url)
 
         fetch(url, {
             method: 'GET',

@@ -74,6 +74,8 @@ class Gift extends Component {
     }
 
     componentDidMount() {
+
+        document.title = '个人信息-优惠券'
         console.log(data)
         this.changeState(data);
     }

@@ -19,7 +19,7 @@ class Cart extends Component {
     }
 
     componentDidMount() {
-
+        document.title = '消费查询'
     }
 
 
