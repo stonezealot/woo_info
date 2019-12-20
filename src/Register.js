@@ -263,6 +263,9 @@ class Register extends Component {
                     <div style={{ marginLeft: '5px', marginRight: '5px' }}>
                         <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>保存</Button>
                     </div>
+                    <div>
+                        备案号：沪ICP备19045576号-1
+                    </div>
                 </div>
             </div>
 
