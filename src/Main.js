@@ -110,10 +110,7 @@ class Main extends Component {
           mode="light"
           onLeftClick={() => console.log('onLeftClick')}
         ><div style={{ paddingTop: '5px' }}>会员中心</div></NavBar>
-        {/* <div style={header}> */}
-        <div style={{ marginTop: '10px', height: '35px' }}>
-        </div>
-        {/* </div> */}
+        <div style={{ marginTop: '10px', height: '35px' }}></div>
         <div>
           <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
         </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
+import { Button, NavBar } from 'antd-mobile';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -61,9 +62,12 @@ class Scan extends Component {
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
                 <div style={header}>
-                    <div style={{ marginTop: '10px', height: '30px' }}>
-                        <p style={headerTitle}>我的二维码</p>
-                    </div>
+                    <NavBar
+                        className="navbar"
+                        mode="light"
+                        onLeftClick={() => console.log('onLeftClick')}
+                    ><div style={{ paddingTop: '5px' }}>积分查询</div></NavBar>
+                    <div style={{ marginTop: '10px', height: '35px' }}></div>
                     <div style={{
                         height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
                     }}>
