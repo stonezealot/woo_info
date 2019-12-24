@@ -100,7 +100,7 @@ class Register extends Component {
                             this.setState({
                                 vipIdReturn: response
                             }, () => {
-                                if (this.state.vipIdReturn.errCode == 'OK') {
+                                if (this.state.vipIdReturn.vipId != null) {
 
                                     //get userinfo
                                     fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
@@ -120,8 +120,6 @@ class Register extends Component {
                                                 this.props.history.push('/main')
                                             })
                                         })
-
-
                                 }
                             })
                         })
