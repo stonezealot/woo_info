@@ -125,9 +125,6 @@ class Register extends Component {
                                 }
                             })
                         })
-
-
-
                 })
             })
 
@@ -170,6 +167,7 @@ class Register extends Component {
 
     handleBirthday = (value) => {
         this.setState({
+            date: value,
             birthday: moment(value).format('YYYY-MM-DD')
         })
     }
@@ -203,7 +201,7 @@ class Register extends Component {
             vipPhone: vipPhone,
             checkCode: checkCode,
             birthday: birthday,
-            gender: gender,
+            gender: (gender == 0 ? 'M' : 'F'),
             wechatId: home.openid
         }
 
