@@ -42,6 +42,7 @@ class Register extends Component {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
             authorization: 'Bearer a753835b-2523-40e5-a8c4-62974c590ad5',
             date: now,
+            accessToken: '',
             dValue: 0, // date
             sValue: 0, // sex
             home: '',
