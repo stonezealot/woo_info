@@ -315,6 +315,7 @@ class Register extends Component {
                                     extra="一经提交,无法修改"
                                     value={this.state.date}
                                     onChange={this.handleBirthday}
+                                    minDate={new Date(1930, 1, 1, 0, 0, 0)}
                                 >
                                     <List.Item arrow="horizontal">生日
                                     </List.Item>
