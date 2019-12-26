@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { Button, DatePicker, List, InputItem, Picker } from 'antd-mobile';
+import { Button, DatePicker, List, InputItem, Picker, Toast } from 'antd-mobile';
+import moment from 'moment';
 import '../node_modules/antd-mobile/dist/antd-mobile.min.css';
 import './App.css';
 
@@ -53,8 +54,9 @@ class Register extends Component {
             vipName: '',
             vipPhone: '',
             checkCode: '',
-            birthday: '',
-            gender: ''
+            birthday: moment(now).format('YYYY-MM-DD'),
+            gender: '',
+            hasError: false,
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
         this.urlValue = this.urlValue.bind(this);
@@ -135,6 +137,8 @@ class Register extends Component {
         this.handleVipName = this.handleVipName.bind(this)
         this.handleVipPhone = this.handleVipPhone.bind(this)
         this.handleCheckCode = this.handleCheckCode.bind(this)
+        this.handleBirthday = this.handleBirthday.bind(this)
+        this.handleGender = this.handleGender.bind(this)
 
     }
 
@@ -145,32 +149,76 @@ class Register extends Component {
         if (r != null) return unescape(r[2]); return null;
     }
 
-    handleVipName(e) {
+    handleVipName = (value) => {
+
         this.setState({
-            vipName: e.target.value
+            vipName: value
         })
     }
 
-    handleVipPhone(e) {
+    handleVipPhone = (value) => {
         this.setState({
-            vipPhone: e.target.value
+            vipPhone: value
         })
     }
 
-    handleCheckCode(e) {
+    handleCheckCode = (value) => {
         this.setState({
-            checkCode: e.target.value
+            checkCode: value
         })
     }
+
+    handleBirthday = (value) => {
+        this.setState({
+            birthday: moment(value).format('YYYY-MM-DD')
+        })
+    }
+
+    handleGender = (value) => {
+        this.setState({
+            gender: value
+        })
+    }
+
+    // onErrorClick = () => {
+    //     if (this.state.hasError) {
+    //         Toast.info('姓名不能为空');
+    //     }
+    // }
 
     handleSaveButton() {
+
+        const { vipName, vipPhone, checkCode, birthday, gender, home } = this.state
         console.log('save')
         // this.props.history.push('/main')
-        console.log('vipName: ' + this.state.vipName)
-        console.log('vipPhone: ' + this.state.vipPhone)
-        console.log('checkCode: ' + this.state.checkCode)
-        console.log('birthday: ' + this.state.birthday)
-        console.log('gender: ' + this.state.sValue)
+        console.log('vipName: ' + vipName)
+        console.log('vipPhone: ' + vipPhone)
+        console.log('checkCode: ' + checkCode)
+        console.log('birthday: ' + birthday)
+        console.log('gender: ' + (gender == 0 ? 'M' : 'F'))
+
+        const body = {
+            vipName: vipName,
+            vipPhone: vipPhone,
+            checkCode: checkCode,
+            birthday: birthday,
+            gender: gender,
+            wechatId: home.openid
+        }
+
+        fetch(this.state.serviceEntry + 'vip-register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            },
+            body: JSON.stringify(body),
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+            })
+
     }
 
     render() {
@@ -244,6 +292,8 @@ class Register extends Component {
                                     placeholder="姓名"
                                     ref={el => this.autoFocusInst = el}
                                     onChange={this.handleVipName}
+                                // onErrorClick={this.onErrorClick}
+                                // error={this.state.hasError}
                                 >姓名</InputItem>
                                 <InputItem
                                     clear
@@ -265,7 +315,7 @@ class Register extends Component {
                                     title="选择日期"
                                     extra="一经提交,无法修改"
                                     value={this.state.date}
-                                    onChange={date => this.setState({ date })}
+                                    onChange={this.handleBirthday}
                                 >
                                     <List.Item arrow="horizontal">生日
                                     </List.Item>
@@ -281,7 +331,7 @@ class Register extends Component {
                                 <Picker data={sexStyle}
                                     cols={1}
                                     value={this.state.sValue}
-                                    onChange={v => this.setState({ sValue: v })}
+                                    onChange={this.handleGender}
                                     onOk={v => this.setState({ sValue: v }, () => { console.log(this.state.sValue) })}>
                                     <List.Item arrow="horizontal">性别</List.Item>
                                 </Picker>
