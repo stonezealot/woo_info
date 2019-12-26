@@ -196,6 +196,7 @@ class Register extends Component {
         console.log('checkCode: ' + checkCode)
         console.log('birthday: ' + birthday)
         console.log('gender: ' + (gender == 0 ? 'M' : 'F'))
+        console.log('wechatId: ' + home.openid)
 
         const body = {
             vipName: vipName,
