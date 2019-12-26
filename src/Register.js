@@ -41,20 +41,19 @@ class Register extends Component {
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
             authorization: 'Bearer a753835b-2523-40e5-a8c4-62974c590ad5',
-            username: '',
-            password: '',
-            home: '',
-            log: '',
-            showError: false,
             date: now,
-            dValue: 0,
-            sValue: 0,
-            accessToken: '',
-            test: '',
+            dValue: 0, // date
+            sValue: 0, // sex
+            home: '',
             location: this.props.location,
             userinfo: '',
             nickname: '',
-            headimgurl: ''
+            headimgurl: '',
+            vipName: '',
+            vipPhone: '',
+            checkCode: '',
+            birthday: '',
+            gender: ''
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
         this.urlValue = this.urlValue.bind(this);
@@ -76,14 +75,14 @@ class Register extends Component {
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    test: response
+                    home: response
                 }, () => {
 
-                    console.log(this.state.test)
+                    console.log(this.state.home)
 
 
                     const body = {
-                        wechatId: this.state.test.openid,
+                        wechatId: this.state.home.openid,
                     }
 
                     //get vip id
@@ -103,7 +102,7 @@ class Register extends Component {
                                 if (this.state.vipIdReturn.vipId != null) {
 
                                     //get userinfo
-                                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.test.accessToken + '&openid=' + this.state.test.openid + '&lang=zh_CN', {
+                                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
                                         method: 'GET',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -131,6 +130,11 @@ class Register extends Component {
 
         console.log('current search url:' + window.location.search)
         console.log('current search:' + this.urlValue('code'))
+
+        this.handleVipName = this.handleVipName.bind(this)
+        this.handleVipPhone = this.handleVipPhone.bind(this)
+        this.handleCheckCode = this.handleCheckCode.bind(this)
+
     }
 
     //获取url中的code值
@@ -140,9 +144,32 @@ class Register extends Component {
         if (r != null) return unescape(r[2]); return null;
     }
 
+    handleVipName(e) {
+        this.setState({
+            vipName: e.target.value
+        })
+    }
+
+    handleVipPhone(e) {
+        this.setState({
+            vipPhone: e.target.value
+        })
+    }
+
+    handleCheckCode(e) {
+        this.setState({
+            checkCode: e.target.value
+        })
+    }
+
     handleSaveButton() {
         console.log('save')
-        this.props.history.push('/main')
+        // this.props.history.push('/main')
+        console.log('vipName: ' + this.state.vipName)
+        console.log('vipPhone: ' + this.state.vipPhone)
+        console.log('checkCode: ' + this.state.checkCode)
+        console.log('birthday: ' + this.state.birthday)
+        console.log('gender: ' + this.state.sValue)
     }
 
     render() {
@@ -215,16 +242,19 @@ class Register extends Component {
                                     clear
                                     placeholder="姓名"
                                     ref={el => this.autoFocusInst = el}
+                                    onChange={this.handleVipName}
                                 >姓名</InputItem>
                                 <InputItem
                                     clear
                                     placeholder="手机号"
                                     ref={el => this.autoFocusInst = el}
+                                    onChange={this.handleVipPhone}
                                 >手机号</InputItem>
                                 <Button type="primary" style={getButton}>获取验证码</Button>
                                 <InputItem
                                     clear
                                     ref={el => this.autoFocusInst = el}
+                                    onChange={this.handleCheckCode}
                                 >验证码</InputItem>
                                 <div style={{ height: '20px', fontSize: '12px', color: 'red' }}>
                                     <p style={{ marginLeft: '15px', paddingTop: '4px' }}>一经提交,无法修改</p>
