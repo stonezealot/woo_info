@@ -188,7 +188,7 @@ class Register extends Component {
 
         const { vipName, vipPhone, checkCode, birthday, gender, home } = this.state
         console.log('save')
-        // this.props.history.push('/main')
+        // 
         console.log('vipName: ' + vipName)
         console.log('vipPhone: ' + vipPhone)
         console.log('checkCode: ' + checkCode)
@@ -217,6 +217,7 @@ class Register extends Component {
             .then(response => {
                 console.log(response)
             })
+            .then(this.props.history.push('/main'))
 
     }
 
