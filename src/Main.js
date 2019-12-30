@@ -36,6 +36,11 @@ class Main extends Component {
 
     document.title = '个人信息-我的信息'
 
+    // document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+    //   WeixinJSBridge.call('hideToolbar');
+    //   WeixinJSBridge.call('hideOptionMenu');
+    // })
+
   }
 
   handlePhoneButton() {

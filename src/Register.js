@@ -64,14 +64,6 @@ class Register extends Component {
 
     componentDidMount() {
 
-
-        window.addEventListener('pageshow', function (event) {
-
-            console.log('window.performance.navigation.type: ' + window.performance.navigation.type)
-            // location.refresh();   //此处可以写你的实际应用的代码
-
-        }, false)
-
         const { cookies } = this.props;
 
         let url = this.state.serviceEntry + 'access-token?code=' + this.urlValue('code')
@@ -127,7 +119,7 @@ class Register extends Component {
                                                 console.log(this.state.userinfo)
                                                 cookies.set('nickname', this.state.userinfo.nickname)
                                                 cookies.set('headimgurl', this.state.userinfo.headimgurl)
-                                                this.props.history.push('/main')
+                                                this.props.history.replace('/main')
                                             })
                                         })
                                 }
@@ -249,7 +241,7 @@ class Register extends Component {
                                 console.log(this.state.userinfo)
                                 cookies.set('nickname', this.state.userinfo.nickname)
                                 cookies.set('headimgurl', this.state.userinfo.headimgurl)
-                                this.props.history.push('/main')
+                                this.props.history.replace('/main')
                             })
                         })
                 )
@@ -379,9 +371,6 @@ class Register extends Component {
                     </div>
                     <div style={{ marginLeft: '5px', marginRight: '5px' }}>
                         <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>保存</Button>
-                    </div>
-                    <div>
-                        备案号：沪ICP备19045576号-1
                     </div>
                 </div>
             </div>
