@@ -41,7 +41,7 @@ class Register extends Component {
         super(props);
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer a753835b-2523-40e5-a8c4-62974c590ad5',
+            authorization: 'Bearer 2f1515c7-4fcb-4eb3-9d83-2d237a5ac4ec',
             date: now,
             accessToken: '',
             dValue: 0, // date
@@ -205,19 +205,28 @@ class Register extends Component {
             wechatId: home.openid
         }
 
-        fetch(this.state.serviceEntry + 'vip-register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': this.state.authorization
-            },
-            body: JSON.stringify(body),
-        })
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
+        if (vipName == '') {
+            Toast.info('请输入姓名', 1);
+        } else if (vipPhone == '') {
+            Toast.info('请输入手机号', 1);
+        } else if (checkCode == '') {
+            Toast.info('请输入验证码', 1);
+        } else {
+            fetch(this.state.serviceEntry + 'vip-register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.state.authorization
+                },
+                body: JSON.stringify(body),
             })
-            .then(this.props.history.push('/main'))
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+                })
+                .then(this.props.history.push('/main'))
+        }
+
 
     }
 
