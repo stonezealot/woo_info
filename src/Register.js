@@ -64,9 +64,9 @@ class Register extends Component {
 
     componentDidMount() {
 
-        window.history.pushState(null, null, document.URL);
-        window.addEventListener('popstate', function (e) {
-            window.history.pushState(null, null, document.URL);
+        this.props.history.pushState(null, null, document.URL);
+        this.props.addEventListener('popstate', function (e) {
+            this.props.history.pushState(null, null, document.URL);
         })
 
         const { cookies } = this.props;
