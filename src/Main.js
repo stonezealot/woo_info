@@ -36,11 +36,6 @@ class Main extends Component {
 
     document.title = '个人信息-我的信息'
 
-    window.history.pushState(null, null, document.URL);
-    window.addEventListener('popstate', function (e) {
-      window.history.pushState(null, null, document.URL);
-    })
-
   }
 
   handlePhoneButton() {

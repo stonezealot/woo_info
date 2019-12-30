@@ -64,6 +64,11 @@ class Register extends Component {
 
     componentDidMount() {
 
+        window.history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function (e) {
+            window.history.pushState(null, null, document.URL);
+        })
+
         const { cookies } = this.props;
 
         let url = this.state.serviceEntry + 'access-token?code=' + this.urlValue('code')
