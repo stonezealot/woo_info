@@ -224,30 +224,33 @@ class Register extends Component {
                 .then(response => response.json())
                 .then(response => {
                     console.log(response)
-                })
-                .then(
-                    //get userinfo
-                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': this.state.authorization
-                        }
-                    }).then(response => response.json())
-                        .then(response => {
-                            this.setState({
-                                userinfo: response
-                            }, () => {
-                                console.log(this.state.userinfo)
-                                cookies.set('nickname', this.state.userinfo.nickname)
-                                cookies.set('headimgurl', this.state.userinfo.headimgurl)
-                                this.props.history.replace('/main')
-                            })
+
+                    if (response.errCode != 'OK') {
+                        Toast.info('注册失败', 1);
+                    } else {
+
+                        //get userinfo
+                        fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': this.state.authorization
+                            }
                         })
-                )
+                            .then(response => response.json())
+                            .then(response => {
+                                this.setState({
+                                    userinfo: response
+                                }, () => {
+                                    console.log(this.state.userinfo)
+                                    cookies.set('nickname', this.state.userinfo.nickname)
+                                    cookies.set('headimgurl', this.state.userinfo.headimgurl)
+                                    this.props.history.replace('/main')
+                                })
+                            })
+                    }
+                })
         }
-
-
     }
 
     render() {
