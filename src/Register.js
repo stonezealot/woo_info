@@ -186,6 +186,7 @@ class Register extends Component {
 
     handleSaveButton() {
 
+        const { cookies } = this.props
         const { vipName, vipPhone, checkCode, birthday, gender, home } = this.state
         console.log('save')
         // 
@@ -224,7 +225,26 @@ class Register extends Component {
                 .then(response => {
                     console.log(response)
                 })
-                .then(this.props.history.push('/main'))
+                .then(
+                    //get userinfo
+                    fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': this.state.authorization
+                        }
+                    }).then(response => response.json())
+                        .then(response => {
+                            this.setState({
+                                userinfo: response
+                            }, () => {
+                                console.log(this.state.userinfo)
+                                cookies.set('nickname', this.state.userinfo.nickname)
+                                cookies.set('headimgurl', this.state.userinfo.headimgurl)
+                                this.props.history.push('/main')
+                            })
+                        })
+                )
         }
 
 
