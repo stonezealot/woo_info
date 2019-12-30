@@ -33,7 +33,14 @@ class Main extends Component {
   }
 
   componentDidMount() {
+
     document.title = '个人信息-我的信息'
+
+    window.history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function (e) {
+      window.history.pushState(null, null, document.URL);
+    })
+
   }
 
   handlePhoneButton() {
@@ -115,7 +122,7 @@ class Main extends Component {
           <img style={image} className='woopic' alt={require("./woopic.png")} src={require("./woopic.png")} />
         </div>
         <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
-          <img style={{ height: '45px', width: '45px' }} src={this.state.headimgurl}/>
+          <img style={{ height: '45px', width: '45px' }} src={this.state.headimgurl} />
           <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>{this.state.nickname}</div>
         </div>
         <div style={{ backgroundColor: '#3CC48D', marginTop: '5px', height: '60px', display: 'flex', flexDirection: 'row' }}>
