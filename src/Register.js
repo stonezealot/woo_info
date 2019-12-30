@@ -64,10 +64,13 @@ class Register extends Component {
 
     componentDidMount() {
 
-        this.props.history.pushState(null, null, document.URL);
-        this.props.addEventListener('popstate', function (e) {
-            this.props.history.pushState(null, null, document.URL);
-        })
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || window.performance && window.performance.navigation.type == 2) {
+                console.log('window.performance.navigation.type: ' + window.performance.navigation.type)
+                // location.refresh();   //此处可以写你的实际应用的代码
+            }
+        }, false)
 
         const { cookies } = this.props;
 
