@@ -119,6 +119,9 @@ class Register extends Component {
                                                 console.log(this.state.userinfo)
                                                 cookies.set('nickname', this.state.userinfo.nickname)
                                                 cookies.set('headimgurl', this.state.userinfo.headimgurl)
+                                                cookies.set('serviceEntry', this.state.serviceEntry)
+                                                cookies.set('authorization', this.state.authorization)
+                                                cookies.set('vipId', this.state.vipIdReturn.vipId)
                                                 this.props.history.replace('/main')
                                             })
                                         })
@@ -178,12 +181,6 @@ class Register extends Component {
         })
     }
 
-    // onErrorClick = () => {
-    //     if (this.state.hasError) {
-    //         Toast.info('姓名不能为空');
-    //     }
-    // }
-
     handleSaveButton() {
 
         const { cookies } = this.props
@@ -206,53 +203,73 @@ class Register extends Component {
             wechatId: home.openid
         }
 
-        // if (vipName == '') {
-        //     Toast.info('请输入姓名', 1);
-        // } else if (vipPhone == '') {
-        //     Toast.info('请输入手机号', 1);
-        // } else if (checkCode == '') {
-        //     Toast.info('请输入验证码', 1);
-        // } else {
-        //     fetch(this.state.serviceEntry + 'vip-register', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': this.state.authorization
-        //         },
-        //         body: JSON.stringify(body),
-        //     })
-        //         .then(response => response.json())
-        //         .then(response => {
-        //             console.log(response)
+        if (vipName == '') {
+            Toast.info('请输入姓名', 1);
+        } else if (vipPhone == '') {
+            Toast.info('请输入手机号', 1);
+        } else if (checkCode == '') {
+            Toast.info('请输入验证码', 1);
+        } else {
+            fetch(this.state.serviceEntry + 'vip-register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.state.authorization
+                },
+                body: JSON.stringify(body),
+            })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
 
-        //             if (response.errCode != 'OK') {
-        //                 Toast.info('注册失败', 1);
-        //             } else {
+                    if (response.errCode != 'OK') {
+                        Toast.info('注册失败', 1);
+                    } else {
 
-        //                 //get userinfo
-        //                 fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
-        //                     method: 'GET',
-        //                     headers: {
-        //                         'Content-Type': 'application/json',
-        //                         'Authorization': this.state.authorization
-        //                     }
-        //                 })
-        //                     .then(response => response.json())
-        //                     .then(response => {
-        //                         this.setState({
-        //                             userinfo: response
-        //                         }, () => {
-        //                             console.log(this.state.userinfo)
-        //                             cookies.set('nickname', this.state.userinfo.nickname)
-        //                             cookies.set('headimgurl', this.state.userinfo.headimgurl)
-        //                             this.props.history.replace('/main')
-        //                         })
-        //                     })
-        //             }
-        //         })
-        // }
+                        //get userinfo
+                        fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': this.state.authorization
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(response => {
+                                this.setState({
+                                    userinfo: response
+                                }, () => {
 
-        this.props.history.replace('/main')
+                                    console.log(this.state.userinfo)
+
+                                    //get vip id
+                                    fetch(this.state.serviceEntry + 'get-vip-id', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': this.state.authorization
+                                        },
+                                        body: JSON.stringify(body),
+                                    })
+                                        .then(response => response.json())
+                                        .then(response => {
+                                            this.setState({
+                                                vipIdReturn: response
+                                            }, () => {
+                                                cookies.set('nickname', this.state.userinfo.nickname)
+                                                cookies.set('headimgurl', this.state.userinfo.headimgurl)
+                                                cookies.set('serviceEntry', this.state.serviceEntry)
+                                                cookies.set('authorization', this.state.authorization)
+                                                cookies.set('vipId', this.state.vipIdReturn.vipId)
+                                                this.props.history.replace('/main')
+                                            })
+                                        })
+                                })
+                            })
+                    }
+                })
+        }
+
     }
 
     render() {

@@ -4,7 +4,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import 'antd/dist/antd.css';
 import './App.css';
-import { Button, NavBar } from 'antd-mobile';
+import { NavBar } from 'antd-mobile';
 
 class Main extends Component {
 
@@ -74,17 +74,6 @@ class Main extends Component {
   }
 
   render() {
-
-    const header = {
-      // textAlign: 'center',
-      // fontSize: '20px',
-      // fontFamily: 'varela',
-      backgroundColor: '#F7F7F7',
-      color: 'black',
-      alignItems: 'center',
-      justifyContent: 'center',
-      // marginTop:'35px'
-    };
 
     const image = {
       backgroundColor: '#3CC48D',
