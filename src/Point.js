@@ -5,25 +5,7 @@ import { withRouter } from 'react-router';
 import { NavBar, ListView } from 'antd-mobile';
 import 'antd/dist/antd.css';
 import './App.css';
-
-
-const data = [
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/dKbkpPXKfvZzWCM.png',
-        title: 'Meet hotel',
-        des: '不是所有的兼职汪都需要风吹日晒',
-    },
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/XmwCzSeJiqpkuMB.png',
-        title: 'McDonald\'s invites you',
-        des: '不是所有的兼职汪都需要风吹日晒',
-    },
-    {
-        img: 'https://zos.alipayobjects.com/rmsportal/hfVtzEhPzTUewPm.png',
-        title: 'Eat the week',
-        des: '不是所有的兼职汪都需要风吹日晒',
-    },
-];
+import moment from 'moment';
 
 const dataBlobs = {};
 let sectionIDs = [];
@@ -123,30 +105,23 @@ class Point extends Component {
             />
         );
 
-        console.log(data);
+        console.log(this.state.ptsList);
 
 
-        let index = data.length - 1;
+        let index = this.state.ptsList.length - 1;
         const row = (rowData, sectionID, rowID) => {
             if (index < 0) {
-                index = data.length - 1;
+                index = this.state.ptsList.length - 1;
             }
-            const obj = data[index--];
+            const obj = this.state.ptsList[index--];
             return (
                 <div key={rowID} style={{ padding: '0 15px' }}>
-                    <div
-                        style={{
-                            lineHeight: '50px',
-                            color: '#888',
-                            fontSize: 18,
-                            borderBottom: '1px solid #F6F6F6',
-                        }}
-                    >{obj.title}</div>
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
-                        <img style={{ height: '64px', marginRight: '15px' }} src={obj.img} alt="" />
                         <div style={{ lineHeight: 1 }}>
-                            <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{obj.des}</div>
-                            <div><span style={{ fontSize: '30px', color: '#FF6E27' }}>35</span>¥ {rowID}</div>
+                            <div>会员积分</div>
+                            <div>来源:</div>
+                            <div>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
+                            <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{obj.totalPts}</div>
                         </div>
                     </div>
                 </div>
