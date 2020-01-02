@@ -41,7 +41,7 @@ class Register extends Component {
         super(props);
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer 2f1515c7-4fcb-4eb3-9d83-2d237a5ac4ec',
+            authorization: 'Bearer 0652738f-8f08-44c9-9e0e-768c29a02772',
             date: now,
             accessToken: '',
             dValue: 0, // date
@@ -206,51 +206,53 @@ class Register extends Component {
             wechatId: home.openid
         }
 
-        if (vipName == '') {
-            Toast.info('请输入姓名', 1);
-        } else if (vipPhone == '') {
-            Toast.info('请输入手机号', 1);
-        } else if (checkCode == '') {
-            Toast.info('请输入验证码', 1);
-        } else {
-            fetch(this.state.serviceEntry + 'vip-register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': this.state.authorization
-                },
-                body: JSON.stringify(body),
-            })
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
+        // if (vipName == '') {
+        //     Toast.info('请输入姓名', 1);
+        // } else if (vipPhone == '') {
+        //     Toast.info('请输入手机号', 1);
+        // } else if (checkCode == '') {
+        //     Toast.info('请输入验证码', 1);
+        // } else {
+        //     fetch(this.state.serviceEntry + 'vip-register', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': this.state.authorization
+        //         },
+        //         body: JSON.stringify(body),
+        //     })
+        //         .then(response => response.json())
+        //         .then(response => {
+        //             console.log(response)
 
-                    if (response.errCode != 'OK') {
-                        Toast.info('注册失败', 1);
-                    } else {
+        //             if (response.errCode != 'OK') {
+        //                 Toast.info('注册失败', 1);
+        //             } else {
 
-                        //get userinfo
-                        fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': this.state.authorization
-                            }
-                        })
-                            .then(response => response.json())
-                            .then(response => {
-                                this.setState({
-                                    userinfo: response
-                                }, () => {
-                                    console.log(this.state.userinfo)
-                                    cookies.set('nickname', this.state.userinfo.nickname)
-                                    cookies.set('headimgurl', this.state.userinfo.headimgurl)
-                                    this.props.history.replace('/main')
-                                })
-                            })
-                    }
-                })
-        }
+        //                 //get userinfo
+        //                 fetch(this.state.serviceEntry + 'userinfo?accessToken=' + this.state.home.accessToken + '&openid=' + this.state.home.openid + '&lang=zh_CN', {
+        //                     method: 'GET',
+        //                     headers: {
+        //                         'Content-Type': 'application/json',
+        //                         'Authorization': this.state.authorization
+        //                     }
+        //                 })
+        //                     .then(response => response.json())
+        //                     .then(response => {
+        //                         this.setState({
+        //                             userinfo: response
+        //                         }, () => {
+        //                             console.log(this.state.userinfo)
+        //                             cookies.set('nickname', this.state.userinfo.nickname)
+        //                             cookies.set('headimgurl', this.state.userinfo.headimgurl)
+        //                             this.props.history.replace('/main')
+        //                         })
+        //                     })
+        //             }
+        //         })
+        // }
+
+        this.props.history.replace('/main')
     }
 
     render() {

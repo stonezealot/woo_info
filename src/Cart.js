@@ -8,6 +8,29 @@ import 'antd/dist/antd.css';
 import './App.css';
 
 
+const data = [
+    {
+        price: 800.00,
+        priceFill: 10000,
+        no: 'Q19111326417454',
+    },
+    {
+        price: 100.00,
+        priceFill: 1588,
+        no: 'Q19111326417768',
+    },
+    {
+        price: 200.00,
+        priceFill: 2988,
+        no: 'Q19111326417657',
+    },
+    {
+        price: 300.00,
+        priceFill: 4888,
+        no: 'Q19111326417575',
+    }
+]
+
 class Cart extends Component {
 
     static propTypes = {
