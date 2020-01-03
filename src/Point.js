@@ -126,7 +126,7 @@ class Point extends Component {
                 <div key={rowID} style={{ padding: '0 15px' }}>
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
                         <div style={{ lineHeight: 1, display: 'flex', flexDirection: 'row' }}>
-                            <div style={{ flex: 1 }}>
+                            <div style={{}}>
                                 <div style={{ fontWeight: 'bolder' }}>会员积分</div>
                                 <div style={{ color: 'gray', marginTop: '5px' }}>来源: {obj.docId}</div>
                                 <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
@@ -137,7 +137,7 @@ class Point extends Component {
                                 color: 'orange',
                                 fontWeight: 'bold',
                                 fontSize: '24px',
-                                flex: 1
+                                marginLeft: '200px'
                             }}>{obj.totalPts}</div>
                         </div>
                     </div>
