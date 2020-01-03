@@ -127,11 +127,20 @@ class Point extends Component {
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
                         <div style={{ lineHeight: 1, display: 'flex', flexDirection: 'row' }}>
                             <div>
-                                <div style={{ fontWeight: 'bold' }}>会员积分</div>
-                                <div style={{ color: 'gray' }}>来源: {obj.docId}</div>
-                                <div style={{ color: 'gray', fontSize: '10px' }}>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
+                                <div style={{ fontWeight: 'bolder' }}>会员积分</div>
+                                <div style={{ color: 'gray', marginTop: '5px' }}>来源: {obj.docId}</div>
+                                <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
                             </div>
-                            <div style={{ marginBottom: '8px', fontWeight: 'bold', marginLeft: '20px', color: 'orange', fontWeight: 'bold', fontSize: '24px' }}>{obj.totalPts}</div>
+                            <div style={{
+                                marginBottom: '8px',
+                                fontWeight: 'bold',
+                                color: 'orange',
+                                fontWeight: 'bold',
+                                fontSize: '24px',
+                                position: 'absolute',
+                                left: '10px',
+                                top: '10px'
+                            }}>{obj.totalPts}</div>
                         </div>
                     </div>
                 </div>
