@@ -137,8 +137,8 @@ class Point extends Component {
                                 color: 'orange',
                                 fontWeight: 'bold',
                                 fontSize: '24px',
-                                position: 'absolute',
-                                left: '10px',
+                                position: 'relative',
+                                right: '10px',
                                 top: '10px'
                             }}>{obj.totalPts}</div>
                         </div>
