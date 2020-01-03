@@ -118,7 +118,7 @@ class Cart extends Component {
                 <div key={rowID} style={{ padding: '0 15px' }}>
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
                         <div style={{ lineHeight: 1, display: 'flex', flexDirection: 'row' }}>
-                            <div style={{}}>
+                            <div style={{ width: '200px' }}>
                                 <div style={{ fontWeight: 'bolder' }}>{obj.name}</div>
                                 <div style={{ color: 'gray', marginTop: '5px' }}>金额: {obj.netPrice}</div>
 
@@ -127,14 +127,14 @@ class Cart extends Component {
                                 <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>购买单号: {obj.docId}</div>
                             </div>
                             <div>
-                                <div style={{ color: 'gray', marginTop: '5px' }}>* {obj.stkQty}</div>
+                                <div style={{ color: 'gray', marginTop: '5px', marginLeft: '120px' }}>* {obj.stkQty}</div>
                                 <div style={{
                                     marginBottom: '8px',
                                     fontWeight: 'bold',
-                                    color: 'orange',
+                                    color: 'red',
                                     fontWeight: 'bold',
-                                    fontSize: '24px',
-                                    marginLeft: '200px'
+                                    fontSize: '15px',
+                                    marginLeft: '100px'
                                 }}>总金额: {obj.lineTotalNet + obj.lineTax}</div>
 
                             </div>
@@ -156,16 +156,24 @@ class Cart extends Component {
                     this.state.saleList == '' ?
                         <Empty description='您还没有消费记录哦~~' image={Empty.PRESENTED_IMAGE_SIMPLE} />
                         :
-                        <ListView
-                            ref={el => this.lv = el}
-                            dataSource={this.state.dataSource}
-                            className="am-list sticky-list"
-                            useBodyScroll
-                            renderRow={row}
-                            renderSeparator={separator}
-                            pageSize={4}
-                            scrollEventThrottle={200}
-                        />
+                        <div>
+                            <div style={{
+                                backgroundColor: '#F5F5F9',
+                                height: 8,
+                                borderTop: '1px solid #ECECED',
+                                borderBottom: '1px solid #ECECED',
+                            }}></div>
+                            <ListView
+                                ref={el => this.lv = el}
+                                dataSource={this.state.dataSource}
+                                className="am-list sticky-list"
+                                useBodyScroll
+                                renderRow={row}
+                                renderSeparator={separator}
+                                pageSize={4}
+                                scrollEventThrottle={200}
+                            />
+                        </div>
                 }
             </div>
         );
