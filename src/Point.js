@@ -33,15 +33,7 @@ class Point extends Component {
             isLoading: true,
             showDetail: false,
             vipId: cookies.get('vipId'),
-            ptsList: [
-                {
-                    "recKey": 19053236,
-                    "docDate": "2010-06-02T16:00:00.000+0000",
-                    "docId": "142-00301-20100603-0005",
-                    "totalPts": 130,
-                    "vipId": "SA00001551"
-                }
-            ]
+            ptsList: ''
         }
     }
 
