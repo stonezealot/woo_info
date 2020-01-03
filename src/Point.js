@@ -33,7 +33,15 @@ class Point extends Component {
             isLoading: true,
             showDetail: false,
             vipId: cookies.get('vipId'),
-            ptsList: ''
+            ptsList: [
+                {
+                    "recKey": 19053236,
+                    "docDate": "2010-06-02T16:00:00.000+0000",
+                    "docId": "142-00301-20100603-0005",
+                    "totalPts": 130,
+                    "vipId": "SA00001551"
+                }
+            ]
         }
     }
 
@@ -117,10 +125,13 @@ class Point extends Component {
             return (
                 <div key={rowID} style={{ padding: '0 15px' }}>
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
-                        <div style={{ lineHeight: 1 }}>
-                            <div>会员积分</div>
-                            <div>来源:</div>
-                            <div>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
+                        <div style={{ lineHeight: 1, display: 'flex', flexDirection: 'column' }}>
+                            <div>
+                                <div>会员积分</div>
+                                <div>来源: {obj.docId}</div>
+                                <div>{moment(obj.docDate).format('YYYY-MM-DD HH:mm:ss')}</div>
+                            </div>
+
                             <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>{obj.totalPts}</div>
                         </div>
                     </div>

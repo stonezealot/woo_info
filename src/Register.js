@@ -41,7 +41,7 @@ class Register extends Component {
         super(props);
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer 0652738f-8f08-44c9-9e0e-768c29a02772',
+            authorization: 'Bearer 1443d37e-9823-4579-82ee-01d1709f85b5',
             date: now,
             accessToken: '',
             dValue: 0, // date
