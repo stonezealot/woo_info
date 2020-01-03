@@ -138,7 +138,7 @@ class Point extends Component {
                                 fontWeight: 'bold',
                                 fontSize: '24px',
                                 marginLeft: '200px'
-                            }}>{obj.totalPts}</div>
+                            }}>{obj.totalPts < 0 ? obj.totalPts : '+' + obj.totalPts}</div>
                         </div>
                     </div>
                 </div>
