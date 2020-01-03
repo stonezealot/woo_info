@@ -116,18 +116,18 @@ class Cart extends Component {
             const obj = this.state.saleList[index--];
             return (
                 <div key={rowID} style={{ padding: '0 15px' }}>
-                    <div
-                        style={{
-                            lineHeight: '50px',
-                            color: '#888',
-                            fontSize: 18,
-                            borderBottom: '1px solid #F6F6F6',
-                        }}
-                    >{obj.name}</div>
                     <div style={{ display: '-webkit-box', display: 'flex', padding: '15px 0' }}>
+                        <div
+                            style={{
+                                lineHeight: '50px',
+                                color: '#888',
+                                fontSize: 18,
+                                borderBottom: '1px solid #F6F6F6',
+                            }}
+                        >{obj.name}</div>
                         <div style={{ lineHeight: 1, display: 'flex', flexDirection: 'row' }}>
                             <div style={{ width: '200px' }}>
-                                <div style={{ fontWeight: 'bolder' }}>{obj.name}</div>
+                                {/* <div style={{ fontWeight: 'bolder' }}>{obj.name}</div> */}
                                 <div style={{ color: 'gray', marginTop: '5px' }}>金额: {obj.netPrice}</div>
                                 <div style={{ color: 'gray', fontSize: '15px', marginTop: '10px' }}>购买时间: {moment(obj.docDate).format('YYYY-MM-DD')}</div>
                                 <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>购买单号: {obj.docId}</div>
