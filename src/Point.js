@@ -70,7 +70,7 @@ class Point extends Component {
                     this.setState({
                         total: this.state.ptsList.reduce(function (x, y) {
                             console.log(x.totalPts, y.totalPts)
-                            return x + y
+                            return x.totalPts + y.totalPts
                         })
                     })
                 })
