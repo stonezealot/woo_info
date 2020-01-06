@@ -33,7 +33,8 @@ class Point extends Component {
             isLoading: true,
             showDetail: false,
             vipId: cookies.get('vipId'),
-            ptsList: ''
+            ptsList: '',
+            total: ''
         }
     }
 
@@ -43,6 +44,17 @@ class Point extends Component {
             isLoading: false
         });
     }
+
+    handleSum = (list) => {
+        const sum = 0
+        for (var i = 0; i < list.length; i++) {
+            this.sum += list.totalPts
+        }
+        this.setState({
+            total: sum
+        })
+    }
+
 
     componentDidMount() {
 
@@ -65,7 +77,8 @@ class Point extends Component {
                     ptsList: response
                 }, () => {
                     console.log(this.state.ptsList)
-                    this.changeState(this.state.ptsList);
+                    this.changeState(this.state.ptsList)
+                    this.handleSum(this.state.ptsList)
                 })
             })
 
@@ -146,7 +159,7 @@ class Point extends Component {
                 ><div style={{ paddingTop: '5px' }}>积分查询</div></NavBar>
                 <div style={{ marginTop: '10px', height: '35px' }}></div>
                 <div style={{ backgroundColor: '#DDB100', height: '150px', paddingTop: '90px' }}>
-                    <div style={{ fontSize: '30px', fontWeight: 'bold', color: 'white', marginLeft: '30px' }}>0积分</div>
+                    <div style={{ fontSize: '30px', fontWeight: 'bold', color: 'white', marginLeft: '30px' }}>{this.state.total}积分</div>
                 </div>
                 <div style={{
                     backgroundColor: '#F5F5F9',
