@@ -123,18 +123,18 @@ class Cart extends Component {
                                 <div style={{ display: 'flex', flexDirection: 'row', borderBottom: '1px solid #F6F6F6', justifyContent: 'space-between' }}>
 
                                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                        <div style={{ color: 'gray', marginTop: '5px', width: '80px' }}>金额: {obj.netPrice}</div>
-                                        <div style={{ color: 'gray', marginTop: '5px', marginLeft: '20px', width: '80px' }}>数量: {obj.stkQty}</div>
+                                        <div style={{ color: 'gray', marginTop: '15px', width: '80px' }}>金额: {obj.netPrice}</div>
+                                        <div style={{ color: 'gray', marginTop: '15px', marginLeft: '20px', width: '80px' }}>数量: {obj.stkQty}</div>
                                     </div>
                                     <div style={{
-                                        marginTop: '5px',
+                                        marginTop: '15px',
                                         fontWeight: 'bold',
                                         fontSize: '15px',
                                         marginLeft: '70px'
                                     }}>总金额: {obj.lineTotalNet + obj.lineTax}
                                     </div>
                                 </div>
-                                <div style={{ color: 'gray', fontSize: '15px', marginTop: '10px' }}>购买时间: {moment(obj.docDate).format('YYYY-MM-DD')}</div>
+                                <div style={{ color: 'gray', fontSize: '15px', marginTop: '20px' }}>购买时间: {moment(obj.docDate).format('YYYY-MM-DD')}</div>
                                 <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>购买单号: {obj.docId}</div>
                             </div>
                         </div>
