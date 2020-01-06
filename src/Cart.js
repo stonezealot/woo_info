@@ -123,11 +123,11 @@ class Cart extends Component {
                                 <div style={{ display: 'flex', flexDirection: 'row', borderBottom: '1px solid #F6F6F6', justifyContent: 'space-between' }}>
 
                                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                        <div style={{ color: 'gray', marginTop: '5px' }}>金额: {obj.netPrice}</div>
-                                        <div style={{ color: 'gray', marginLeft: '20px' }}>数量: {obj.stkQty}</div>
+                                        <div style={{ color: 'gray', marginTop: '5px', width: '80px' }}>金额: {obj.netPrice}</div>
+                                        <div style={{ color: 'gray', marginTop: '5px', marginLeft: '20px', width: '80px' }}>数量: {obj.stkQty}</div>
                                     </div>
                                     <div style={{
-                                        marginBottom: '8px',
+                                        marginTop: '5px',
                                         fontWeight: 'bold',
                                         fontSize: '15px',
                                         marginLeft: '70px'
