@@ -45,6 +45,8 @@ class Point extends Component {
         });
     }
 
+
+
     componentDidMount() {
 
 
@@ -68,10 +70,11 @@ class Point extends Component {
                     console.log(this.state.ptsList)
                     this.changeState(this.state.ptsList)
                     this.setState({
-                        total: this.state.ptsList.reduce(function (x, y) {
-                            console.log(x.totalPts, y.totalPts)
-                            return x.totalPts + y.totalPts
-                        })
+                        // total: this.state.ptsList.reduce(function (x, y) {
+                        //     console.log(x.totalPts, y.totalPts)
+                        //     return (x.totalPts + y.totalPts)
+                        // })
+                        total: this.state.ptsList[0].totalPts + this.state.ptsList[1].totalPts
                     })
                 })
             })
