@@ -45,17 +45,6 @@ class Point extends Component {
         });
     }
 
-    handleSum = (list) => {
-        const sum = 0
-        for (var i = 0; i < list.length; i++) {
-            this.sum += list.totalPts
-        }
-        this.setState({
-            total: sum
-        })
-    }
-
-
     componentDidMount() {
 
 
@@ -78,7 +67,12 @@ class Point extends Component {
                 }, () => {
                     console.log(this.state.ptsList)
                     this.changeState(this.state.ptsList)
-                    this.handleSum(this.state.ptsList)
+                    this.setState({
+                        total: this.state.ptsList.reduce(function (x, y) {
+                            console.log(x.totalPts, y.totalPts)
+                            return x + y
+                        })
+                    })
                 })
             })
 
