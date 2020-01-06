@@ -125,11 +125,9 @@ class Cart extends Component {
                                 <div style={{ color: 'gray', fontSize: '10px', marginTop: '10px' }}>购买单号: {obj.docId}</div>
                             </div>
                             <div>
-                                <div style={{ color: 'gray', marginTop: '5px', marginLeft: '120px' }}>* {obj.stkQty}</div>
+                                <div style={{ color: 'gray', borderBottom: '1px solid #F6F6F6', marginLeft: '120px' }}>数量: {obj.stkQty}</div>
                                 <div style={{
                                     marginBottom: '8px',
-                                    fontWeight: 'bold',
-                                    color: 'red',
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                     marginLeft: '70px'
