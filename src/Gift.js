@@ -188,17 +188,16 @@ class Gift extends Component {
                                 ref={el => this.lv = el}
                                 dataSource={this.state.dataSource}
                                 renderRow={row}
-
                                 useBodyScroll
                                 style={{
                                     height: '100vh',
                                     width: '100%',
                                     backgroundColor: '#F7F7F7',
                                 }}
-                                pullToRefresh={<PullToRefresh
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={this.onRefresh}
-                                />}
+                                // pullToRefresh={<PullToRefresh
+                                //     refreshing={this.state.refreshing}
+                                //     onRefresh={this.onRefresh}
+                                // />}
                                 onEndReachedThreshold={1000}
                                 onEndReached={this.onEndReached}
                                 pageSize={5}
