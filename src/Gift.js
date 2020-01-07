@@ -73,7 +73,6 @@ class Gift extends Component {
         }
 
         this.handleDetailButton = this.handleDetailButton.bind(this);
-        this.detailTitle = this.detailTitle.bind(this);
 
     }
 
