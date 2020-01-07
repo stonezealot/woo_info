@@ -4,6 +4,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Empty } from 'antd';
 import { Tabs, Badge, ListView, PullToRefresh, Accordion, NavBar } from 'antd-mobile';
+import moment from 'moment';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -50,14 +51,24 @@ class Gift extends Component {
 
     constructor(props) {
         super(props);
+
+        const { cookies } = this.props;
+
+
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,
-        });
+        })
+
+
         this.state = {
 
+            serviceEntry: cookies.get('serviceEntry'),
+            authorization: cookies.get('authorization'),
+            vipId: cookies.get('vipId'),
             dataSource: dataSource.cloneWithRows({}),
             isLoading: true,
-            showDetail: false
+            showDetail: false,
+            discountList: ''
 
         }
 
@@ -78,6 +89,25 @@ class Gift extends Component {
         document.title = '个人信息-优惠券'
         console.log(data)
         this.changeState(data);
+
+        let url = this.state.serviceEntry + 'discounts?csId=' + this.state.vipId
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    discountList: response
+                }, () => {
+                    console.log(this.state.discountList)
+                    this.changeState(this.state.discountList)
+                })
+            })
     }
 
     handleDetailButton() {
@@ -101,17 +131,17 @@ class Gift extends Component {
 
     render() {
 
-        console.log(data);
+        console.log(this.state.discountList);
 
-        let index = data.length - 1;
+        let index = this.state.discountList.length - 1;
 
         const row = (rowData, sectionID, rowID) => {
             if (index < 0) {
                 //没有歌曲
-                index = data.length - 1;
+                index = this.state.discountList.length - 1;
             }
 
-            const obj = data[index--];
+            const obj = this.state.discountList[index--];
 
             return (
 
@@ -125,20 +155,17 @@ class Gift extends Component {
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px' }}>
                         <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.price}.00</div>
+                            <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
                             <div style={{ flex: 6.5, paddingTop: '20px' }}>
                                 <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
-                                <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.priceFill}元以上可用</div>
+                                <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
                             </div>
                         </div>
                         <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
                             <div>
-                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.no}</div>
-                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  2019.11.13- 2019.12.13</div>
+                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
+                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
                             </div>
-                            {/* <div>
-                                <div style={{ fontSize: '12px', color: '#A2A2A2', padding: '14px', paddingLeft: '60px' }}>详情</div>
-                            </div> */}
                         </div>
                         <div className="detailTitle">
                             <Accordion className="detailTitle" accordion='false'>
@@ -194,10 +221,6 @@ class Gift extends Component {
                                     width: '100%',
                                     backgroundColor: '#F7F7F7',
                                 }}
-                                // pullToRefresh={<PullToRefresh
-                                //     refreshing={this.state.refreshing}
-                                //     onRefresh={this.onRefresh}
-                                // />}
                                 onEndReachedThreshold={1000}
                                 onEndReached={this.onEndReached}
                                 pageSize={5}
