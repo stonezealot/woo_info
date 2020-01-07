@@ -101,24 +101,6 @@ class Gift extends Component {
 
     render() {
 
-        const header = {
-            // textAlign: 'center',
-            fontSize: '20px',
-            fontFamily: 'varela',
-            backgroundColor: 'white',
-            color: 'black',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '35px'
-        };
-
-        const headerTitle = {
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            fontWeight: '800'
-        }
-
         console.log(data);
 
         let index = data.length - 1;
@@ -196,6 +178,7 @@ class Gift extends Component {
                         tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                         tabBarActiveTextColor='#D71818'
                         tabs={tabs}
+                        swipeable={false}
                         initialPage={1}
                         onChange={(tab, index) => { console.log('onChange', index, tab); }}
                         onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
