@@ -87,8 +87,7 @@ class Gift extends Component {
     componentDidMount() {
 
         document.title = '个人信息-优惠券'
-        console.log(data)
-        this.changeState(data);
+        console.log(this.state.vipId)
 
         let url = this.state.serviceEntry + 'discounts?csId=' + this.state.vipId
 
@@ -116,18 +115,6 @@ class Gift extends Component {
         }, () => { console.log(this.state.showDetail) })
 
     }
-
-    detailTitle() {
-        return (
-            <div>
-                abc
-            </div>
-        )
-    }
-
-
-
-
 
     render() {
 
