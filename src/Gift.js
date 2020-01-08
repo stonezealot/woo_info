@@ -204,7 +204,7 @@ class Gift extends Component {
                         initialPage={1}
                         onChange={(tab, index) => { console.log('onChange', index, tab); }}
                         onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '120vh', backgroundColor: '#F7F7F7' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh', backgroundColor: '#F7F7F7' }}>
                             <ListView
                                 key={this.state.useBodyScroll ? '0' : '1'}
                                 ref={el => this.lv = el}
