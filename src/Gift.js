@@ -286,7 +286,7 @@ class Gift extends Component {
                         initialPage={1}
                         onChange={(tab, index) => { console.log('onChange', index, tab); }}
                         onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7', paddingTop: '15px' }}>
                             <ListView
                                 key={this.state.useBodyScroll ? '0' : '1'}
                                 ref={el => this.lv = el}
@@ -304,7 +304,7 @@ class Gift extends Component {
                             />
 
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7', paddingTop: '15px' }}>
                             {/* <Empty description='您还没有电子券哦~~' image={Empty.PRESENTED_IMAGE_SIMPLE} /> */}
                             <ListView
                                 key={this.state.useBodyScroll ? '0' : '1'}
@@ -322,7 +322,7 @@ class Gift extends Component {
                                 pageSize={5}
                             />
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7', paddingTop: '15px' }}>
                             {/* <Empty description='您还没有电子券哦~~' image={Empty.PRESENTED_IMAGE_SIMPLE} /> */}
                             <ListView
                                 key={this.state.useBodyScroll ? '0' : '1'}
