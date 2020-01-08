@@ -158,8 +158,8 @@ class Gift extends Component {
                             <Accordion className="detailTitle" accordion='false'>
                                 <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
                                     <div style={{ height: '140px', width: '100%' }}>
-                                        <div style={{ height: '50px', margin: '10px', backgroundColor: 'pink' }}>
-                                            <Barcode value={obj.svId} />
+                                        <div>
+                                            <Barcode barCode={obj.svId} />
                                         </div>
                                         <div style={{ marginLeft: '5px' }}>
                                             <div>使用规则</div>
