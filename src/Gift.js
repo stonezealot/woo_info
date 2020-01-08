@@ -132,7 +132,7 @@ class Gift extends Component {
 
             return (
                 <div key={rowID} style={{
-                    paddingTop: '15px',
+                    // paddingTop: '15px',
                     backgroundColor: '#F7F7F7',
                     display: 'flex',
                     justifyContent: 'center',
