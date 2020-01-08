@@ -131,7 +131,6 @@ class Gift extends Component {
             const obj = this.state.discountList[index--];
 
             return (
-
                 <div key={rowID} style={{
                     paddingTop: '15px',
                     backgroundColor: '#F7F7F7',
@@ -139,42 +138,49 @@ class Gift extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
-                    <div style={{ width: '80%', background: 'white', borderRadius: '8px' }}>
-                        <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
-                            <div style={{ flex: 6.5, paddingTop: '20px' }}>
-                                <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
-                                <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
-                            </div>
-                        </div>
-                        <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
-                            <div>
-                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
-                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
-                            </div>
-                        </div>
-                        <div className="detailTitle">
-                            <Accordion className="detailTitle" accordion='false'>
-                                <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
-                                    <div style={{ height: '140px', width: '100%' }}>
-                                        <div style={{ marginTop: '5px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Barcode barCode={obj.svId} />
-                                        </div>
-                                        <div style={{ marginLeft: '5px' }}>
-                                            <div>使用规则</div>
-                                            <div style={{ fontSize: '12px' }}>嫵WOO期待与您美丽每一天!</div>
-                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                <div>使用范围</div>
-                                                <div style={{ marginLeft: '5px', color: '#EE008F' }}>全部区域</div>
-                                            </div>
-                                        </div>
+                    {
+                        obj.statusFlg == 'B'
+                            ?
+                            <div style={{ width: '80%', background: 'white', borderRadius: '8px' }}>
+                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
+                                    <div style={{ flex: 6.5, paddingTop: '20px' }}>
+                                        <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
+                                        <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
                                     </div>
-                                </Accordion.Panel>
-                            </Accordion>
-                        </div>
+                                </div>
+                                <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
+                                    <div>
+                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
+                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
+                                    </div>
+                                </div>
+                                <div className="detailTitle">
+                                    <Accordion className="detailTitle" accordion='false'>
+                                        <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
+                                            <div style={{ height: '140px', width: '100%' }}>
+                                                <div style={{ marginTop: '5px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Barcode barCode={obj.svId} />
+                                                </div>
+                                                <div style={{ marginLeft: '5px' }}>
+                                                    <div>使用规则</div>
+                                                    <div style={{ fontSize: '12px' }}>嫵WOO期待与您美丽每一天!</div>
+                                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                        <div>使用范围</div>
+                                                        <div style={{ marginLeft: '5px', color: '#EE008F' }}>全部区域</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Accordion.Panel>
+                                    </Accordion>
+                                </div>
 
-                    </div>
+                            </div>
+                            :
+                            null
+                    }
+
                 </div >
 
 
