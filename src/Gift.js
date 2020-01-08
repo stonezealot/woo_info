@@ -141,7 +141,7 @@ class Gift extends Component {
                     {
                         obj.statusFlg == 'B'
                             ?
-                            <div style={{ width: '80%', background: 'white', borderRadius: '8px' }}>
+                            <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
                                 <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                                     <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
