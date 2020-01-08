@@ -69,7 +69,9 @@ class Gift extends Component {
             dataSource: dataSource.cloneWithRows({}),
             isLoading: true,
             showDetail: false,
-            discountList: ''
+            discountListB: '',
+            discountListC: '',
+            discountListD: ''
 
         }
 
@@ -101,7 +103,9 @@ class Gift extends Component {
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    discountList: response
+                    discountListB: response.filter(o => { return (o.statusFlg == 'B') }),
+                    discountListC: response.filter(o => { return (o.statusFlg == 'C') }),
+                    discountListD: response.filter(o => { return (o.statusFlg == 'D') })
                 }, () => {
                     console.log(this.state.discountList)
                     this.changeState(this.state.discountList)
@@ -118,17 +122,17 @@ class Gift extends Component {
 
     render() {
 
-        console.log(this.state.discountList);
+        console.log(this.state.discountListB);
 
-        let index = this.state.discountList.length - 1;
+        let index = this.state.discountListB.length - 1;
 
-        const row = (rowData, sectionID, rowID) => {
+        const rowB = (rowData, sectionID, rowID) => {
             if (index < 0) {
                 //没有歌曲
-                index = this.state.discountList.length - 1;
+                index = this.state.discountListB.length - 1;
             }
 
-            const obj = this.state.discountList[index--];
+            const obj = this.state.discountListB[index--];
 
             return (
                 <div key={rowID} style={{
@@ -138,52 +142,43 @@ class Gift extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
-                    {
-                        obj.statusFlg == 'B'
-                            ?
-                            <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
-                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
-                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
-                                    <div style={{ flex: 6.5, paddingTop: '20px' }}>
-                                        <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
-                                        <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
-                                    </div>
-                                </div>
-                                <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
-                                    <div>
-                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
-                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
-                                    </div>
-                                </div>
-                                <div className="detailTitle">
-                                    <Accordion className="detailTitle" accordion='false'>
-                                        <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
-                                            <div style={{ height: '140px', width: '100%' }}>
-                                                <div style={{ marginTop: '5px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <Barcode barCode={obj.svId} />
-                                                </div>
-                                                <div style={{ marginLeft: '5px' }}>
-                                                    <div>使用规则</div>
-                                                    <div style={{ fontSize: '12px' }}>嫵WOO期待与您美丽每一天!</div>
-                                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                                        <div>使用范围</div>
-                                                        <div style={{ marginLeft: '5px', color: '#EE008F' }}>全部区域</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Accordion.Panel>
-                                    </Accordion>
-                                </div>
 
+                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
+                        <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
+                            <div style={{ flex: 6.5, paddingTop: '20px' }}>
+                                <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
+                                <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
                             </div>
-                            :
-                            null
-                    }
-
+                        </div>
+                        <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
+                            <div>
+                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
+                                <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
+                            </div>
+                        </div>
+                        <div className="detailTitle">
+                            <Accordion className="detailTitle" accordion='false'>
+                                <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
+                                    <div style={{ height: '140px', width: '100%' }}>
+                                        <div style={{ marginTop: '5px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Barcode barCode={obj.svId} />
+                                        </div>
+                                        <div style={{ marginLeft: '5px' }}>
+                                            <div>使用规则</div>
+                                            <div style={{ fontSize: '12px' }}>嫵WOO期待与您美丽每一天!</div>
+                                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                                <div>使用范围</div>
+                                                <div style={{ marginLeft: '5px', color: '#EE008F' }}>全部区域</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Accordion.Panel>
+                            </Accordion>
+                        </div>
+                    </div>
                 </div >
-
-
             );
         };
 
@@ -204,12 +199,12 @@ class Gift extends Component {
                         initialPage={1}
                         onChange={(tab, index) => { console.log('onChange', index, tab); }}
                         onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh', backgroundColor: '#F7F7F7' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
                             <ListView
                                 key={this.state.useBodyScroll ? '0' : '1'}
                                 ref={el => this.lv = el}
                                 dataSource={this.state.dataSource}
-                                renderRow={row}
+                                renderRow={rowB}
                                 useBodyScroll
                                 style={{
                                     height: '100vh',
