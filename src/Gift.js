@@ -4,6 +4,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Empty } from 'antd';
 import { Tabs, Badge, ListView, PullToRefresh, Accordion, NavBar } from 'antd-mobile';
+import Barcode from 'react-barcode';
 import moment from 'moment';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -157,7 +158,9 @@ class Gift extends Component {
                             <Accordion className="detailTitle" accordion='false'>
                                 <Accordion.Panel className="detailTitle" header={<div style={{ color: '#A2A2A2', fontSize: '15px' }}>详情</div>}>
                                     <div style={{ height: '140px', width: '100%' }}>
-                                        <div style={{ height: '50px', margin: '10px', backgroundColor: 'pink' }}>二维码</div>
+                                        <div style={{ height: '50px', margin: '10px', backgroundColor: 'pink' }}>
+                                            <Barcode value={obj.svId} />
+                                        </div>
                                         <div style={{ marginLeft: '5px' }}>
                                             <div>使用规则</div>
                                             <div style={{ fontSize: '12px' }}>嫵WOO期待与您美丽每一天!</div>
