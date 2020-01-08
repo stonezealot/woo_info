@@ -139,7 +139,7 @@ class Gift extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj.status == 'B'
+                        obj.statusFlg == 'B'
                             ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
                                 <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
@@ -202,7 +202,7 @@ class Gift extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj.status == 'C'
+                        obj.statusFlg == 'C'
                             ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
                                 <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
@@ -244,7 +244,7 @@ class Gift extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj.status == 'D'
+                        obj.statusFlg == 'D'
                             ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
                                 <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
