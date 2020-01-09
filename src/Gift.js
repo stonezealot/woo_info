@@ -179,8 +179,6 @@ class Gift extends Component {
                             :
                             null
                     }
-
-
                 </div >
             );
         };
