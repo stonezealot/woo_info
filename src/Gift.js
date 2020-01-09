@@ -203,12 +203,12 @@ class Gift extends Component {
                         obj.statusFlg == 'C'
                             ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
-                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
+                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: 'gray' }}></div>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
+                                    <div style={{ color: 'gray', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
                                     <div style={{ flex: 6.5, paddingTop: '20px' }}>
-                                        <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
-                                        <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
+                                        <div style={{ color: 'gray', fontSize: '20px' }}>抵用券</div>
+                                        <div style={{ color: 'gray', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
                                     </div>
                                 </div>
                                 <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
@@ -245,12 +245,12 @@ class Gift extends Component {
                         obj.statusFlg == 'D'
                             ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
-                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
+                                <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: 'gray' }}></div>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <div style={{ color: '#EE008F', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
+                                    <div style={{ color: 'gray', flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.svAmt}.00</div>
                                     <div style={{ flex: 6.5, paddingTop: '20px' }}>
-                                        <div style={{ color: '#EE008F', fontSize: '20px' }}>抵用券</div>
-                                        <div style={{ color: '#EE008F', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
+                                        <div style={{ color: 'gray', fontSize: '20px' }}>抵用券</div>
+                                        <div style={{ color: 'gray', paddingTop: '-5px' }}>消费满{obj.svAmt}元以上可用</div>
                                     </div>
                                 </div>
                                 <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
