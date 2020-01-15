@@ -29,12 +29,25 @@ class Shop extends Component {
         }
 
         this.onChange = this.onChange.bind(this)
+        this.getLocation = this.getLocation.bind(this)
 
     }
 
     componentDidMount() {
         document.title = '门店列表'
+        this.getLocation()
 
+
+    }
+
+    onChange = (e) => {
+        this.setState({
+            value: e
+        }, () => { console.log(this.state.value) })
+
+    };
+
+    getLocation() {
         const BMap = window.BMap;
         const BMAP_STATUS_SUCCESS = window.BMAP_STATUS_SUCCESS;
 
@@ -59,13 +72,6 @@ class Shop extends Component {
             }
         }, { enableHighAccuracy: true })
     }
-
-    onChange = (e) => {
-        this.setState({
-            value: e
-        }, () => { console.log(this.state.value) })
-
-    };
 
 
 
