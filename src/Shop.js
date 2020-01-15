@@ -84,8 +84,10 @@ class Shop extends Component {
                     onChange={(tab, index) => { console.log('onChange', index, tab); }}
                     onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
+                        <div id="allmap" ></div >
                         <div>lng: {this.state.lng}</div>
                         <div>lat: {this.state.lat}</div>
+
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
 
