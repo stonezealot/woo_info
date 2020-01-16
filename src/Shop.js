@@ -78,6 +78,7 @@ class Shop extends Component {
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
                     tabs={tabs}
+                    swipeable={false}
                     initialPage={1}
                     onChange={(tab, index) => { console.log('onChange', index, tab); }}
                     onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
