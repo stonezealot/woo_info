@@ -16,45 +16,16 @@ const tabs = [
     { title: <Badge>已过期</Badge> },
 ];
 
-const data = [
-    {
-        price: 800.00,
-        priceFill: 10000,
-        no: 'Q19111326417454',
-    },
-    {
-        price: 100.00,
-        priceFill: 1588,
-        no: 'Q19111326417768',
-    },
-    {
-        price: 200.00,
-        priceFill: 2988,
-        no: 'Q19111326417657',
-    },
-    {
-        price: 300.00,
-        priceFill: 4888,
-        no: 'Q19111326417575',
-    }
-]
-
-
 class Gift extends Component {
 
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
     };
 
-
-
-
-
     constructor(props) {
         super(props);
 
         const { cookies } = this.props;
-
 
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => row1 !== row2,

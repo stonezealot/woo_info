@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { Empty } from 'antd';
-import { InputItem, Button, SearchBar, SegmentedControl, Tabs, Badge, Modal } from 'antd-mobile';
+import { SearchBar, Tabs, Badge, ListView } from 'antd-mobile';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -22,13 +21,33 @@ class Shop extends Component {
 
     constructor(props) {
         super(props);
+
+        const { cookies } = this.props;
+
+        const dataSource = new ListView.DataSource({
+            rowHasChanged: (row1, row2) => row1 !== row2,
+        })
+
         this.state = {
             value: '',
-            lng: '',
-            lat: ''
+            longitude: '',
+            latitude: '',
+            serviceEntry: cookies.get('serviceEntry'),
+            authorization: cookies.get('authorization'),
+            dataSource: dataSource.cloneWithRows({}),
+            addressList: ''
         }
 
         this.onChange = this.onChange.bind(this)
+
+    }
+
+    changeState = (list) => {
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(list),
+            isLoading: false
+        });
+
 
     }
 
@@ -59,6 +78,24 @@ class Shop extends Component {
             }
         }, { enableHighAccuracy: true })
 
+        let url = this.state.serviceEntry + 'addresses'
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    addressList: response
+                }, () => {
+                    console.log(this.state.addressList)
+                    this.changeState(this.state.addressList)
+                })
+            })
 
     }
 
@@ -70,6 +107,37 @@ class Shop extends Component {
     };
 
     render() {
+
+        console.log(this.state.addressList);
+
+        let index = this.state.addressList.length - 1;
+
+        const rowB = (rowData, sectionID, rowID) => {
+            if (index < 0) {
+                //没有歌曲
+                index = this.state.addressList.length - 1;
+            }
+
+            const obj = this.state.addressList[index--];
+
+            return (
+                <div key={rowID} style={{
+                    // paddingTop: '15px',
+                    backgroundColor: '#F7F7F7',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+
+                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
+                        <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <div style={{flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.address}</div>
+                        </div>
+                    </div>
+                </div >
+            );
+        };
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
@@ -84,9 +152,21 @@ class Shop extends Component {
                     onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
                         <div id="allmap" ></div >
-                        <div>lng: {this.state.lng}</div>
-                        <div>lat: {this.state.lat}</div>
-
+                        <ListView
+                            key={this.state.useBodyScroll ? '0' : '1'}
+                            ref={el => this.lv = el}
+                            dataSource={this.state.dataSource}
+                            renderRow={rowB}
+                            useBodyScroll
+                            style={{
+                                height: '100vh',
+                                width: '100%',
+                                backgroundColor: '#F7F7F7',
+                            }}
+                            onEndReachedThreshold={1000}
+                            onEndReached={this.onEndReached}
+                            pageSize={5}
+                        />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
 

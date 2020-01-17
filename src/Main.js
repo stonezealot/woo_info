@@ -5,7 +5,6 @@ import { withRouter } from 'react-router';
 import 'antd/dist/antd.css';
 import './App.css';
 import { NavBar } from 'antd-mobile';
-import wx from 'weixin-js-sdk';
 
 class Main extends Component {
 
