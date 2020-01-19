@@ -34,7 +34,8 @@ class Shop extends Component {
             latitude: '',
             serviceEntry: cookies.get('serviceEntry'),
             authorization: cookies.get('authorization'),
-            dataSource: dataSource.cloneWithRows({}),
+            dataSource: dataSource,
+            // .cloneWithRows({}),
             addressList: ''
         }
 
