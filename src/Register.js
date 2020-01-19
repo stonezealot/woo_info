@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { Button, DatePicker, List, InputItem, Picker, Toast } from 'antd-mobile';
+import { DatePicker, List, InputItem, Picker, Toast } from 'antd-mobile';
 import moment from 'moment';
 import '../node_modules/antd-mobile/dist/antd-mobile.min.css';
 import './App.css';
+import { Button } from 'react-weui';
+//import styles
+import 'weui';
+import 'react-weui/build/packages/react-weui.css';
 
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -41,7 +45,7 @@ class Register extends Component {
         super(props);
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer 309674a7-5387-4e03-bc60-c91e7402ed23',
+            authorization: 'Bearer 85f3aa85-5deb-4ed5-a968-64491843413f',
             date: now,
             accessToken: '',
             dValue: 0, // date
@@ -352,7 +356,7 @@ class Register extends Component {
                                     ref={el => this.autoFocusInst = el}
                                     onChange={this.handleVipPhone}
                                 >手机号</InputItem>
-                                <Button type="primary" style={getButton}>获取验证码</Button>
+                                <Button style={{ backgroundColor: '#DDB100', marginTop: '5px', marginBottom: '5px' }}>获取验证码</Button>
                                 <InputItem
                                     clear
                                     ref={el => this.autoFocusInst = el}
@@ -392,7 +396,8 @@ class Register extends Component {
                         </div>
                     </div>
                     <div style={{ marginLeft: '5px', marginRight: '5px' }}>
-                        <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>保存</Button>
+                        {/* <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>保存</Button> */}
+                        <Button onClick={this.handleSaveButton}>保存</Button>
                     </div>
                 </div>
             </div>

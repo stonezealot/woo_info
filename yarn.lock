@@ -10348,6 +10348,15 @@ react-virtualized@^9.21.1:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
+react-weui@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/react-weui/-/react-weui-1.2.2.tgz#5281dd0c843ce9626e064fac5b79acb45b7aaf43"
+  integrity sha512-dFfhMy/2JUIS211bDnMZHPivTEnYQFfZctmUVNjWkyt1om/28bwYHGn9wk7zLnnaswxTDmn2v8+oe7N4lxpGzg==
+  dependencies:
+    babel-runtime "^6.26.0"
+    prop-types "^15.7.2"
+    weui "^1.1.0"
+
 react@^16.8.6:
   version "16.11.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.11.0.tgz#d294545fe62299ccee83363599bf904e4a07fdbb"
@@ -12453,6 +12462,11 @@ weixin-js-sdk@^1.4.0-test:
   version "1.4.0-test"
   resolved "https://registry.yarnpkg.com/weixin-js-sdk/-/weixin-js-sdk-1.4.0-test.tgz#612bbafcc97ad84f5afe6dc84701534cc59fc3ca"
   integrity sha512-Dh/TwKhaQVAlyqEXdR65aJdexsynOhCEauexY93YZ+gXcV+ITTd/qvAHdwmkGP0nwAp314v0FD4AXUqCBQFm6Q==
+
+weui@^1.1.0:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/weui/-/weui-1.1.3.tgz#0f0899bb61bb2ec603b2648367a8139298f81514"
+  integrity sha512-vC6eWUvG1MYoE8yLsvBBmLB2+4DZWynQOL47MUscHMwPVltOZPGsiRb2PE7y3z+w3ElF1SsmJsyhr40wiXgP5A==
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3, whatwg-encoding@^1.0.5:
   version "1.0.5"
