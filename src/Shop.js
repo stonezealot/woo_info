@@ -158,7 +158,7 @@ class Shop extends Component {
                             ref={el => this.lv = el}
                             dataSource={this.state.dataSource}
                             renderRow={rowB}
-                            useBodyScroll
+                            // useBodyScroll
                             style={{
                                 height: '100vh',
                                 width: '100%',
