@@ -160,7 +160,7 @@ class Shop extends Component {
                             renderRow={rowB}
                             // useBodyScroll
                             style={{
-                                // height: '100vh',
+                                height: '100vh',
                                 width: '100%',
                                 backgroundColor: '#F7F7F7',
                             }}
