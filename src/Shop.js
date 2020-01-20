@@ -60,7 +60,7 @@ class Shop extends Component {
     }
 
     componentDidMount() {
-        document.querySelector('.element').addEventListener('touchmove', this.stopScroll, false);
+        document.body.addEventListener('touchmove', this.stopScroll, false);
         document.title = '门店列表'
         const BMap = window.BMap;
         const BMAP_STATUS_SUCCESS = window.BMAP_STATUS_SUCCESS;
