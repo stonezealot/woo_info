@@ -151,7 +151,7 @@ class Shop extends Component {
                     initialPage={1}
                     onChange={(tab, index) => { console.log('onChange', index, tab); }}
                     onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
                         <div id="allmap" ></div >
                         <ListView
                             key={this.state.useBodyScroll ? '0' : '1'}
