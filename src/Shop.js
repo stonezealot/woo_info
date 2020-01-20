@@ -138,11 +138,10 @@ class Shop extends Component {
                     alignItems: 'center',
                 }}>
 
-                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
-                        <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.address}</div>
-                        </div>
+                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
+                        {/* <div style={{ display: 'flex', flexDirection: 'row' }}> */}
+                        <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>{obj.address}</div>
+                        {/* </div> */}
                     </div>
                 </div >
             );
@@ -171,6 +170,7 @@ class Shop extends Component {
                                 height: '100vh',
                                 width: '100%',
                                 backgroundColor: '#F7F7F7',
+                                paddingBottom: '50px'
                             }}
                             onEndReachedThreshold={1000}
                             onEndReached={this.onEndReached}
