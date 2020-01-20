@@ -40,6 +40,7 @@ class Shop extends Component {
         }
 
         this.onChange = this.onChange.bind(this)
+        this.stopScroll = this.stopScroll.bind(this)
 
     }
 
@@ -52,7 +53,14 @@ class Shop extends Component {
 
     }
 
+    stopScroll(e) {
+
+        e.preventDefault()
+
+    }
+
     componentDidMount() {
+        document.querySelector('.element').addEventListener('touchmove', this.stopScroll, false);
         document.title = '门店列表'
         const BMap = window.BMap;
         const BMAP_STATUS_SUCCESS = window.BMAP_STATUS_SUCCESS;
@@ -133,7 +141,7 @@ class Shop extends Component {
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px' }}>
                         <div className="pinkTop" style={{ height: '20px', width: '100%', backgroundColor: '#EE008F' }}></div>
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            <div style={{flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.address}</div>
+                            <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '25px' }}>{obj.address}</div>
                         </div>
                     </div>
                 </div >
