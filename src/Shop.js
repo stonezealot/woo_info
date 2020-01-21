@@ -30,8 +30,8 @@ class Shop extends Component {
 
         this.state = {
             value: '',
-            longitude: '',
-            latitude: '',
+            lng: '',
+            lat: '',
             serviceEntry: cookies.get('serviceEntry'),
             authorization: cookies.get('authorization'),
             dataSource: dataSource,
@@ -78,8 +78,8 @@ class Shop extends Component {
                 map.panTo(r.point);
                 console.log('您的位置：' + r.point.lng + ',' + r.point.lat);
                 that.setState({
-                    longitude: r.point.lng,
-                    latitude: r.point.lat
+                    lng: r.point.lng,
+                    lat: r.point.lat
                 })
             }
             else {
@@ -87,7 +87,8 @@ class Shop extends Component {
             }
         }, { enableHighAccuracy: true })
 
-        let url = this.state.serviceEntry + 'addresses?longitude=' + this.state.longitude + '&latitude=' + this.state.latitude
+        let url = this.state.serviceEntry + 'addresses?longitude=' + this.state.lng + '&latitude=' + this.state.lat
+        console.log(url)
 
         fetch(url, {
             method: 'GET',
