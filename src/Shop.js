@@ -134,7 +134,7 @@ class Shop extends Component {
 
             return (
                 <div key={rowID} style={{
-                    // paddingTop: '15px',
+                    paddingTop: '15px',
                     backgroundColor: '#F7F7F7',
                     display: 'flex',
                     justifyContent: 'center',
@@ -142,9 +142,9 @@ class Shop extends Component {
                 }}>
 
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
-                        {/* <div style={{ display: 'flex', flexDirection: 'row' }}> */}
+ 
                         <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>{obj.address}</div>
-                        {/* </div> */}
+
                     </div>
                 </div >
             );
