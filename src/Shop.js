@@ -36,7 +36,9 @@ class Shop extends Component {
             authorization: cookies.get('authorization'),
             dataSource: dataSource,
             // .cloneWithRows({}),
-            addressList: ''
+            addressList: '',
+            addressListUpdated: '',
+            searchInput: ''
         }
 
         this.onChange = this.onChange.bind(this)
@@ -49,14 +51,19 @@ class Shop extends Component {
             dataSource: this.state.dataSource.cloneWithRows(list),
             isLoading: false
         });
-
-
     }
 
     stopScroll(e) {
-
         e.preventDefault()
+    }
 
+    handleSearchInput(e) {
+        this.setState({
+            searchInput: e.target.value,
+            addressListUpdated: this.state.addressList.filter(a => { return (a.address.includes(e.target.value)) })
+        }, () => {
+            console.log(this.state.searchInput)
+        });
     }
 
     componentDidMount() {
@@ -142,7 +149,7 @@ class Shop extends Component {
                 }}>
 
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
- 
+
                         <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
 
                     </div>
@@ -152,7 +159,7 @@ class Shop extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <SearchBar placeholder="输入地区、省、市" maxLength={16} onChange={this.onChange} />
+                <SearchBar placeholder="输入地区、省、市" maxLength={16} onSubmit={this.handleSearchInput} />
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
