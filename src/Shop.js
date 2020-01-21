@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
+import { Input } from 'antd';
 import { SearchBar, Tabs, Badge, ListView } from 'antd-mobile';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -43,6 +44,7 @@ class Shop extends Component {
 
         this.onChange = this.onChange.bind(this)
         this.stopScroll = this.stopScroll.bind(this)
+        // this.handleSearchInput = this.handleSearchInput.bind(this)
 
     }
 
@@ -57,14 +59,13 @@ class Shop extends Component {
         e.preventDefault()
     }
 
-    handleSearchInput(e) {
-        this.setState({
-            searchInput: e.target.value,
-            addressListUpdated: this.state.addressList.filter(a => { return (a.address.includes(e.target.value)) })
-        }, () => {
-            console.log(this.state.searchInput)
-        });
-    }
+    // handleSearchInput(e) {
+
+    //     this.setState({
+    //         searchInput: e.target.value,
+    //         addressListUpdated: this.state.addressList
+    //     });
+    // }
 
     componentDidMount() {
         document.body.addEventListener('touchmove', this.stopScroll, false);
@@ -157,9 +158,36 @@ class Shop extends Component {
             );
         };
 
+        const rowC = (rowData, sectionID, rowID) => {
+            if (index < 0) {
+                //没有歌曲
+                index = this.state.addressListUpdated.length - 1;
+            }
+
+            const obj = this.state.addressListUpdated[index--];
+
+            return (
+                <div key={rowID} style={{
+                    paddingTop: '15px',
+                    backgroundColor: '#F7F7F7',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+
+                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
+
+                        <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
+
+                    </div>
+                </div >
+            );
+        };
+
+
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <SearchBar placeholder="输入地区、省、市" maxLength={16} onSubmit={this.handleSearchInput} />
+                <Input placeholder="输入地区、省、市" maxLength={16} onChange={this.handleSearchInput} />
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
@@ -187,8 +215,23 @@ class Shop extends Component {
                             pageSize={5}
                         />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#F7F7F7' }}>
-
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                        <ListView
+                            key={this.state.useBodyScroll ? '0' : '1'}
+                            ref={el => this.lv = el}
+                            dataSource={this.state.dataSource}
+                            renderRow={rowC}
+                            // useBodyScroll
+                            style={{
+                                height: '100vh',
+                                width: '100%',
+                                backgroundColor: '#F7F7F7',
+                                paddingBottom: '50px'
+                            }}
+                            onEndReachedThreshold={1000}
+                            onEndReached={this.onEndReached}
+                            pageSize={5}
+                        />
                     </div>
                 </Tabs>
             </div>

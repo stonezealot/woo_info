@@ -273,6 +273,7 @@ class Register extends Component {
                     }
                 })
         }
+        // this.props.history.replace('/main')
 
     }
 
