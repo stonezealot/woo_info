@@ -80,36 +80,35 @@ class Shop extends Component {
                 that.setState({
                     lng: r.point.lng,
                     lat: r.point.lat
+                }, () => {
+                    console.log('lng:' + that.state.lng)
+                    console.log('lat:' + that.state.lat)
+
+                    let url = that.state.serviceEntry + 'addresses?longitude=' + that.state.lng + '&latitude=' + that.state.lat
+                    console.log(url)
+
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': that.state.authorization
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            that.setState({
+                                addressList: response
+                            }, () => {
+                                console.log(that.state.addressList)
+                                that.changeState(that.state.addressList)
+                            })
+                        })
                 })
             }
             else {
-                console.log('failed' + this.getStatus());
+                console.log('failed' + that.getStatus());
             }
         }, { enableHighAccuracy: true })
-
-        console.log('lng:' + this.state.lng)
-        console.log('lat:' + this.state.lat)
-
-        let url = this.state.serviceEntry + 'addresses?longitude=' + this.state.lng + '&latitude=' + this.state.lat
-        console.log(url)
-
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': this.state.authorization
-            }
-        })
-            .then(response => response.json())
-            .then(response => {
-                this.setState({
-                    addressList: response
-                }, () => {
-                    console.log(this.state.addressList)
-                    this.changeState(this.state.addressList)
-                })
-            })
-
     }
 
     onChange = (e) => {
