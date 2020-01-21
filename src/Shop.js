@@ -44,7 +44,7 @@ class Shop extends Component {
 
         this.onChange = this.onChange.bind(this)
         this.stopScroll = this.stopScroll.bind(this)
-        // this.handleSearchInput = this.handleSearchInput.bind(this)
+        this.handleSearchInput = this.handleSearchInput.bind(this)
 
     }
 
@@ -59,13 +59,20 @@ class Shop extends Component {
         e.preventDefault()
     }
 
-    // handleSearchInput(e) {
+    handleSearchInput(e) {
 
-    //     this.setState({
-    //         searchInput: e.target.value,
-    //         addressListUpdated: this.state.addressList
-    //     });
-    // }
+        this.setState({
+            searchInput: e.target.value
+        }, () => {
+            this.setState({
+                addressListUpdated: this.state.addressList.filter(a => {
+                    return (
+                        a.address.toUpperCase().includes(this.state.supplierInput.toUpperCase())
+                    )
+                })
+            })
+        });
+    }
 
     componentDidMount() {
         document.body.addEventListener('touchmove', this.stopScroll, false);
@@ -105,7 +112,8 @@ class Shop extends Component {
                         .then(response => response.json())
                         .then(response => {
                             that.setState({
-                                addressList: response
+                                addressList: response,
+                                addressListUpdated: response
                             }, () => {
                                 console.log(that.state.addressList)
                                 that.changeState(that.state.addressList)
@@ -187,7 +195,7 @@ class Shop extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <Input placeholder="输入地区、省、市" maxLength={16} onChange={this.handleSearchInput} />
+                <Input.Search placeholder="输入地区、省、市" maxLength={16} onChange={this.handleSearchInput} />
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
