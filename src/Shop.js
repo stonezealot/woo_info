@@ -143,7 +143,7 @@ class Shop extends Component {
 
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
  
-                        <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>{obj.address}</div>
+                        <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
 
                     </div>
                 </div >
