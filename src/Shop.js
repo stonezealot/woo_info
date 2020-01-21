@@ -67,7 +67,7 @@ class Shop extends Component {
             this.setState({
                 addressListUpdated: this.state.addressList.filter(a => {
                     return (
-                        a.address.toUpperCase().includes(this.state.supplierInput.toUpperCase())
+                        a.address.toUpperCase().includes(this.state.searchInput.toUpperCase())
                     )
                 })
             })
