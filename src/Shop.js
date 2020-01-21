@@ -87,6 +87,9 @@ class Shop extends Component {
             }
         }, { enableHighAccuracy: true })
 
+        console.log('lng:' + this.state.lng)
+        console.log('lat:' + this.state.lat)
+
         let url = this.state.serviceEntry + 'addresses?longitude=' + this.state.lng + '&latitude=' + this.state.lat
         console.log(url)
 
