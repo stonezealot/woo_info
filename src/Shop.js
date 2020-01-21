@@ -78,8 +78,8 @@ class Shop extends Component {
                 map.panTo(r.point);
                 console.log('您的位置：' + r.point.lng + ',' + r.point.lat);
                 that.setState({
-                    lng: r.point.lng,
-                    lat: r.point.lat
+                    longitude: r.point.lng,
+                    latitude: r.point.lat
                 })
             }
             else {
@@ -87,7 +87,7 @@ class Shop extends Component {
             }
         }, { enableHighAccuracy: true })
 
-        let url = this.state.serviceEntry + 'addresses'
+        let url = this.state.serviceEntry + 'addresses?longitude=' + this.state.longitude + '&latitude=' + this.state.latitude
 
         fetch(url, {
             method: 'GET',
