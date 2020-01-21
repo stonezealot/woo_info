@@ -139,7 +139,6 @@ class Shop extends Component {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    paddingBottom: '50px',
                 }}>
 
                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
