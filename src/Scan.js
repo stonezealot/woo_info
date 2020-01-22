@@ -120,7 +120,7 @@ class Scan extends Component {
                         height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
                     }}>
                         <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}>
-                            <Barcode barCode={this.state.dynamicCode} />
+                            {/* <Barcode barCode={this.state.dynamicCode} /> */}
                         </div>
                         <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>{this.state.dynamicCode}</div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
