@@ -4,6 +4,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Button, NavBar } from 'antd-mobile';
 import Barcode from './Barcode';
+import JsBarcode from 'jsbarcode';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -26,15 +27,21 @@ class Scan extends Component {
             vipId: cookies.get('vipId'),
             value: '',
             time: 120,
-            dynamicCode: 'null'
+            dynamicCode: ''
         }
 
         this.onChange = this.onChange.bind(this)
+        this.handleBarcode = this.handleBarcode.bind(this);
 
     }
 
-    componentWillMount() {
-
+    handleBarcode(code) {
+        JsBarcode(this.barcode, code, {
+            displayValue: false,
+            width: 2,
+            height: 50,
+            margin: 0,
+        });
     }
 
     componentDidMount() {
@@ -61,6 +68,7 @@ class Scan extends Component {
                         dynamicCode: this.state.dynamicCodeInfo.dynamicCode
                     }, () => {
                         console.log(this.state.dynamicCode)
+                        this.handleBarcode(this.state.dynamicCode)
                         //处理倒计时
                         let timeChange;
                         let ti = this.state.time;
@@ -130,7 +138,9 @@ class Scan extends Component {
                         height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
                     }}>
                         <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}>
-                            <Barcode barCode={dbarcode} />
+                            <svg ref={(ref) => {
+                                this.barcode = ref;
+                            }} />
                         </div>
                         <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>{this.state.dynamicCode}</div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
