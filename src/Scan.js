@@ -3,6 +3,7 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
 import { Button, NavBar } from 'antd-mobile';
+import Barcode from './Barcode';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -13,10 +14,19 @@ class Scan extends Component {
     };
 
     constructor(props) {
+
+
         super(props);
+
+        const { cookies } = this.props;
+
         this.state = {
+            serviceEntry: cookies.get('serviceEntry'),
+            authorization: cookies.get('authorization'),
+            vipId: cookies.get('vipId'),
             value: '',
-            time: 5
+            time: 120,
+            dynamicCode: ''
         }
 
         this.onChange = this.onChange.bind(this)
@@ -24,10 +34,33 @@ class Scan extends Component {
     }
 
     componentDidMount() {
+
         document.title = '我的二维码'
+
+        const body = {
+            vipId: this.state.vipId,
+        }
+
+        fetch(this.state.serviceEntry + 'get-dynamic-code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            },
+            body: JSON.stringify(body),
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    dynamicCode: response.dynamicCode
+                })
+            })
+
+
+
+        //处理倒计时
         let timeChange;
         let ti = this.state.time;
-        //关键在于用ti取代time进行计算和判断，因为time在render里不断刷新，但在方法中不会进行刷新
         const clock = () => {
             if (ti > 0) {
                 //当ti>0时执行更新方法
@@ -44,8 +77,9 @@ class Scan extends Component {
                 });
             }
         };
-        //每隔一秒执行一次clock方法
         timeChange = setInterval(clock, 1000);
+
+
     }
 
     onChange = (e) => {
@@ -93,8 +127,10 @@ class Scan extends Component {
                     <div style={{
                         height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
                     }}>
-                        <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}></div>
-                        <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>1573 7971 5086 6</div>
+                        <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}>
+                            <Barcode barCode={this.state.dynamicCode} />
+                        </div>
+                        <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>{this.state.dynamicCode}</div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
                             <div style={{ height: '200px', width: '200px', backgroundColor: 'white', }}></div>
                         </div>
