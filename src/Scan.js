@@ -38,7 +38,7 @@ class Scan extends Component {
     handleBarcode(code) {
         JsBarcode(this.barcode, code, {
             displayValue: false,
-            width: 2,
+            width: 1,
             height: 50,
             margin: 0,
         });
