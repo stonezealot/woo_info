@@ -58,34 +58,29 @@ class Scan extends Component {
                         dynamicCode: this.state.dynamicCodeInfo.dynamicCode
                     }, () => {
                         console.log(this.state.dynamicCode)
+                        //处理倒计时
+                        let timeChange;
+                        let ti = this.state.time;
+                        const clock = () => {
+                            if (ti > 0) {
+                                //当ti>0时执行更新方法
+                                ti = ti - 1;
+                                this.setState({
+                                    time: ti
+                                });
+                                console.log(ti);
+                            } else {
+                                //当ti=0时执行终止循环方法
+                                clearInterval(timeChange);
+                                this.setState({
+                                    time: 0
+                                });
+                            }
+                        };
+                        timeChange = setInterval(clock, 1000);
                     })
                 })
             })
-
-
-
-        //处理倒计时
-        let timeChange;
-        let ti = this.state.time;
-        const clock = () => {
-            if (ti > 0) {
-                //当ti>0时执行更新方法
-                ti = ti - 1;
-                this.setState({
-                    time: ti
-                });
-                console.log(ti);
-            } else {
-                //当ti=0时执行终止循环方法
-                clearInterval(timeChange);
-                this.setState({
-                    time: 0
-                });
-            }
-        };
-        timeChange = setInterval(clock, 1000);
-
-
     }
 
     onChange = (e) => {
