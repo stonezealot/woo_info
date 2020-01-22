@@ -33,10 +33,7 @@ class Scan extends Component {
 
     }
 
-    componentDidMount() {
-
-        document.title = '我的二维码'
-
+    componentWillMount() {
         const body = {
             vipId: this.state.vipId,
         }
@@ -81,6 +78,12 @@ class Scan extends Component {
                     })
                 })
             })
+    }
+
+    componentDidMount() {
+
+        document.title = '我的二维码'
+
     }
 
     onChange = (e) => {
