@@ -52,7 +52,13 @@ class Scan extends Component {
             .then(response => response.json())
             .then(response => {
                 this.setState({
-                    dynamicCode: response.dynamicCode
+                    dynamicCodeInfo: response
+                }, () => {
+                    this.setState({
+                        dynamicCode: this.state.dynamicCodeInfo.dynamicCode
+                    }, () => {
+                        console.log(this.state.dynamicCode)
+                    })
                 })
             })
 
@@ -105,15 +111,6 @@ class Scan extends Component {
             justifyContent: 'center',
             height: '35px'
         };
-
-        const headerTitle = {
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            fontWeight: '800'
-        }
-
-
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
