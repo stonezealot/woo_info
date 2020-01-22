@@ -195,7 +195,7 @@ class Shop extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <Input.Search placeholder="输入地区、省、市" maxLength={16} onChange={this.handleSearchInput} />
+                <Input.Search placeholder="输入地区、省、市" maxLength={16} />
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
