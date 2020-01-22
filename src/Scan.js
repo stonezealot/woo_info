@@ -26,7 +26,7 @@ class Scan extends Component {
             vipId: cookies.get('vipId'),
             value: '',
             time: 120,
-            dynamicCode: ''
+            dynamicCode: 'null'
         }
 
         this.onChange = this.onChange.bind(this)
