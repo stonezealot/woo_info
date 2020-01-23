@@ -132,13 +132,9 @@ class Scan extends Component {
                     ><div style={{ paddingTop: '5px' }}>积分查询</div></NavBar>
                     <div style={{ marginTop: '10px', height: '35px' }}></div>
                     <div style={{
-                        height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
+                        height: '450px', backgroundColor: '#AAAA55', margin: '10px', padding: '20px'
                     }}>
-                        <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}>
-                            {/* <svg ref={(ref) => {
-                                this.barcode = ref;
-                            }} /> */}
-                        </div>
+                        <div style={{marginTop:'100px'}}></div>
                         <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>{this.state.dynamicCode}</div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
                             {/* <div style={{ height: '200px', width: '200px', backgroundColor: 'white', }}></div> */}
