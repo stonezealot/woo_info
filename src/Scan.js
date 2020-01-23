@@ -69,7 +69,7 @@ class Scan extends Component {
                         dynamicCode: this.state.dynamicCodeInfo.dynamicCode
                     }, () => {
                         console.log(this.state.dynamicCode)
-                        this.handleBarcode(this.state.dynamicCode)
+                        // this.handleBarcode(this.state.dynamicCode)
                         //处理倒计时
                         let timeChange;
                         let ti = this.state.time;
@@ -118,10 +118,6 @@ class Scan extends Component {
             justifyContent: 'center',
             height: '35px'
         };
-
-        const dbarcode = this.state.dynamicCode
-
-        console.log('db:  ' + dbarcode)
 
         return (
 
