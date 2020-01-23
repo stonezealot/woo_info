@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { Button, NavBar } from 'antd-mobile';
 import Barcode from './Barcode';
 import JsBarcode from 'jsbarcode';
+import QRCode from 'qrcode.react';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -31,18 +32,18 @@ class Scan extends Component {
         }
 
         this.onChange = this.onChange.bind(this)
-        this.handleBarcode = this.handleBarcode.bind(this);
+        // this.handleBarcode = this.handleBarcode.bind(this);
 
     }
 
-    handleBarcode(code) {
-        JsBarcode(this.barcode, code, {
-            displayValue: false,
-            width: 1,
-            height: 50,
-            margin: 0,
-        });
-    }
+    // handleBarcode(code) {
+    //     JsBarcode(this.barcode, code, {
+    //         displayValue: false,
+    //         width: 1,
+    //         height: 50,
+    //         margin: 0,
+    //     });
+    // }
 
     componentDidMount() {
 
@@ -138,13 +139,18 @@ class Scan extends Component {
                         height: '450px', backgroundColor: 'pink', margin: '10px', padding: '20px'
                     }}>
                         <div style={{ height: '120px', backgroundColor: 'white', borderWidth: '1px', borderColor: '#F7F7F7' }}>
-                            <svg ref={(ref) => {
+                            {/* <svg ref={(ref) => {
                                 this.barcode = ref;
-                            }} />
+                            }} /> */}
                         </div>
                         <div style={{ height: '20px', marginTop: '10px', textAlign: 'center', fontSize: '13px' }}>{this.state.dynamicCode}</div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
-                            <div style={{ height: '200px', width: '200px', backgroundColor: 'white', }}></div>
+                            {/* <div style={{ height: '200px', width: '200px', backgroundColor: 'white', }}></div> */}
+                            <QRCode
+                                value={this.state.dynamicCode}  //value参数为生成二维码的链接
+                                size={200} //二维码的宽高尺寸
+                                fgColor="#000000"  //二维码的颜色
+                            />
                         </div>
                         {
                             this.state.time == 0 ?
