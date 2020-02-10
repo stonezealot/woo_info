@@ -36,12 +36,11 @@ class Phone extends Component {
     }
 
     handleSaveButton() {
-        const { vipId, checkCode, vipPhone } = this.state
 
         const body = {
-            vipId: vipId,
-            checkCode: checkCode,
-            vipPhone: vipPhone
+            vipId: this.state.vipId,
+            checkCode: this.state.checkCode,
+            vipPhone: this.state.vipPhone
         }
 
         fetch(this.state.serviceEntry + 'update-vip-phone', {
