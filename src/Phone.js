@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { withRouter } from 'react-router';
-import { Button, NavBar } from 'antd-mobile';
+import { Button, NavBar, InputItem, Toast } from 'antd-mobile';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -16,31 +16,60 @@ class Phone extends Component {
     constructor(props) {
         super(props);
 
+        const { cookies } = this.props;
+
+        this.state = {
+            serviceEntry: cookies.get('serviceEntry'),
+            authorization: cookies.get('authorization'),
+            vipId: cookies.get('vipId'),
+            isLoading: true,
+            showDetail: false,
+            discountList: '',
+            checkCode: '',
+            vipPhone: ''
+        }
+
     }
 
     componentDidMount() {
         document.title = '变更手机号码'
     }
 
-    render() {
+    handleSaveButton() {
+        const { vipId, checkCode, vipPhone } = this.state
 
-        const header = {
-            // textAlign: 'center',
-            fontSize: '20px',
-            fontFamily: 'varela',
-            backgroundColor: 'white',
-            color: 'black',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '35px'
-        };
-
-        const headerTitle = {
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            fontWeight: '800'
+        const body = {
+            vipId: vipId,
+            checkCode: checkCode,
+            vipPhone: vipPhone
         }
+
+        fetch(this.state.serviceEntry + 'update-vip-phone', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            },
+            body: JSON.stringify(body),
+        })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                if (response.errCode == 'OK') {
+                    Toast.info('修改成功', 1);
+                }
+            })
+    }
+
+    changePhone = (value) => {
+        this.setState({
+            vipPhone: value
+        }, () => {
+            console.log(this.state.vipPhone)
+        })
+    }
+
+    render() {
 
         const getButton = {
             marginTop: '5px',
@@ -84,13 +113,13 @@ class Phone extends Component {
                     marginRight: '10px',
                 }}>
                     <div style={{ color: '#CCCCCC' }}>原手机号:</div>
-                    <input className="input" style={{ height: '50px', width: '100%' }}></input>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }}></InputItem>
                     <div style={{ color: '#CCCCCC', marginTop: '10px' }}>新手机号</div>
-                    <input className="input" style={{ height: '50px', width: '100%' }}></input>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }} onChange={this.changePhone}></InputItem>
                     <div style={{ marginTop: '20px' }}>
-                        <Button type="primary" style={getButton} onClick={this.handleSaveButton}>获取验证码</Button>
+                        <Button type="primary" style={getButton}>获取验证码</Button>
                     </div>
-                    <input className="input" style={{ height: '50px', width: '100%' }} placeholder="验证码"></input>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }} placeholder="验证码"></InputItem>
                     <div>
                         <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>立即修改</Button>
                     </div>
