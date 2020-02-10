@@ -33,6 +33,7 @@ class Phone extends Component {
 
     componentDidMount() {
         document.title = '变更手机号码'
+        console.log('vipId:' + this.state.vipId)
     }
 
     handleSaveButton() {
