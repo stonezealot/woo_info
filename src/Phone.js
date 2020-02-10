@@ -29,6 +29,8 @@ class Phone extends Component {
             vipPhone: ''
         }
 
+        this.handleSaveButton = this.handleSaveButton.bind(this)
+
     }
 
     componentDidMount() {
