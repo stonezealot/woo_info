@@ -45,7 +45,7 @@ class Register extends Component {
         super(props);
         this.state = {
             serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer 3ebb98f9-4130-4b07-817c-4a774c5cb8f9',
+            authorization: 'Bearer e8723c54-8582-4e61-9586-e209ea7a9f2b',
             date: now,
             accessToken: '',
             dValue: 0, // date
@@ -63,6 +63,7 @@ class Register extends Component {
             hasError: false,
         }
         this.handleSaveButton = this.handleSaveButton.bind(this);
+        this.handleCheckCodeButton = this.handleCheckCodeButton.bind(this);
         this.urlValue = this.urlValue.bind(this);
     }
 
@@ -184,6 +185,39 @@ class Register extends Component {
             gender: value
         })
     }
+
+    handleCheckCodeButton() {
+        const { vipPhone } = this.state
+        const body = {
+            vipPhone: vipPhone,
+            templateId: '533111'
+        }
+
+        if (vipPhone == '') {
+            Toast.info('请输入手机号', 1);
+        } else if (vipPhone.length != 11) {
+            Toast.info('请确认手机号', 1);
+        } else {
+            fetch(this.state.serviceEntry + 'send-checkcode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.state.authorization
+                },
+                body: JSON.stringify(body),
+            })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+
+                    if (response.errCode != 'OK') {
+                        Toast.info('发送失败', 1);
+                    }
+                })
+        }
+
+    }
+
 
     handleSaveButton() {
 
@@ -357,7 +391,7 @@ class Register extends Component {
                                     ref={el => this.autoFocusInst = el}
                                     onChange={this.handleVipPhone}
                                 >手机号</InputItem>
-                                <Button style={{ backgroundColor: '#DDB100', marginTop: '5px', marginBottom: '5px' }}>获取验证码</Button>
+                                <Button style={{ backgroundColor: '#DDB100', marginTop: '5px', marginBottom: '5px' }} onClick={this.handleCheckCodeButton}>获取验证码</Button>
                                 <InputItem
                                     clear
                                     ref={el => this.autoFocusInst = el}

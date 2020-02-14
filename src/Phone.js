@@ -30,12 +30,45 @@ class Phone extends Component {
         }
 
         this.handleSaveButton = this.handleSaveButton.bind(this)
+        this.handleCheckCodeButton = this.handleCheckCodeButton.bind(this)
 
     }
 
     componentDidMount() {
         document.title = '变更手机号码'
         console.log('vipId:' + this.state.vipId)
+    }
+
+    handleCheckCodeButton() {
+        const { vipPhone } = this.state
+        const body = {
+            vipPhone: vipPhone,
+            templateId: '532510'
+        }
+
+        if (vipPhone == '') {
+            Toast.info('请输入手机号', 1);
+        } else if (vipPhone.length != 11) {
+            Toast.info('请确认手机号', 1);
+        } else {
+            fetch(this.state.serviceEntry + 'send-checkcode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.state.authorization
+                },
+                body: JSON.stringify(body),
+            })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+
+                    if (response.errCode != 'OK') {
+                        Toast.info('发送失败', 1);
+                    }
+                })
+        }
+
     }
 
     handleSaveButton() {
@@ -119,7 +152,7 @@ class Phone extends Component {
                     <div style={{ color: '#CCCCCC', marginTop: '10px' }}>新手机号</div>
                     <InputItem className="input" style={{ height: '50px', width: '100%' }} onChange={this.changePhone}></InputItem>
                     <div style={{ marginTop: '20px' }}>
-                        <Button type="primary" style={getButton}>获取验证码</Button>
+                        <Button type="primary" style={getButton} onClick={this.handleCheckCodeButton}>获取验证码</Button>
                     </div>
                     <InputItem className="input" style={{ height: '50px', width: '100%' }} placeholder="验证码"></InputItem>
                     <div>
