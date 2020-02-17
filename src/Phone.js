@@ -53,9 +53,9 @@ class Phone extends Component {
                 this.setState({
                     vipInfo: response
                 }, () => {
-                    console.log(this.state.vipInfo)
+                    console.log(this.state.vipInfo[0])
                     this.setState({
-                        vipPhoneOld: this.state.vipInfo.vipPhone1
+                        vipPhoneOld: this.state.vipInfo[0].vipPhone1
                     })
                 })
             })
