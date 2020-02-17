@@ -87,6 +87,8 @@ class Phone extends Component {
 
                     if (response.errCode != 'OK') {
                         Toast.info('发送失败', 1);
+                    }else{
+                        Toast.info('发送成功', 1);
                     }
                 })
         }
