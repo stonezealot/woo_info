@@ -175,7 +175,7 @@ class Phone extends Component {
                     marginRight: '10px',
                 }}>
                     <div style={{ color: '#CCCCCC' }}>原手机号:</div>
-                    <InputItem className="input" style={{ height: '50px', width: '100%' }} defaultValue={this.state.vipPhoneOld} editable={false}></InputItem>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }} placeholder={this.state.vipPhoneOld} editable={false}></InputItem>
                     <div style={{ color: '#CCCCCC', marginTop: '10px' }}>新手机号</div>
                     <InputItem className="input" style={{ height: '50px', width: '100%' }} onChange={this.changePhone}></InputItem>
                     <div style={{ marginTop: '20px' }}>
