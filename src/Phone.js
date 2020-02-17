@@ -26,7 +26,8 @@ class Phone extends Component {
             showDetail: false,
             discountList: '',
             checkCode: '',
-            vipPhone: ''
+            vipPhoneOld: '',
+            vipInfo: ''
         }
 
         this.handleSaveButton = this.handleSaveButton.bind(this)
@@ -37,6 +38,27 @@ class Phone extends Component {
     componentDidMount() {
         document.title = '变更手机号码'
         console.log('vipId:' + this.state.vipId)
+
+        let url = this.state.serviceEntry + 'vip-info?vipId=' + this.state.vipId
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': this.state.authorization
+            }
+        })
+            .then(response => response.json())
+            .then(response => {
+                this.setState({
+                    vipInfo: response
+                }, () => {
+                    console.log(this.state.vipInfo)
+                    this.setState({
+                        vipPhoneOld: this.state.vipInfo.vipPhone1
+                    })
+                })
+            })
     }
 
     handleCheckCodeButton() {
@@ -92,6 +114,11 @@ class Phone extends Component {
                 console.log(response)
                 if (response.errCode == 'OK') {
                     Toast.info('修改成功', 1);
+                    this.setState({
+                        vipPhoneOld: this.state.vipPhone
+                    })
+                } else {
+                    Toast.info('修改失败', 1);
                 }
             })
     }
@@ -148,7 +175,7 @@ class Phone extends Component {
                     marginRight: '10px',
                 }}>
                     <div style={{ color: '#CCCCCC' }}>原手机号:</div>
-                    <InputItem className="input" style={{ height: '50px', width: '100%' }}></InputItem>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }} defaultValue={this.state.vipPhoneOld} editable={false}></InputItem>
                     <div style={{ color: '#CCCCCC', marginTop: '10px' }}>新手机号</div>
                     <InputItem className="input" style={{ height: '50px', width: '100%' }} onChange={this.changePhone}></InputItem>
                     <div style={{ marginTop: '20px' }}>
