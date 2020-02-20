@@ -70,7 +70,7 @@ class Shop extends Component {
                         a.address.includes(this.state.searchInput.toString())
                     )
                 })
-            },() =>{
+            }, () => {
                 console.log(this.state.addressListUpdated)
             })
         });
@@ -197,7 +197,7 @@ class Shop extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <Input.Search placeholder="输入地区、省、市" maxLength={16} onSubmit={this.handleSearchInput}/>
+                <Input.Search placeholder="输入地区、省、市" maxLength={16} onSearch={this.handleSearchInput} />
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
