@@ -67,7 +67,7 @@ class Shop extends Component {
             this.setState({
                 addressListUpdated: this.state.addressList.filter(a => {
                     return (
-                        a.address.toUpperCase().includes(this.state.searchInput.toUpperCase())
+                        a.address.includes(this.state.searchInput.toString())
                     )
                 })
             })
@@ -195,7 +195,7 @@ class Shop extends Component {
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
-                <Input.Search placeholder="输入地区、省、市" maxLength={16} />
+                <Input.Search placeholder="输入地区、省、市" maxLength={16} onChange={this.handleSearchInput}/>
                 <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
