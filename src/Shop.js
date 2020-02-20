@@ -62,7 +62,7 @@ class Shop extends Component {
     handleSearchInput(e) {
 
         this.setState({
-            searchInput: e.target.value
+            searchInput: e
         }, () => {
             this.setState({
                 addressListUpdated: this.state.addressList.filter(a => {
