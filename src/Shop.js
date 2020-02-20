@@ -115,7 +115,7 @@ class Shop extends Component {
                         .then(response => {
                             that.setState({
                                 addressList: response,
-                                // addressListUpdated: response
+                                addressListUpdated: response
                             }, () => {
                                 console.log(that.state.addressList)
                                 that.changeState(that.state.addressList)
