@@ -70,6 +70,8 @@ class Shop extends Component {
                         a.address.includes(this.state.searchInput.toString())
                     )
                 })
+            },() =>{
+                console.log(this.state.addressListUpdated)
             })
         });
     }
@@ -223,7 +225,7 @@ class Shop extends Component {
                             pageSize={5}
                         />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                    {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
                         <ListView
                             key={this.state.useBodyScroll ? '0' : '1'}
                             ref={el => this.lv = el}
@@ -240,7 +242,7 @@ class Shop extends Component {
                             onEndReached={this.onEndReached}
                             pageSize={5}
                         />
-                    </div>
+                    </div> */}
                 </Tabs>
             </div>
         );
