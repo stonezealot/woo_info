@@ -184,12 +184,19 @@ class Shop extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
+                    {
+                        obj.address == undefined ?
 
-                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
+                            null :
 
-                        <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
+                            <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
 
-                    </div>
+                                <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
+
+                            </div>
+
+                    }
+
                 </div >
             );
         };
@@ -203,7 +210,7 @@ class Shop extends Component {
                     tabBarActiveTextColor='#D71818'
                     tabs={tabs}
                     swipeable={false}
-                    initialPage={1}
+                    initialPage={0}
                     onChange={(tab, index) => { console.log('onChange', index, tab); }}
                     onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }} >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
@@ -225,7 +232,7 @@ class Shop extends Component {
                             pageSize={5}
                         />
                     </div>
-                    {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
                         <ListView
                             key={this.state.useBodyScroll ? '0' : '1'}
                             ref={el => this.lv = el}
@@ -242,7 +249,7 @@ class Shop extends Component {
                             onEndReached={this.onEndReached}
                             pageSize={5}
                         />
-                    </div> */}
+                    </div>
                 </Tabs>
             </div>
         );
