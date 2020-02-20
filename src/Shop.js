@@ -115,7 +115,7 @@ class Shop extends Component {
                         .then(response => {
                             that.setState({
                                 addressList: response,
-                                addressListUpdated: response
+                                // addressListUpdated: response
                             }, () => {
                                 console.log(that.state.addressList)
                                 that.changeState(that.state.addressList)
@@ -225,7 +225,7 @@ class Shop extends Component {
                             pageSize={5}
                         />
                     </div>
-                    {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#F7F7F7' }}>
                         <ListView
                             key={this.state.useBodyScroll ? '0' : '1'}
                             ref={el => this.lv = el}
@@ -242,7 +242,7 @@ class Shop extends Component {
                             onEndReached={this.onEndReached}
                             pageSize={5}
                         />
-                    </div> */}
+                    </div>
                 </Tabs>
             </div>
         );
