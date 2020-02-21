@@ -50,7 +50,8 @@ class Shop extends Component {
 
     changeState = (list) => {
         this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(list),
+            dataSource: this.state.dataSource,
+            // .cloneWithRows(list)
             isLoading: false
         });
     }
