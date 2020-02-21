@@ -171,10 +171,10 @@ class Shop extends Component {
         const rowC = (rowData, sectionID, rowID) => {
             if (index < 0) {
                 //没有歌曲
-                index = this.state.addressListUpdated.length - 1;
+                index = this.state.addressList.length - 1;
             }
 
-            const obj = this.state.addressListUpdated[index--];
+            const obj = this.state.addressList[index--];
 
             console.log(obj)
 
@@ -187,15 +187,16 @@ class Shop extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj == undefined ?
-
-                            null :
+                        obj.address.includes(this.state.searchInput) ?
 
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
 
                                 <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
 
                             </div>
+                            : null
+
+
 
                     }
 
