@@ -101,7 +101,7 @@ class Shop extends Component {
                     console.log('lng:' + that.state.lng)
                     console.log('lat:' + that.state.lat)
 
-                    let url = that.state.serviceEntry + 'addresses?longitude=' + that.state.lng + '&latitude=' + that.state.lat
+                    let url = that.state.serviceEntry + 'geoaddresses?longitude=' + that.state.lng + '&latitude=' + that.state.lat
                     console.log(url)
 
                     fetch(url, {
