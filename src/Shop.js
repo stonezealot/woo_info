@@ -63,17 +63,7 @@ class Shop extends Component {
 
         this.setState({
             searchInput: e
-        }, () => {
-            this.setState({
-                addressListUpdated: this.state.addressList.filter(a => {
-                    return (
-                        a.address.includes(this.state.searchInput.toString())
-                    )
-                })
-            }, () => {
-                console.log(this.state.addressListUpdated)
-            })
-        });
+        }, () => { console.log(this.state.searchInput) });
     }
 
     componentDidMount() {
@@ -185,7 +175,7 @@ class Shop extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj.address.toString().includes(this.state.searchInput.toString()) ?
+                        obj.address.indexOf(this.state.searchInput) != -1 ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
                                 <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
                             </div>
