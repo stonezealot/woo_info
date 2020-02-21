@@ -176,8 +176,6 @@ class Shop extends Component {
 
             const obj = this.state.addressList[index--];
 
-            console.log(obj)
-
             return (
                 <div key={rowID} style={{
                     paddingTop: '15px',
@@ -187,17 +185,11 @@ class Shop extends Component {
                     alignItems: 'center',
                 }}>
                     {
-                        obj.address.includes(this.state.searchInput) ?
-
+                        obj.address.toString().includes(this.state.searchInput.toString()) ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
-
                                 <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
-
                             </div>
                             : null
-
-
-
                     }
 
                 </div >
