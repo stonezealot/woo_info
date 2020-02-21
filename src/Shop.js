@@ -176,6 +176,8 @@ class Shop extends Component {
 
             const obj = this.state.addressListUpdated[index--];
 
+            console.log(obj)
+
             return (
                 <div key={rowID} style={{
                     paddingTop: '15px',
