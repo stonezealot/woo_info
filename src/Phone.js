@@ -28,7 +28,7 @@ class Phone extends Component {
             checkCode: '',
             vipPhoneOld: '',
             vipInfo: '',
-            status: false
+            status: true
         }
 
         this.handleSaveButton = this.handleSaveButton.bind(this)
