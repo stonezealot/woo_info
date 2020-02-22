@@ -149,31 +149,11 @@ class Shop extends Component {
                     alignItems: 'center',
                 }}>
 
-                    <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
+                    {/* <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
 
                         <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
 
-                    </div>
-                </div >
-            );
-        };
-
-        const rowC = (rowData, sectionID, rowID) => {
-            if (index < 0) {
-                //没有歌曲
-                index = this.state.addressList.length - 1;
-            }
-
-            const obj = this.state.addressList[index--];
-
-            return (
-                <div key={rowID} style={{
-                    paddingTop: '15px',
-                    backgroundColor: '#F7F7F7',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
+                    </div> */}
                     {
                         obj.address.indexOf(this.state.searchInput) != -1 ?
                             <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
@@ -181,16 +161,43 @@ class Shop extends Component {
                             </div>
                             : null
                     }
-
                 </div >
             );
         };
+
+        // const rowC = (rowData, sectionID, rowID) => {
+        //     if (index < 0) {
+        //         //没有歌曲
+        //         index = this.state.addressList.length - 1;
+        //     }
+
+        //     const obj = this.state.addressList[index--];
+
+        //     return (
+        //         <div key={rowID} style={{
+        //             paddingTop: '15px',
+        //             backgroundColor: '#F7F7F7',
+        //             display: 'flex',
+        //             justifyContent: 'center',
+        //             alignItems: 'center',
+        //         }}>
+        //             {
+        //                 obj.address.indexOf(this.state.searchInput) != -1 ?
+        //                     <div style={{ width: '80%', background: 'white', borderRadius: '8px', marginBottom: '15px', height: '60px' }}>
+        //                         <div style={{ flex: 3.5, paddingLeft: '20px', paddingTop: '5px', fontSize: '10px' }}>地址: {obj.address}</div>
+        //                     </div>
+        //                     : null
+        //             }
+
+        //         </div >
+        //     );
+        // };
 
 
         return (
             <div style={{ backgroundColor: '#F7F7F7', height: '100vh' }}>
                 <Input.Search placeholder="输入地区、省、市" maxLength={16} onSearch={this.handleSearchInput} />
-                <Tabs
+                {/* <Tabs
                     tabBarUnderlineStyle={{ backgroundColor: '#D71818', height: 2, borderWidth: '0px' }}
                     tabBarActiveTextColor='#D71818'
                     tabs={tabs}
@@ -235,7 +242,23 @@ class Shop extends Component {
                             pageSize={5}
                         />
                     </div>
-                </Tabs>
+                </Tabs> */}
+                <ListView
+                            key={this.state.useBodyScroll ? '0' : '1'}
+                            ref={el => this.lv = el}
+                            dataSource={this.state.dataSource}
+                            renderRow={rowB}
+                            // useBodyScroll
+                            style={{
+                                height: '100vh',
+                                width: '100%',
+                                backgroundColor: '#F7F7F7',
+                                paddingBottom: '50px'
+                            }}
+                            onEndReachedThreshold={1000}
+                            onEndReached={this.onEndReached}
+                            pageSize={5}
+                        />
             </div>
         );
     }
