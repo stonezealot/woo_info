@@ -35,8 +35,7 @@ class Shop extends Component {
             lat: '',
             serviceEntry: cookies.get('serviceEntry'),
             authorization: cookies.get('authorization'),
-            dataSource1: dataSource,
-            dataSource2: dataSource,
+            dataSource: dataSource,
             // .cloneWithRows({}),
             addressList: '',
             addressListUpdated: '',
@@ -49,16 +48,9 @@ class Shop extends Component {
 
     }
 
-    changeState1 = (list) => {
+    changeState = (list) => {
         this.setState({
-            dataSource1: this.state.dataSource1.cloneWithRows(list),
-            isLoading: false
-        });
-    }
-
-    changeState2 = (list) => {
-        this.setState({
-            dataSource2: this.state.dataSource2.cloneWithRows(list),
+            dataSource: this.state.dataSource.cloneWithRows(list),
             isLoading: false
         });
     }
@@ -70,8 +62,8 @@ class Shop extends Component {
     handleSearchInput(e) {
 
         this.setState({
-            searchInput: e
-        }, () => { console.log(this.state.searchInput) });
+            searchInput: e,
+        });
     }
 
     componentDidMount() {
@@ -116,8 +108,7 @@ class Shop extends Component {
                                 addressListUpdated: response
                             }, () => {
                                 console.log(that.state.addressList)
-                                that.changeState1(that.state.addressList)
-                                that.changeState2(that.state.addressListUpdated)
+                                that.changeState(that.state.addressList)
                             })
                         })
                 })
@@ -170,10 +161,10 @@ class Shop extends Component {
         const rowC = (rowData, sectionID, rowID) => {
             if (index < 0) {
                 //没有歌曲
-                index = this.state.addressListUpdated.length - 1;
+                index = this.state.addressList.length - 1;
             }
 
-            const obj = this.state.addressListUpdated[index--];
+            const obj = this.state.addressList[index--];
 
             return (
                 <div key={rowID} style={{
