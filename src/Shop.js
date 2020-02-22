@@ -31,7 +31,7 @@ class Shop extends Component {
 
         this.state = {
             value: '',
-            lng: '',
+            lng: '',    
             lat: '',
             serviceEntry: cookies.get('serviceEntry'),
             authorization: cookies.get('authorization'),
@@ -243,6 +243,7 @@ class Shop extends Component {
                         />
                     </div>
                 </Tabs> */}
+                <div id="allmap" ></div >
                 <ListView
                             key={this.state.useBodyScroll ? '0' : '1'}
                             ref={el => this.lv = el}
