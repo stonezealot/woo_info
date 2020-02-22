@@ -132,11 +132,11 @@ class Phone extends Component {
         }, () => {
             if (this.state.vipPhone == '') {
                 this.setState({
-                    status: false
+                    status: true
                 })
             }else{
                 this.setState({
-                    status: true
+                    status: false
                 })
             }
         })
