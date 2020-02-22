@@ -227,7 +227,7 @@ class Gift extends Component {
                                 <div style={{ paddingLeft: '10px', display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
                                     <div>
                                         <div style={{ fontSize: '10px', color: '#A2A2A2' }}>优惠券号:  {obj.svId}</div>
-                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>有效时间:  {moment(obj.startDate).format('YYYY-MM-DD')} - {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
+                                        <div style={{ fontSize: '10px', color: '#A2A2A2' }}>截止日期:  {moment(obj.expiryDate).format('YYYY-MM-DD')}</div>
                                     </div>
                                 </div>
                             </div>

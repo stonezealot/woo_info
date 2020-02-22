@@ -116,12 +116,14 @@ class Phone extends Component {
             .then(response => {
                 console.log(response)
                 if (response.errCode == 'OK') {
-                    Toast.info('修改成功', 1);
+                    Toast.info('修改成功', 3);
                     this.setState({
-                        vipPhoneOld: this.state.vipPhone
+                        vipPhoneOld: this.state.vipPhone,
+                        vipPhone: '',
+                        status:true
                     })
                 } else {
-                    Toast.info('修改失败', 1);
+                    Toast.info('修改失败', 3);
                 }
             })
     }
@@ -134,7 +136,7 @@ class Phone extends Component {
                 this.setState({
                     status: true
                 })
-            }else{
+            } else {
                 this.setState({
                     status: false
                 })
