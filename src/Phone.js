@@ -27,7 +27,8 @@ class Phone extends Component {
             discountList: '',
             checkCode: '',
             vipPhoneOld: '',
-            vipInfo: ''
+            vipInfo: '',
+            status: false
         }
 
         this.handleSaveButton = this.handleSaveButton.bind(this)
@@ -87,7 +88,7 @@ class Phone extends Component {
 
                     if (response.errCode != 'OK') {
                         Toast.info('发送失败', 1);
-                    }else{
+                    } else {
                         Toast.info('发送成功', 1);
                     }
                 })
@@ -129,7 +130,15 @@ class Phone extends Component {
         this.setState({
             vipPhone: value
         }, () => {
-            console.log(this.state.vipPhone)
+            if (this.state.vipPhone == '') {
+                this.setState({
+                    status: false
+                })
+            }else{
+                this.setState({
+                    status: true
+                })
+            }
         })
     }
 
@@ -181,11 +190,11 @@ class Phone extends Component {
                     <div style={{ color: '#CCCCCC', marginTop: '10px' }}>新手机号</div>
                     <InputItem className="input" style={{ height: '50px', width: '100%' }} onChange={this.changePhone}></InputItem>
                     <div style={{ marginTop: '20px' }}>
-                        <Button type="primary" style={getButton} onClick={this.handleCheckCodeButton}>获取验证码</Button>
+                        <Button type="primary" style={getButton} onClick={this.handleCheckCodeButton} disabled={this.state.status}>获取验证码</Button>
                     </div>
-                    <InputItem className="input" style={{ height: '50px', width: '100%' }} placeholder="验证码"></InputItem>
+                    <InputItem className="input" style={{ height: '50px', width: '100%' }} placeholder="验证码" disabled={this.state.status}></InputItem>
                     <div>
-                        <Button type="primary" style={saveButton} onClick={this.handleSaveButton}>立即修改</Button>
+                        <Button type="primary" style={saveButton} onClick={this.handleSaveButton} disabled={this.state.status}>立即修改</Button>
                     </div>
 
                 </div>
