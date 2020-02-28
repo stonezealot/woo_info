@@ -17,7 +17,8 @@ class Main extends Component {
 
     const { cookies } = this.props;
     this.state = {
-
+      serviceEntry: cookies.get('serviceEntry'),
+      authorization: cookies.get('authorization'),
       nickname: cookies.get('nickname'),
       headimgurl: cookies.get('headimgurl'),
       vipId: cookies.get('vipId'),
@@ -179,7 +180,7 @@ class Main extends Component {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <div style={{ color: 'yellow', fontWeight: 'bold' }}>0</div>
+            <div style={{ color: 'yellow', fontWeight: 'bold' }}>{this.state.total}</div>
             <div style={{ color: 'white', fontSize: '10px' }}>我的积分</div>
           </div>
           <div style={{
@@ -189,7 +190,7 @@ class Main extends Component {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <div style={{ color: 'yellow', fontWeight: 'bold' }}>4</div>
+            <div style={{ color: 'yellow', fontWeight: 'bold' }}>{this.state.amount}</div>
             <div style={{ color: 'white', fontSize: '10px' }}>我的优惠券</div>
           </div>
         </div>
