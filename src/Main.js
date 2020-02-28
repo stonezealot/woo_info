@@ -20,6 +20,10 @@ class Main extends Component {
 
       nickname: cookies.get('nickname'),
       headimgurl: cookies.get('headimgurl'),
+      vipId: cookies.get('vipId'),
+      ptsList: '',
+      total: '',
+      amount: ''
 
       // headimgUrl: 'http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erfbmp9anj1jZCgvSaOwcUR3ArOFF6vXWzMAssLqjHlgSBUBasT4kOMllvLrOLYM1bDaazFhwTevA/132'
 
@@ -30,6 +34,7 @@ class Main extends Component {
     this.handleGiftButton = this.handleGiftButton.bind(this);
     this.handleShopButton = this.handleShopButton.bind(this);
     this.handleScanButton = this.handleScanButton.bind(this);
+    this.handlesum = this.handlesum.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +46,54 @@ class Main extends Component {
     //   WeixinJSBridge.call('hideOptionMenu');
     // })
 
+    let url = this.state.serviceEntry + 'points?vipId=' + this.state.vipId
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.state.authorization
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          ptsList: response
+        }, () => {
+          this.handlesum(this.state.ptsList)
+        })
+      })
+
+    let url2 = this.state.serviceEntry + 'discounts?csId=' + this.state.vipId
+
+    fetch(url2, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.state.authorization
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          discountList: response,
+        }, () => {
+          this.setState({
+            amount: this.state.discountList.length
+          })
+        })
+      })
+
+  }
+
+  handlesum = (list) => {
+    var a = 0
+    for (var i in list) {
+      a = a + list[i].totalPts
+    }
+    this.setState({
+      total: a
+    })
   }
 
   handlePhoneButton() {
@@ -112,7 +165,11 @@ class Main extends Component {
         </div>
         <div style={{ backgroundColor: 'white', marginTop: '5px', height: '60px', padding: '10px', paddingLeft: '20px', display: 'flex', flexDirection: 'row' }}>
           <img style={{ height: '45px', width: '45px' }} src={this.state.headimgurl} />
-          <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>{this.state.nickname}</div>
+          <div>
+            <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>昵称:  {this.state.nickname}</div>
+            <div style={{ marginLeft: '10px', color: '#3CC48D', fontSize: '15px' }}>会员号： {this.state.vipId}</div>
+          </div>
+
         </div>
         <div style={{ backgroundColor: '#3CC48D', marginTop: '5px', height: '60px', display: 'flex', flexDirection: 'row' }}>
           <div style={{
