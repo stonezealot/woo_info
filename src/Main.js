@@ -80,7 +80,15 @@ class Main extends Component {
           discountList: response,
         }, () => {
           this.setState({
-            amount: this.state.discountList.length
+            discountListB: this.state.discountList.filter(d => {
+              return (
+                d.statusFlg == 'B'
+              )
+            })
+          }, () => {
+            this.setState({
+              amount: this.state.discountListB.length
+            })
           })
         })
       })
