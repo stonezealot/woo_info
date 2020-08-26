@@ -44,8 +44,8 @@ class Register extends Component {
         console.log('in login screen')
         super(props);
         this.state = {
-            serviceEntry: 'https://dev.epbmobile.app:8090/gateway/epod/api/',
-            authorization: 'Bearer 1bb63cc0-b9e0-4f04-a7a0-93eacba89547',
+            serviceEntry: 'https://www.epbrowser.com:8090/gateway/epod/api/',
+            authorization: 'Bearer 2f76bc53-151c-4f23-be89-812194741807',
             date: now,
             accessToken: '',
             dValue: 0, // date
